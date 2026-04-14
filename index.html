@@ -769,6 +769,90 @@
     .reveal-delay-4 { transition-delay: 0.4s; }
     .reveal-delay-5 { transition-delay: 0.5s; }
 
+    /* ── Contrast / New Category Section ─────────────────────── */
+    #contrast { padding: 7rem 0; }
+
+    .contrast-table {
+      margin-top: 3.5rem;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--bg-card);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    }
+
+    .contrast-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #faf7f4;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .contrast-header-col {
+      padding: 1rem 2rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .contrast-header-col.old  { color: var(--text-3); border-right: 1px solid var(--border); }
+    .contrast-header-col.new  { color: var(--accent-1); }
+
+    .contrast-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .contrast-row:last-child { border-bottom: none; }
+    .contrast-row:hover { background: #fdf9f7; }
+
+    .contrast-cell {
+      padding: 1.15rem 2rem;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .contrast-cell.old {
+      color: var(--text-3);
+      border-right: 1px solid var(--border);
+    }
+
+    .contrast-cell.old::before {
+      content: '✕';
+      font-size: 0.65rem;
+      color: #c0a898;
+      flex-shrink: 0;
+      margin-top: 0.28rem;
+      font-weight: 600;
+    }
+
+    .contrast-cell.new { color: var(--text-1); font-weight: 400; }
+
+    .contrast-cell.new::before {
+      content: '→';
+      color: var(--accent-1);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .contrast-tagline {
+      margin-top: 2.75rem;
+      text-align: center;
+      font-family: 'Lora', serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-2);
+    }
+
+    .contrast-tagline em { color: var(--accent-1); }
+
     /* ── Responsive ───────────────────────────────────────────── */
     @media (max-width: 960px) {
       #hero { grid-template-columns: 1fr; min-height: auto; padding: 8rem 0 4rem; }
@@ -794,10 +878,10 @@
       <span class="logo-fabric">fabric.</span><span class="logo-domain">nfh.global</span>
     </a>
     <ul class="nav-links">
-      <li><a href="#what">What is Fabric</a></li>
+      <li><a href="#contrast">New Category</a></li>
       <li><a href="#usecases">Use Cases</a></li>
       <li><a href="#how">How it Works</a></li>
-      <li><a href="#pillars">Pillars</a></li>
+      <li><a href="#pillars">Primitives</a></li>
       <li><a href="#cta" class="nav-cta">Get Started →</a></li>
     </ul>
   </nav>
@@ -813,7 +897,7 @@
         </h1>
         <p class="hero-sub reveal reveal-delay-2">
           NFH Fabric is the orchestration layer that elevates AI agents beyond their own limits —
-          enabling automated settlement, reputation, discovery, and trust across every open network.
+          enabling tokenized identity, programmable value, composable loyalty, smart contracts, and automated settlement across every open network.
         </p>
         <div class="hero-actions reveal reveal-delay-3">
           <a href="#usecases" class="btn-primary">See it in action →</a>
@@ -962,6 +1046,56 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ── Not an upgrade. A new category. ───────────────────────── -->
+  <section id="contrast">
+    <div class="container">
+      <div class="section-label reveal">A new category</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Not an upgrade.<br/><em>A new category.</em>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        Every transformative technology looks like an improvement — until you see what it actually replaces.
+      </p>
+
+      <div class="contrast-table reveal reveal-delay-3">
+        <div class="contrast-header">
+          <div class="contrast-header-col old">The old way</div>
+          <div class="contrast-header-col new">With NFH Fabric</div>
+        </div>
+        <div class="contrast-row">
+          <div class="contrast-cell old">KYC repeated from scratch on every network</div>
+          <div class="contrast-cell new">Tokenized identity — verify once, recognised everywhere as a portable Verifiable Credential</div>
+        </div>
+        <div class="contrast-row">
+          <div class="contrast-cell old">Invoices tracked in spreadsheets, settled in days</div>
+          <div class="contrast-cell new">Invoices as programmable tokens — self-executing, self-settling on delivery confirmation</div>
+        </div>
+        <div class="contrast-row">
+          <div class="contrast-cell old">Loyalty locked to one platform, lost when you leave</div>
+          <div class="contrast-cell new">Tokenized cross-network loyalty — earn on one network, redeem on any other</div>
+        </div>
+        <div class="contrast-row">
+          <div class="contrast-cell old">Contracts need lawyers, time, and trust between parties</div>
+          <div class="contrast-cell new">Smart contracts execute automatically on conditions — no intermediary, no delay</div>
+        </div>
+        <div class="contrast-row">
+          <div class="contrast-cell old">Vouchers expire, can't be combined, locked to one issuer</div>
+          <div class="contrast-cell new">Composable vouchers — stack, transfer, program, and redeem across the fabric</div>
+        </div>
+        <div class="contrast-row">
+          <div class="contrast-cell old">Value transfer relies on banks, clearinghouses, and reconciliation</div>
+          <div class="contrast-cell new">Settlement triggered by smart contract execution — instant, transparent, and final</div>
+        </div>
+      </div>
+
+      <p class="contrast-tagline reveal reveal-delay-4">
+        This isn't a better horse. <em>It's the automobile.</em>
+      </p>
     </div>
   </section>
 
@@ -1257,9 +1391,9 @@
     <div class="container">
       <div class="pillars-header">
         <div class="section-label reveal">The pillars</div>
-        <h2 class="section-title reveal reveal-delay-1">Built on six foundations</h2>
+        <h2 class="section-title reveal reveal-delay-1">Built on nine primitives</h2>
         <p class="section-sub reveal reveal-delay-2">
-          Each pillar is a primitive. Together, they make NFH Fabric the richest open network infrastructure ever built.
+          Each primitive stands alone. Together, they compose into financial products, trust systems, and agentic workflows that didn't exist before.
         </p>
       </div>
 
@@ -1276,13 +1410,13 @@
         </div>
         <div class="pillar-card reveal reveal-delay-2">
           <div class="pillar-icon">📜</div>
-          <div class="pillar-title">Programmable Contracts</div>
-          <p class="pillar-desc">Terms encoded as logic. Agreements executed without interpretation or delay.</p>
+          <div class="pillar-title">Smart Contracts</div>
+          <p class="pillar-desc">Conditions trigger execution automatically — payments release, vouchers issue, reputation updates — no intermediary, no delay.</p>
         </div>
         <div class="pillar-card reveal reveal-delay-3">
           <div class="pillar-icon">🪙</div>
           <div class="pillar-title">Tokenization</div>
-          <p class="pillar-desc">Any asset — produce, service, energy, credential — becomes a tradeable token on the fabric.</p>
+          <p class="pillar-desc">Any asset — produce, service, energy, invoice, or credential — becomes a programmable token on the fabric.</p>
         </div>
         <div class="pillar-card reveal reveal-delay-4">
           <div class="pillar-icon">⭐</div>
@@ -1293,6 +1427,21 @@
           <div class="pillar-icon">⚡</div>
           <div class="pillar-title">Automated Settlement</div>
           <p class="pillar-desc">Value transfer triggered by contract execution — instant, transparent, final.</p>
+        </div>
+        <div class="pillar-card reveal reveal-delay-1">
+          <div class="pillar-icon">🪪</div>
+          <div class="pillar-title">Tokenized Identity</div>
+          <p class="pillar-desc">KYC as a portable token. Verifiable Credentials recognised across every network — verify once, trusted everywhere.</p>
+        </div>
+        <div class="pillar-card reveal reveal-delay-2">
+          <div class="pillar-icon">🎟️</div>
+          <div class="pillar-title">Vouchers &amp; Loyalty</div>
+          <p class="pillar-desc">Tokenized vouchers and cross-network loyalty — composable, transferable, and programmable. Earn on one network, redeem on any other.</p>
+        </div>
+        <div class="pillar-card reveal reveal-delay-3">
+          <div class="pillar-icon">🔗</div>
+          <div class="pillar-title">Composability</div>
+          <p class="pillar-desc">Primitives combine. Stack a VC with a smart contract and a voucher to create financial products that didn't exist before fabric.</p>
         </div>
       </div>
     </div>
