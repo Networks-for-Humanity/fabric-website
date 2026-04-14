@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFH Fabric — The Agentic Rails</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #f8f5f0;
+      --bg-card:    #ffffff;
+      --bg-card-h:  #fffdfb;
+      --border:     rgba(0,0,0,0.08);
+      --border-h:   rgba(139,58,42,0.3);
+      --text-1:     #100e0b;
+      --text-2:     #5a4f48;
+      --text-3:     #a0948c;
+      --accent-1:   #8b3a2a;
+      --accent-2:   #6d2c1e;
+      --accent-3:   #c8623e;
+      --accent-lt:  #f2e8e4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── Subtle warm mesh background ─────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 60% at 10% 15%, rgba(139,58,42,0.05) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 50% at 90% 80%, rgba(200,98,62,0.04) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at 50% 50%, rgba(248,240,232,0.6) 0%, transparent 80%);
+    }
+
+    /* ── Layout ───────────────────────────────────────────────── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section { padding: 7rem 0; }
+
+    /* ── Nav ──────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.1rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(248,245,240,0.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text-1);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-logo .logo-fabric {
+      color: var(--accent-1);
+    }
+
+    .nav-logo .logo-domain {
+      color: var(--text-1);
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.25rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text-1); }
+
+    .nav-cta {
+      background: var(--text-1) !important;
+      color: var(--bg) !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 500 !important;
+      font-size: 0.85rem !important;
+    }
+
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── Hero ─────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 4rem;
+      padding-top: 5rem;
+    }
+
+    .hero-left { position: relative; z-index: 1; }
+
+    .hero-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-1);
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-label::before {
+      content: '—';
+      color: var(--accent-1);
+    }
+
+    .hero-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(2.8rem, 4.5vw, 4.4rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      color: var(--text-1);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent-1);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-2);
+      max-width: 500px;
+      margin-bottom: 2.5rem;
+      line-height: 1.75;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--accent-1);
+      color: #fff;
+      padding: 0.8rem 1.7rem;
+      border-radius: 7px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-2);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: transparent;
+      color: var(--text-1);
+      padding: 0.8rem 1.4rem;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      font-weight: 400;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.02);
+    }
+
+    .hero-attribution {
+      margin-top: 2.5rem;
+      font-size: 0.78rem;
+      color: var(--text-3);
+    }
+
+    /* ── Hero Network Illustration ────────────────────────────── */
+    .hero-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .network-wrap {
+      position: relative;
+      width: 520px;
+      height: 460px;
+    }
+
+    .network-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Node styles */
+    .node-circle {
+      transition: r 0.3s;
+    }
+
+    .node-hub {
+      animation: hub-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes hub-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    .node-outer {
+      animation: node-float 4s ease-in-out infinite;
+    }
+
+    .node-outer:nth-child(odd) { animation-delay: -2s; }
+
+    @keyframes node-float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* Flow dots along paths */
+    .flow-dot {
+      r: 3;
+      fill: var(--accent-1);
+      opacity: 0.7;
+    }
+
+    /* ── Section shared ───────────────────────────────────────── */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-1);
+      margin-bottom: 1.1rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 20px; height: 1px;
+      background: var(--accent-1);
+    }
+
+    .section-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(2rem, 3.2vw, 2.8rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.18;
+      margin-bottom: 1rem;
+      color: var(--text-1);
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--accent-1);
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--text-2);
+      max-width: 580px;
+      line-height: 1.75;
+    }
+
+    /* ── Dividers ─────────────────────────────────────────────── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── What is Fabric ───────────────────────────────────────── */
+    #what { padding: 7rem 0; }
+
+    .what-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 6rem;
+      align-items: start;
+      margin-top: 3.5rem;
+    }
+
+    .what-points {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .what-point {
+      display: flex;
+      gap: 1.1rem;
+      align-items: flex-start;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .what-point:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .what-point-icon {
+      flex-shrink: 0;
+      width: 38px; height: 38px;
+      border-radius: 9px;
+      background: var(--accent-lt);
+      border: 1px solid rgba(139,58,42,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .what-point-text h4 {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-1);
+    }
+
+    .what-point-text p {
+      font-size: 0.88rem;
+      color: var(--text-2);
+      line-height: 1.68;
+    }
+
+    /* What — stat box */
+    .what-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .stat-card-text { flex: 1; }
+
+    .stat-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 0.45rem;
+      margin-bottom: 0.55rem;
+      line-height: 1;
+    }
+
+    .stat-num {
+      font-family: 'Lora', serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: var(--accent-1);
+      line-height: 1;
+    }
+
+    .stat-word {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+      font-style: italic;
+      color: #a07030;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .stat-illus {
+      flex-shrink: 0;
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    /* ── Use Cases ────────────────────────────────────────────── */
+    #usecases { padding: 7rem 0; }
+
+    .usecases-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .usecases-header .section-sub { margin: 0 auto; }
+
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .case-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+      cursor: default;
+    }
+
+    .case-card:hover {
+      border-color: rgba(139,58,42,0.2);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+    }
+
+    .case-card.featured {
+      grid-column: span 2;
+      background: linear-gradient(135deg, #fff9f7, #fff5f2);
+      border-color: rgba(139,58,42,0.15);
+    }
+
+    .case-emoji { font-size: 1.8rem; margin-bottom: 0.9rem; }
+
+    .case-title {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-1);
+    }
+
+    .case-desc {
+      font-size: 0.86rem;
+      color: var(--text-2);
+      line-height: 1.68;
+    }
+
+    .case-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--accent-1);
+      background: var(--accent-lt);
+      padding: 0.22rem 0.7rem;
+      border-radius: 100px;
+    }
+
+    /* ── How it Works ─────────────────────────────────────────── */
+    #how { padding: 7rem 0; }
+
+    .how-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 6rem;
+      align-items: start;
+      margin-top: 3.5rem;
+    }
+
+    .how-steps { display: flex; flex-direction: column; }
+
+    .how-step {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .how-step:first-child { padding-top: 0; }
+    .how-step:last-child { border-bottom: none; }
+
+    .step-num {
+      flex-shrink: 0;
+      font-family: 'Lora', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-1);
+      letter-spacing: 0.04em;
+      padding-top: 0.25rem;
+    }
+
+    .step-content h4 {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-1);
+    }
+
+    .step-content p {
+      font-size: 0.87rem;
+      color: var(--text-2);
+      line-height: 1.68;
+    }
+
+    /* Agent stack */
+    .agent-stack { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .stack-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: border-color 0.25s;
+    }
+
+    .stack-card:hover { border-color: rgba(139,58,42,0.2); }
+
+    .stack-card.highlight {
+      background: linear-gradient(135deg, #fff9f7, #fff5f2);
+      border-color: rgba(139,58,42,0.25);
+      box-shadow: 0 4px 20px rgba(139,58,42,0.08);
+    }
+
+    .stack-icon {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: var(--accent-lt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .stack-card.highlight .stack-icon {
+      background: var(--accent-1);
+    }
+
+    .stack-label {
+      font-family: 'Lora', serif;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-1);
+    }
+
+    .stack-desc {
+      font-size: 0.78rem;
+      color: var(--text-2);
+      margin-top: 0.1rem;
+    }
+
+    .stack-connector {
+      text-align: center;
+      color: var(--text-3);
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .stack-unlocks {
+      margin-top: 0.5rem;
+      padding: 1.1rem 1.35rem;
+      background: var(--accent-lt);
+      border: 1px solid rgba(139,58,42,0.12);
+      border-radius: 12px;
+    }
+
+    .stack-unlocks-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-1);
+      margin-bottom: 0.45rem;
+    }
+
+    .stack-unlocks-items {
+      font-size: 0.82rem;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+
+    /* ── Pillars ──────────────────────────────────────────────── */
+    #pillars { padding: 7rem 0; }
+
+    .pillars-header { text-align: center; margin-bottom: 4rem; }
+    .pillars-header .section-sub { margin: 0 auto; }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+
+    .pillar-card:hover {
+      border-color: rgba(139,58,42,0.2);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.07);
+      transform: translateY(-2px);
+    }
+
+    .pillar-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+
+    .pillar-title {
+      font-family: 'Lora', serif;
+      font-size: 0.98rem;
+      font-weight: 500;
+      margin-bottom: 0.45rem;
+      color: var(--text-1);
+    }
+
+    .pillar-desc {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      line-height: 1.65;
+    }
+
+    /* ── CTA ──────────────────────────────────────────────────── */
+    #cta {
+      padding: 9rem 0;
+      text-align: center;
+    }
+
+    .cta-question {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.12;
+      margin-bottom: 1.25rem;
+      color: var(--text-1);
+    }
+
+    .cta-question em {
+      font-style: italic;
+      color: var(--accent-1);
+    }
+
+    .cta-sub {
+      font-size: 1.05rem;
+      color: var(--text-2);
+      max-width: 480px;
+      margin: 0 auto 2.75rem;
+      line-height: 1.75;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 0.9rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-brand {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+
+    .footer-brand span { color: var(--accent-1); }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-3);
+      text-decoration: none;
+      font-size: 0.83rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text-2); }
+
+    .footer-copy { font-size: 0.8rem; color: var(--text-3); }
+
+    /* ── Scroll Reveal ────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      #hero { grid-template-columns: 1fr; min-height: auto; padding: 8rem 0 4rem; }
+      .hero-right { display: none; }
+      .what-grid, .how-inner { grid-template-columns: 1fr; gap: 3.5rem; }
+      .cases-grid { grid-template-columns: 1fr; }
+      .case-card.featured { grid-column: span 1; }
+      .pillars-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links li:not(:last-child) { display: none; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ───────────────────────────────────────────────────── -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <span class="logo-fabric">fabric.</span><span class="logo-domain">nfh.global</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#what">What is Fabric</a></li>
+      <li><a href="#usecases">Use Cases</a></li>
+      <li><a href="#how">How it Works</a></li>
+      <li><a href="#pillars">Pillars</a></li>
+      <li><a href="#cta" class="nav-cta">Get Started →</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ──────────────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="container" style="display:contents;">
+
+      <div class="hero-left" style="position:relative; z-index:1; padding: 0 2rem 0 max(2rem, calc((100vw - 1140px)/2 + 2rem));">
+        <div class="hero-label reveal">Agentic Rails for Open Networks</div>
+        <h1 class="hero-title reveal reveal-delay-1">
+          The network that<br/>makes agents<br/><em>do more.</em>
+        </h1>
+        <p class="hero-sub reveal reveal-delay-2">
+          NFH Fabric is the orchestration layer that elevates AI agents beyond their own limits —
+          enabling automated settlement, reputation, discovery, and trust across every open network.
+        </p>
+        <div class="hero-actions reveal reveal-delay-3">
+          <a href="#usecases" class="btn-primary">See it in action →</a>
+          <a href="#how" class="btn-secondary">How it works</a>
+        </div>
+        <p class="hero-attribution reveal reveal-delay-4">
+          A <em>Networks for Humanity</em> initiative.
+        </p>
+      </div>
+
+      <!-- Animated Network Illustration -->
+      <div class="hero-right">
+        <div class="network-wrap">
+          <svg class="network-svg" viewBox="0 0 520 460" fill="none" xmlns="http://www.w3.org/2000/svg" id="net-svg">
+
+            <!-- ── Connection lines ──────────────────────────── -->
+            <!-- Hub to each node -->
+            <path id="p1" d="M260,230 L130,110" stroke="#c8623e" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
+            <path id="p2" d="M260,230 L390,115" stroke="#8b3a2a" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
+            <path id="p3" d="M260,230 L440,240" stroke="#c8623e" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
+            <path id="p4" d="M260,230 L390,355" stroke="#8b3a2a" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
+            <path id="p5" d="M260,230 L130,355" stroke="#c8623e" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
+            <path id="p6" d="M260,230 L80,240"  stroke="#8b3a2a" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
+            <!-- Cross connections -->
+            <path d="M130,110 L390,115" stroke="#c8623e" stroke-width="0.6" opacity="0.12"/>
+            <path d="M390,115 L440,240" stroke="#8b3a2a" stroke-width="0.6" opacity="0.12"/>
+            <path d="M440,240 L390,355" stroke="#c8623e" stroke-width="0.6" opacity="0.12"/>
+            <path d="M390,355 L130,355" stroke="#8b3a2a" stroke-width="0.6" opacity="0.12"/>
+            <path d="M130,355 L80,240"  stroke="#c8623e" stroke-width="0.6" opacity="0.12"/>
+            <path d="M80,240  L130,110" stroke="#8b3a2a" stroke-width="0.6" opacity="0.12"/>
+
+            <!-- ── Hub node (NFH Fabric) ─────────────────────── -->
+            <circle cx="260" cy="230" r="42" fill="#fff9f7" stroke="#8b3a2a" stroke-width="1.5" opacity="0.9" class="node-hub"/>
+            <circle cx="260" cy="230" r="48" fill="none" stroke="#c8623e" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.25" class="node-hub"/>
+            <text x="260" y="225" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" fill="#8b3a2a">🕸</text>
+            <text x="260" y="242" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" font-weight="600" fill="#8b3a2a" letter-spacing="0.08em">NFH FABRIC</text>
+
+            <!-- ── Outer nodes ──────────────────────────────── -->
+            <!-- Node 1: AI Agent (top-left) -->
+            <g class="node-outer" style="transform-origin:130px 110px">
+              <circle cx="130" cy="110" r="32" fill="#ffffff" stroke="#c8623e" stroke-width="1.2" opacity="0.85"/>
+              <text x="130" y="105" text-anchor="middle" font-family="Inter,sans-serif" font-size="16">🤖</text>
+              <text x="130" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">AI AGENT</text>
+            </g>
+
+            <!-- Node 2: Network Node (top-right) -->
+            <g class="node-outer" style="transform-origin:390px 115px; animation-delay:-0.8s">
+              <circle cx="390" cy="115" r="30" fill="#ffffff" stroke="#8b3a2a" stroke-width="1.2" opacity="0.85"/>
+              <text x="390" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">🌐</text>
+              <text x="390" y="125" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">NETWORK</text>
+            </g>
+
+            <!-- Node 3: Marketplace (right) -->
+            <g class="node-outer" style="transform-origin:440px 240px; animation-delay:-1.6s">
+              <circle cx="440" cy="240" r="30" fill="#ffffff" stroke="#c8623e" stroke-width="1.2" opacity="0.85"/>
+              <text x="440" y="235" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">🏪</text>
+              <text x="440" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">MARKET</text>
+            </g>
+
+            <!-- Node 4: Settlement (bottom-right) -->
+            <g class="node-outer" style="transform-origin:390px 355px; animation-delay:-2.4s">
+              <circle cx="390" cy="355" r="30" fill="#ffffff" stroke="#8b3a2a" stroke-width="1.2" opacity="0.85"/>
+              <text x="390" y="350" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">💰</text>
+              <text x="390" y="365" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">SETTLEMENT</text>
+            </g>
+
+            <!-- Node 5: Trust / Identity (bottom-left) -->
+            <g class="node-outer" style="transform-origin:130px 355px; animation-delay:-3.2s">
+              <circle cx="130" cy="355" r="30" fill="#ffffff" stroke="#c8623e" stroke-width="1.2" opacity="0.85"/>
+              <text x="130" y="350" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">⭐</text>
+              <text x="130" y="365" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">REPUTATION</text>
+            </g>
+
+            <!-- Node 6: Participant (left) -->
+            <g class="node-outer" style="transform-origin:80px 240px; animation-delay:-4s">
+              <circle cx="80" cy="240" r="30" fill="#ffffff" stroke="#8b3a2a" stroke-width="1.2" opacity="0.85"/>
+              <text x="80" y="235" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">👤</text>
+              <text x="80" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">PARTICIPANT</text>
+            </g>
+
+            <!-- ── Animated flow dots ─────────────────────────── -->
+            <circle r="3.5" fill="#8b3a2a" opacity="0.75">
+              <animateMotion dur="2.8s" repeatCount="indefinite" begin="0s">
+                <mpath href="#p1"/>
+              </animateMotion>
+            </circle>
+            <circle r="3.5" fill="#c8623e" opacity="0.75">
+              <animateMotion dur="2.8s" repeatCount="indefinite" begin="0s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
+                <mpath href="#p2"/>
+              </animateMotion>
+            </circle>
+            <circle r="3.5" fill="#8b3a2a" opacity="0.75">
+              <animateMotion dur="3.2s" repeatCount="indefinite" begin="-1s">
+                <mpath href="#p3"/>
+              </animateMotion>
+            </circle>
+            <circle r="3.5" fill="#c8623e" opacity="0.75">
+              <animateMotion dur="3.2s" repeatCount="indefinite" begin="-1s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
+                <mpath href="#p4"/>
+              </animateMotion>
+            </circle>
+            <circle r="3.5" fill="#8b3a2a" opacity="0.75">
+              <animateMotion dur="2.5s" repeatCount="indefinite" begin="-0.5s">
+                <mpath href="#p5"/>
+              </animateMotion>
+            </circle>
+            <circle r="3.5" fill="#c8623e" opacity="0.75">
+              <animateMotion dur="2.5s" repeatCount="indefinite" begin="-0.5s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
+                <mpath href="#p6"/>
+              </animateMotion>
+            </circle>
+
+            <!-- Second wave of dots (offset timing) -->
+            <circle r="2.5" fill="#8b3a2a" opacity="0.45">
+              <animateMotion dur="2.8s" repeatCount="indefinite" begin="-1.4s">
+                <mpath href="#p1"/>
+              </animateMotion>
+            </circle>
+            <circle r="2.5" fill="#c8623e" opacity="0.45">
+              <animateMotion dur="2.8s" repeatCount="indefinite" begin="-1.4s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
+                <mpath href="#p2"/>
+              </animateMotion>
+            </circle>
+            <circle r="2.5" fill="#8b3a2a" opacity="0.45">
+              <animateMotion dur="3.2s" repeatCount="indefinite" begin="-2.1s">
+                <mpath href="#p3"/>
+              </animateMotion>
+            </circle>
+            <circle r="2.5" fill="#c8623e" opacity="0.45">
+              <animateMotion dur="3.2s" repeatCount="indefinite" begin="-2.1s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
+                <mpath href="#p4"/>
+              </animateMotion>
+            </circle>
+            <circle r="2.5" fill="#8b3a2a" opacity="0.45">
+              <animateMotion dur="2.5s" repeatCount="indefinite" begin="-1.75s">
+                <mpath href="#p5"/>
+              </animateMotion>
+            </circle>
+            <circle r="2.5" fill="#c8623e" opacity="0.45">
+              <animateMotion dur="2.5s" repeatCount="indefinite" begin="-1.75s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
+                <mpath href="#p6"/>
+              </animateMotion>
+            </circle>
+
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ── What is Fabric ─────────────────────────────────────────── -->
+  <section id="what">
+    <div class="container">
+      <div class="section-label reveal">What is NFH Fabric</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Agents are smart.<br/>Fabric makes them <em>powerful.</em>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        An AI agent on its own can reason and respond. Connected to NFH Fabric, it can transact, earn trust, discover opportunities, and operate across open networks — automatically.
+      </p>
+
+      <div class="what-grid">
+        <div class="what-points">
+          <div class="what-point reveal">
+            <div class="what-point-icon">🔍</div>
+            <div class="what-point-text">
+              <h4>Discoverability</h4>
+              <p>Any agent can find any other agent on the network — across geographies, verticals, and platforms.</p>
+            </div>
+          </div>
+          <div class="what-point reveal reveal-delay-1">
+            <div class="what-point-icon">📋</div>
+            <div class="what-point-text">
+              <h4>Programmable Catalogs &amp; Contracts</h4>
+              <p>Programmable contracts define terms before an exchange completes — automatically and transparently.</p>
+            </div>
+          </div>
+          <div class="what-point reveal reveal-delay-2">
+            <div class="what-point-icon">🪙</div>
+            <div class="what-point-text">
+              <h4>Tokenization &amp; Settlement</h4>
+              <p>Every exchange of value settles automatically on the fabric. Instant, verifiable, final.</p>
+            </div>
+          </div>
+          <div class="what-point reveal reveal-delay-3">
+            <div class="what-point-icon">⭐</div>
+            <div class="what-point-text">
+              <h4>Reputation &amp; Trust</h4>
+              <p>Every interaction on the fabric builds reputation — verifiable, portable, and permanent.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="what-stats">
+
+          <!-- Any sector -->
+          <div class="stat-card reveal reveal-delay-1">
+            <div class="stat-card-text">
+              <div class="stat-heading">
+                <span class="stat-num">Any</span>
+                <span class="stat-word">sector.</span>
+              </div>
+              <div class="stat-label">NFH Fabric is sector-agnostic infrastructure — the rails work the same whether you're moving food, money, energy, or credentials.</div>
+            </div>
+            <div class="stat-illus">
+              <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 2×2 sector tiles -->
+                <rect x="4"  y="4"  width="28" height="28" rx="7" fill="#f5ede4" stroke="#d4a882" stroke-width="1"/>
+                <rect x="40" y="4"  width="28" height="28" rx="7" fill="#f5ede4" stroke="#d4a882" stroke-width="1"/>
+                <rect x="4"  y="40" width="28" height="28" rx="7" fill="#f5ede4" stroke="#d4a882" stroke-width="1"/>
+                <rect x="40" y="40" width="28" height="28" rx="7" fill="#f5ede4" stroke="#d4a882" stroke-width="1"/>
+                <!-- icons -->
+                <text x="18" y="25" text-anchor="middle" font-size="14">🌾</text>
+                <text x="54" y="25" text-anchor="middle" font-size="14">⚡</text>
+                <text x="18" y="61" text-anchor="middle" font-size="14">💰</text>
+                <text x="54" y="61" text-anchor="middle" font-size="14">🎓</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Open standards -->
+          <div class="stat-card reveal reveal-delay-2">
+            <div class="stat-card-text">
+              <div class="stat-heading">
+                <span class="stat-num">Open</span>
+                <span class="stat-word">standards.</span>
+              </div>
+              <div class="stat-label">Built on Beckn V2 — interoperable by design, not by permission.</div>
+            </div>
+            <div class="stat-illus">
+              <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Three interconnected nodes -->
+                <line x1="36" y1="14" x2="14" y2="52" stroke="#d4a882" stroke-width="1.2"/>
+                <line x1="36" y1="14" x2="58" y2="52" stroke="#d4a882" stroke-width="1.2"/>
+                <line x1="14" y1="52" x2="58" y2="52" stroke="#d4a882" stroke-width="1.2"/>
+                <!-- Centre connector lines to mid-points -->
+                <line x1="36" y1="14" x2="36" y2="52" stroke="#d4a882" stroke-width="0.7" stroke-dasharray="3,3" opacity="0.5"/>
+                <!-- Nodes -->
+                <circle cx="36" cy="14" r="9"  fill="#fff9f5" stroke="#a07030" stroke-width="1.5"/>
+                <circle cx="14" cy="52" r="9"  fill="#fff9f5" stroke="#a07030" stroke-width="1.5"/>
+                <circle cx="58" cy="52" r="9"  fill="#fff9f5" stroke="#a07030" stroke-width="1.5"/>
+                <!-- Node icons -->
+                <text x="36" y="19" text-anchor="middle" font-size="10">🔗</text>
+                <text x="14" y="57" text-anchor="middle" font-size="10">🌐</text>
+                <text x="58" y="57" text-anchor="middle" font-size="10">🤖</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Always on -->
+          <div class="stat-card reveal reveal-delay-3">
+            <div class="stat-card-text">
+              <div class="stat-heading">
+                <span class="stat-num">Always</span>
+                <span class="stat-word">on.</span>
+              </div>
+              <div class="stat-label">Agents transact 24/7 on the fabric, settling value and building trust while you sleep.</div>
+            </div>
+            <div class="stat-illus">
+              <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer pulse rings -->
+                <circle cx="36" cy="36" r="32" stroke="#d4a882" stroke-width="0.8" opacity="0.3"/>
+                <circle cx="36" cy="36" r="24" stroke="#a07030" stroke-width="0.9" opacity="0.4"/>
+                <!-- Clock face -->
+                <circle cx="36" cy="36" r="16" fill="#fff9f5" stroke="#a07030" stroke-width="1.5"/>
+                <!-- Hour marks -->
+                <line x1="36" y1="22" x2="36" y2="25" stroke="#c8623e" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="36" y1="47" x2="36" y2="50" stroke="#d4a882" stroke-width="1" stroke-linecap="round"/>
+                <line x1="22" y1="36" x2="25" y2="36" stroke="#d4a882" stroke-width="1" stroke-linecap="round"/>
+                <line x1="47" y1="36" x2="50" y2="36" stroke="#d4a882" stroke-width="1" stroke-linecap="round"/>
+                <!-- Clock hands -->
+                <line x1="36" y1="36" x2="36" y2="26" stroke="#8b3a2a" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="36" y1="36" x2="43" y2="36" stroke="#8b3a2a" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="36" cy="36" r="2" fill="#8b3a2a"/>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ── Use Cases ──────────────────────────────────────────────── -->
+  <section id="usecases">
+    <div class="container">
+      <div class="usecases-header">
+        <div class="section-label reveal">Real-world value</div>
+        <h2 class="section-title reveal reveal-delay-1">Fabric in the real world</h2>
+        <p class="section-sub reveal reveal-delay-2">
+          The richness of fabric shows up differently for every participant — but the outcome is always the same:<br/><em style="font-family:'Lora',serif; font-style:italic; color:var(--accent-1); font-size:1.25rem; font-weight:400; letter-spacing:-0.01em;">more value, less friction.</em>
+        </p>
+      </div>
+
+      <div class="cases-grid">
+        <div class="case-card featured reveal">
+          <div class="case-emoji">🍽️</div>
+          <div class="case-title">The Restaurant</div>
+          <p class="case-desc">
+            A restaurant's agent on fabric can discover the freshest local produce, negotiate prices, receive verified delivery, and settle payment — all before the chef arrives in the morning. Reputation builds with every sourcing decision, unlocking better rates from trusted suppliers over time.
+          </p>
+          <span class="case-tag">Automated sourcing &amp; settlement</span>
+        </div>
+
+        <div class="case-card reveal reveal-delay-1">
+          <div class="case-emoji">🌾</div>
+          <div class="case-title">The Farmer</div>
+          <p class="case-desc">
+            A smallholder farmer's produce is tokenized on fabric — discoverable by agents globally, with programmable contracts ensuring fair price and guaranteed payment on delivery.
+          </p>
+          <span class="case-tag">Direct market access</span>
+        </div>
+
+        <div class="case-card reveal reveal-delay-2">
+          <div class="case-emoji">🚗</div>
+          <div class="case-title">The Driver</div>
+          <p class="case-desc">
+            A driver's reliability score, built across every completed trip on the fabric, unlocks better insurance rates, priority dispatch, and access to premium routes — automatically.
+          </p>
+          <span class="case-tag">Portable reputation</span>
+        </div>
+
+        <div class="case-card reveal reveal-delay-3">
+          <div class="case-emoji">🎓</div>
+          <div class="case-title">The Student</div>
+          <p class="case-desc">
+            A scholarship-seeking student's verified academic record, credentials, and community contributions are discoverable by institutions — no intermediaries, no document friction.
+          </p>
+          <span class="case-tag">Verifiable credentials</span>
+        </div>
+
+        <div class="case-card reveal reveal-delay-4">
+          <div class="case-emoji">⚡</div>
+          <div class="case-title">The Energy Grid</div>
+          <p class="case-desc">
+            Solar panels on a rooftop become tokenized energy assets. An agent sells excess power to neighbours, settles in real time, and optimises output — all on the fabric.
+          </p>
+          <span class="case-tag">Real-time energy trading</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ── How it Works ───────────────────────────────────────────── -->
+  <section id="how">
+    <div class="container">
+      <div class="section-label reveal">The architecture</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Fabric as the<br/>agent orchestration layer
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        Agents connect to fabric and gain superpowers. The fabric handles what agents can't do alone.
+      </p>
+
+      <div class="how-inner">
+        <div class="how-steps">
+          <div class="how-step reveal">
+            <div class="step-num">01</div>
+            <div class="step-content">
+              <h4>Participants join the fabric</h4>
+              <p>Any participant — a person, a business, a device, a service — can join the fabric using open, interoperable standards.</p>
+            </div>
+          </div>
+          <div class="how-step reveal reveal-delay-1">
+            <div class="step-num">02</div>
+            <div class="step-content">
+              <h4>Discovery happens instantly</h4>
+              <p>Agents find other agents across the entire fabric — filtered by location, reputation, capability, and real-time availability.</p>
+            </div>
+          </div>
+          <div class="how-step reveal reveal-delay-2">
+            <div class="step-num">03</div>
+            <div class="step-content">
+              <h4>Contracts negotiate themselves</h4>
+              <p>Programmable contracts encode the terms. Agents negotiate, agree, and commit — without a human in the loop.</p>
+            </div>
+          </div>
+          <div class="how-step reveal reveal-delay-3">
+            <div class="step-num">04</div>
+            <div class="step-content">
+              <h4>Value settles automatically</h4>
+              <p>Value exchange and reputation updates happen on-fabric. Every interaction raises or refines the participant's trust score.</p>
+            </div>
+          </div>
+          <div class="how-step reveal reveal-delay-4">
+            <div class="step-num">05</div>
+            <div class="step-content">
+              <h4>Reputation compounds</h4>
+              <p>Each interaction leaves a verified footprint. Participants unlock better access, priority, and deeper network effects over time.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="agent-stack reveal reveal-delay-2">
+          <div class="stack-card">
+            <div class="stack-icon">🤖</div>
+            <div>
+              <div class="stack-label">Requesting Agent</div>
+              <div class="stack-desc">Discovers, negotiates, commits</div>
+            </div>
+          </div>
+          <div class="stack-connector">↕</div>
+          <div class="stack-card highlight">
+            <div class="stack-icon">🕸</div>
+            <div>
+              <div class="stack-label">NFH Fabric Layer</div>
+              <div class="stack-desc">Discoverability · Contracts · Settlement · Trust</div>
+            </div>
+          </div>
+          <div class="stack-connector">↕</div>
+          <div class="stack-card">
+            <div class="stack-icon">🤖</div>
+            <div>
+              <div class="stack-label">Responding Agent</div>
+              <div class="stack-desc">Publishes, fulfils, earns reputation</div>
+            </div>
+          </div>
+          <div class="stack-unlocks">
+            <div class="stack-unlocks-label">Fabric unlocks</div>
+            <div class="stack-unlocks-items">
+              Multi-agent orchestration &nbsp;·&nbsp; Adaptive fulfilment &nbsp;·&nbsp;
+              Cross-network interop &nbsp;·&nbsp; Automated trust verification
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ── Pillars ────────────────────────────────────────────────── -->
+  <section id="pillars">
+    <div class="container">
+      <div class="pillars-header">
+        <div class="section-label reveal">The pillars</div>
+        <h2 class="section-title reveal reveal-delay-1">Built on six foundations</h2>
+        <p class="section-sub reveal reveal-delay-2">
+          Each pillar is a primitive. Together, they make NFH Fabric the richest open network infrastructure ever built.
+        </p>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card reveal">
+          <div class="pillar-icon">🔍</div>
+          <div class="pillar-title">Discoverability</div>
+          <p class="pillar-desc">Open catalogs that any agent can query — without gatekeepers, without lock-in.</p>
+        </div>
+        <div class="pillar-card reveal reveal-delay-1">
+          <div class="pillar-icon">📋</div>
+          <div class="pillar-title">Programmable Catalogs</div>
+          <p class="pillar-desc">Dynamic, structured listings that agents can read, filter, and act on autonomously.</p>
+        </div>
+        <div class="pillar-card reveal reveal-delay-2">
+          <div class="pillar-icon">📜</div>
+          <div class="pillar-title">Programmable Contracts</div>
+          <p class="pillar-desc">Terms encoded as logic. Agreements executed without interpretation or delay.</p>
+        </div>
+        <div class="pillar-card reveal reveal-delay-3">
+          <div class="pillar-icon">🪙</div>
+          <div class="pillar-title">Tokenization</div>
+          <p class="pillar-desc">Any asset — produce, service, energy, credential — becomes a tradeable token on the fabric.</p>
+        </div>
+        <div class="pillar-card reveal reveal-delay-4">
+          <div class="pillar-icon">⭐</div>
+          <div class="pillar-title">Vouch &amp; Trust</div>
+          <p class="pillar-desc">A verifiable reputation layer that compounds with every honest interaction on the network.</p>
+        </div>
+        <div class="pillar-card reveal reveal-delay-5">
+          <div class="pillar-icon">⚡</div>
+          <div class="pillar-title">Automated Settlement</div>
+          <p class="pillar-desc">Value transfer triggered by contract execution — instant, transparent, final.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ── CTA ───────────────────────────────────────────────────── -->
+  <section id="cta">
+    <div class="container">
+      <p class="cta-question reveal">How <em>agentic</em> are you?</p>
+      <p class="cta-sub reveal reveal-delay-1">
+        The fabric is open. The rails are ready.
+      </p>
+      <div class="cta-actions reveal reveal-delay-2">
+        <a href="#" class="btn-primary">Start Building →</a>
+        <a href="#" class="btn-secondary">Read the Docs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand"><span>fabric.</span>nfh.global</div>
+        <ul class="footer-links">
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Network</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <div class="footer-copy">© 2026 Networks for Humanity. Built on open rails.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── Scroll Reveal ─────────────────────────────────────────── -->
+  <script>
+    (function () {
+      const els = document.querySelectorAll('.reveal');
+      const obs = new IntersectionObserver(
+        entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+        { threshold: 0.1 }
+      );
+      els.forEach(el => obs.observe(el));
+    })();
+  </script>
+</body>
+</html>
