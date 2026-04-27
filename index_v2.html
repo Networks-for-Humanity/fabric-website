@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NFH fabric — The network for everything of value.</title>
+<title>NFH fabric — Infrastructure for value exchange</title>
+<meta name="description" content="NFH fabric is open infrastructure to discover, buy, own, exchange, and publish any kind of value. Built by Networks for Humanity. Open source." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&family=Arvo:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <style>
@@ -14,15 +15,15 @@
     --ink:#0A1224;
     --ink-2:#060B18;
     --paper:#F5F2EC;
-    --paper-dim:rgba(245,242,236,.64);
-    --paper-faint:rgba(245,242,236,.4);
-    --paper-ghost:rgba(245,242,236,.16);
+    --paper-dim:rgba(245,242,236,.66);
+    --paper-faint:rgba(245,242,236,.44);
+    --paper-ghost:rgba(245,242,236,.18);
     --brass:#C8934F;
     --brass-dim:rgba(200,147,79,.55);
     --cta:#E05A2B;
     --cta-hover:#EC6B3D;
     --rule:rgba(245,242,236,.1);
-    --rule-strong:rgba(245,242,236,.2);
+    --rule-strong:rgba(245,242,236,.22);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--ink);color:var(--paper);}
@@ -35,6 +36,9 @@
   .page{max-width:1360px; margin:0 auto; padding:0 72px;}
   @media (max-width:1100px){ .page{padding:0 48px} }
   @media (max-width:900px){ .page{padding:0 24px} }
+
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:2px;}
 
   /* -------- top bar -------- */
   .topbar{
@@ -50,10 +54,7 @@
     font-family:'EB Garamond',serif;
     font-size:30px; font-weight:500; color:var(--paper);
     letter-spacing:-0.015em;
-  }
-  .wordmark small{
-    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em;
-    color:var(--paper-faint); text-transform:uppercase; margin-left:8px;
+    white-space:nowrap;
   }
   .topnav{
     display:flex; gap:30px; align-items:center;
@@ -64,361 +65,247 @@
   .topnav a:hover{color:var(--paper);}
   .topnav .spec{color:var(--brass)}
   .topnav .spec:hover{color:var(--cta)}
-  @media (max-width:760px){ .topnav{display:none} }
+  .nav-toggle{
+    display:none;
+    background:none; border:1px solid var(--rule-strong); color:var(--paper);
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.14em;
+    text-transform:uppercase; padding:8px 14px; cursor:pointer;
+  }
+  @media (max-width:760px){
+    .topnav{
+      position:fixed; inset:0 0 auto 0; top:84px;
+      flex-direction:column; align-items:flex-start; gap:0;
+      background:var(--ink-2); padding:24px;
+      border-bottom:1px solid var(--rule-strong);
+      transform:translateY(-110%); transition:transform .25s ease;
+      z-index:30;
+    }
+    .topnav.open{transform:translateY(0);}
+    .topnav a{padding:14px 0; width:100%; border-bottom:1px solid var(--rule);}
+    .nav-toggle{display:inline-block;}
+  }
 
   /* -------- hero -------- */
   .hero{
-    display:grid; grid-template-columns:1fr 1.1fr; gap:80px;
-    padding:120px 0 100px; align-items:center; min-height:82vh;
+    display:grid; grid-template-columns:1fr 1.05fr; gap:72px;
+    padding:96px 0 80px; align-items:center;
   }
-  @media (max-width:1000px){ .hero{grid-template-columns:1fr; gap:48px; padding:80px 0 64px} }
+  @media (max-width:1000px){ .hero{grid-template-columns:1fr; gap:48px; padding:64px 0 56px} }
 
   .eyebrow{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:18px; letter-spacing:0;
-    color:var(--brass);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--brass); font-weight:500;
     display:flex; align-items:center; gap:14px;
   }
-  .eyebrow .bar{width:36px;height:1px;background:var(--brass-dim);display:inline-block}
+  .eyebrow::after{
+    content:""; flex:1; max-width:120px;
+    height:1px; background:var(--brass-dim);
+  }
 
   .hero h1{
     font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(60px, 7vw, 108px);
+    font-size:clamp(52px, 6.4vw, 96px);
     line-height:0.98; letter-spacing:-0.03em;
-    margin:36px 0 36px; text-wrap:balance;
+    margin:28px 0 28px; text-wrap:balance;
   }
   .hero h1 em{ font-style:italic; font-weight:500; color:var(--brass); }
   .hero h1 .dot-golden{ color:var(--brass); }
   .hero .sub{
-    font-family:'EB Garamond',serif; font-weight:400; font-style:italic;
-    font-size:clamp(21px,1.9vw,26px); line-height:1.4;
-    color:var(--paper-dim); max-width:44ch; margin:0 0 40px;
+    font-family:'EB Garamond',serif; font-weight:400;
+    font-size:clamp(19px,1.7vw,22px); line-height:1.5;
+    color:var(--paper-dim); max-width:48ch; margin:0 0 36px;
     letter-spacing:-0.005em; text-wrap:balance;
   }
-  .hero p.lede{
-    font-family:'EB Garamond',serif; font-size:21px; line-height:1.55;
-    color:var(--paper); max-width:44ch; margin:0 0 40px;
-    border-left:2px solid var(--brass); padding-left:22px;
-  }
-  .hero p.lede .lede-mark{
-    font-style:italic; color:var(--brass); font-weight:500;
-  }
-  .hero p.lede b{
-    color:var(--paper); font-weight:500; font-style:normal;
-  }
-  .hero p.lede em{
-    display:block; margin-top:10px;
-    font-style:italic; color:var(--paper-dim); font-size:17px;
-  }
+  .hero .sub b{color:var(--paper); font-weight:500}
 
+  .cta-row{display:flex; flex-wrap:wrap; gap:16px; align-items:center;}
   .cta{
     display:inline-flex; align-items:center; gap:10px;
     font-family:'JetBrains Mono',monospace; font-weight:500;
-    font-size:13px; letter-spacing:0.06em;
+    font-size:12px; letter-spacing:0.12em; text-transform:uppercase;
     color:var(--ink); background:var(--paper);
-    padding:16px 24px; text-decoration:none; border:none; cursor:pointer;
+    padding:16px 22px; text-decoration:none; border:none; cursor:pointer;
     transition:all .18s ease; white-space:nowrap;
   }
   .cta:hover{ background:var(--brass); color:var(--ink); transform:translateY(-1px); }
   .cta .arrow{display:inline-block; transition:transform .2s ease}
   .cta:hover .arrow{transform:translateX(3px)}
-  .cta-ghost{
-    display:inline-flex; align-items:center;
-    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.1em;
-    color:var(--paper-dim); text-decoration:none;
-    border-bottom:1px solid var(--rule); padding-bottom:3px; margin-left:28px;
-    text-transform:uppercase;
+  .cta.ghost{
+    background:transparent; color:var(--paper);
+    border:1px solid var(--rule-strong);
   }
-  .cta-ghost:hover{color:var(--paper); border-color:var(--brass-dim)}
-
-  .hero-meta{
-    display:flex; gap:32px; margin-top:60px;
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    letter-spacing:0.1em; text-transform:uppercase; color:var(--paper-faint);
-  }
-  .hero-meta b{color:var(--paper); font-weight:500; font-family:'EB Garamond',serif; font-style:normal; font-size:14px; letter-spacing:0; text-transform:none;}
+  .cta.ghost:hover{background:rgba(245,242,236,.05); border-color:var(--brass); color:var(--paper); transform:translateY(-1px);}
 
   /* -------- globe -------- */
   .globe-stage{
     position:relative; width:100%; aspect-ratio:1/1;
-    max-width:780px; justify-self:end;
-    margin-right:-40px;
+    max-width:720px; justify-self:end;
+    margin-right:-24px;
   }
-  @media (max-width:1000px){ .globe-stage{justify-self:center; max-width:620px; margin-right:0} }
+  @media (max-width:1000px){ .globe-stage{justify-self:center; max-width:560px; margin-right:0} }
   #globe-canvas{position:absolute; inset:0; width:100%; height:100%; display:block;}
-  .globe-corner{
-    position:absolute; font-family:'JetBrains Mono',monospace; font-size:10px;
-    color:var(--paper-faint); letter-spacing:0.12em; text-transform:uppercase;
-  }
-  .globe-corner.tl{top:8px; left:8px}
-  .globe-corner.tr{top:8px; right:8px; text-align:right}
-  .globe-corner.bl{bottom:8px; left:8px}
-  .globe-corner.br{bottom:8px; right:8px; text-align:right}
-  .globe-corner b{color:var(--paper-dim); font-weight:500}
-  .live-badge{display:inline-flex; align-items:center; gap:8px; color:var(--brass);}
-  .live-badge .pulse{
-    width:6px; height:6px; border-radius:50%; background:var(--cta);
-    animation:pulse 2s infinite;
-  }
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(224,90,43,.5)}
-    70%{box-shadow:0 0 0 8px rgba(224,90,43,0)}
-    100%{box-shadow:0 0 0 0 rgba(224,90,43,0)}
-  }
 
-  .globe-meta{
-    position:absolute; left:0; right:0; bottom:-40px;
-    display:flex; justify-content:center; gap:0;
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    letter-spacing:0.12em; text-transform:uppercase;
-    color:var(--paper-dim);
+  @media (prefers-reduced-motion: reduce){
+    #globe-canvas{animation:none !important;}
+    .principles-track{animation:none !important;}
   }
-  .globe-meta b{color:var(--paper); font-family:'EB Garamond',serif; font-size:15px; letter-spacing:0; text-transform:none; font-weight:500;}
-  .globe-meta .live-badge{color:var(--brass); display:inline-flex; align-items:center; gap:8px; margin-right:24px; padding-right:24px; border-right:1px solid var(--rule-strong);}
-  .globe-meta .live-badge .pulse{
-    width:6px; height:6px; border-radius:50%; background:var(--cta);
-    animation:pulse 2s infinite;
-  }
-  .globe-meta .participants{display:inline-flex; align-items:center; gap:8px;}
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(224,90,43,.5)}
-    70%{box-shadow:0 0 0 8px rgba(224,90,43,0)}
-    100%{box-shadow:0 0 0 0 rgba(224,90,43,0)}
-  }
-  .globe-meta{
-    position:absolute; left:0; right:0; bottom:-44px;
-    display:flex; justify-content:center; align-items:center; gap:0;
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    letter-spacing:0.12em; text-transform:uppercase;
-    color:var(--paper-dim);
-  }
-  .globe-meta b{color:var(--paper); font-family:'EB Garamond',serif; font-size:15px; letter-spacing:0; text-transform:none; font-weight:500;}
-  .globe-meta .live-badge{color:var(--brass); display:inline-flex; align-items:center; gap:8px; margin-right:24px; padding-right:24px; border-right:1px solid var(--rule-strong);}
-  .globe-meta .live-badge .pulse{
-    width:6px; height:6px; border-radius:50%; background:var(--cta);
-    animation:pulse 2s infinite;
-  }
-  .globe-meta .participants{display:inline-flex; align-items:center; gap:8px;}
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(224,90,43,.5)}
-    70%{box-shadow:0 0 0 8px rgba(224,90,43,0)}
-    100%{box-shadow:0 0 0 0 rgba(224,90,43,0)}
-  }
-  .legend{
-    position:absolute; left:-4px; bottom:-56px;
-    display:flex; flex-wrap:wrap; gap:14px 22px;
-    font-family:'JetBrains Mono',monospace; font-size:10px;
-    letter-spacing:0.08em; color:var(--paper-dim); text-transform:uppercase;
-    max-width:640px;
-  }
-  .legend .item{display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; transition:color .2s}
-  .legend .item:hover{color:var(--paper)}
-  .legend .item.off{color:var(--paper-faint); opacity:.35}
-  .legend .sw{width:18px; height:2px; display:inline-block}
 
   /* -------- sections -------- */
-  section{ padding:160px 0; border-top:1px solid var(--rule); position:relative;}
-  @media (max-width:900px){ section{padding:96px 0} }
+  section{ padding:140px 0; border-top:1px solid var(--rule); position:relative;}
+  @media (max-width:900px){ section{padding:88px 0} }
   .snum{
     font-family:'JetBrains Mono',monospace; font-size:11px;
     letter-spacing:0.2em; color:var(--brass); text-transform:uppercase;
     font-weight:500;
   }
-  .snum .bullet{color:var(--paper-faint); margin:0 12px}
   .section-head{
     display:grid; grid-template-columns:1.3fr 0.7fr;
-    align-items:end; gap:64px; margin-bottom:88px;
+    align-items:end; gap:64px; margin-bottom:72px;
   }
-  @media (max-width:900px){ .section-head{grid-template-columns:1fr; gap:24px; margin-bottom:56px} }
+  @media (max-width:900px){ .section-head{grid-template-columns:1fr; gap:24px; margin-bottom:48px} }
   .section-head h2{
     font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(44px, 5.2vw, 72px);
+    font-size:clamp(40px, 4.6vw, 64px);
     line-height:1.0; letter-spacing:-0.028em;
-    margin:28px 0 0; max-width:16ch; text-wrap:balance;
+    margin:24px 0 0; max-width:18ch; text-wrap:balance;
   }
   .section-head h2 em{font-style:italic; color:var(--brass)}
   .section-head .side{
-    max-width:32ch; justify-self:end;
+    max-width:34ch; justify-self:end;
     font-family:'EB Garamond',serif; font-style:italic;
-    font-size:19px; line-height:1.5; color:var(--paper-dim);
+    font-size:18px; line-height:1.5; color:var(--paper-dim);
     padding-bottom:6px;
   }
   @media (max-width:900px){ .section-head .side{justify-self:start} }
 
-  /* -------- CAROUSEL (what moves) -------- */
-  .carousel-head{
-    display:grid; grid-template-columns:1.3fr 0.7fr;
-    gap:64px; align-items:end; padding:0 0 80px 0;
+  /* -------- VISION -------- */
+  .intro-body{
+    display:grid; grid-template-columns: 1fr 1fr; gap:72px;
+    max-width:1140px;
   }
-  @media (max-width:900px){ .carousel-head{grid-template-columns:1fr; gap:24px; padding-bottom:56px} }
-  .carousel-head h2{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(56px,7vw,108px);
-    line-height:0.98; letter-spacing:-0.03em; margin:24px 0 0;
+  @media (max-width:900px){ .intro-body{grid-template-columns:1fr; gap:32px} }
+  .intro-body p{
+    font-family:'EB Garamond',serif;
+    font-size:19px; line-height:1.55;
+    color:var(--paper-dim); margin:0 0 22px;
+    max-width:54ch;
   }
-  .carousel-head h2 em{font-style:italic; color:var(--brass)}
-  .carousel-band{
-    position:relative;
-    padding:0;
-  }
-  .carousel-band .band-label{
-    position:absolute;
-    left:0; top:50%; transform:translateY(-50%);
-    z-index:3;
-    display:flex; align-items:center; gap:14px;
-    padding:14px 24px 14px 0;
-    background:linear-gradient(90deg, var(--ink) 0%, var(--ink) 70%, transparent 100%);
-    font-family:'JetBrains Mono',monospace; font-size:10.5px;
-    letter-spacing:0.22em; text-transform:uppercase;
-    color:var(--paper-faint); font-weight:500;
-    min-width:230px;
-    pointer-events:none;
-  }
-  .carousel-band .band-label .idx{
-    color:var(--brass);
-  }
-  .carousel-band .band-label .bar{
-    width:20px; height:1px; background:var(--brass-dim); display:inline-block;
-  }
-  .carousel-band .band-label .category{
-    color:var(--paper-dim); letter-spacing:0.18em;
-  }
-  @media (max-width:900px){
-    .carousel-band .band-label{
-      position:static; transform:none;
-      padding:18px 0 8px;
-      background:none; min-width:0;
-    }
-  }
-  .carousel{
-    overflow:hidden; position:relative;
-    mask-image:linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
-    -webkit-mask-image:linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
-    padding:36px 0;
-  }
-  .carousel-track{
-    display:flex; gap:0; white-space:nowrap;
-    animation:scroll-left 90s linear infinite;
-    will-change:transform;
-  }
-  .carousel.reverse .carousel-track{ animation:scroll-right 110s linear infinite;}
-  .carousel:hover .carousel-track{ animation-play-state:paused; }
-  .carousel-item{
-    flex:0 0 auto; padding:14px 36px;
-    font-family:'EB Garamond',serif; font-size:clamp(26px,2.6vw,38px);
-    letter-spacing:-0.018em; line-height:1;
-    color:var(--paper); display:inline-flex; align-items:center; gap:36px;
-    transition:color .25s;
-  }
-  .carousel-item:hover{ color:var(--brass); }
-  .carousel-item .sep{
-    width:4px; height:4px; border-radius:50%;
-    background:var(--brass); flex:0 0 auto; opacity:.55;
-  }
-  .carousel-item.accent{
-    font-style:italic; color:var(--brass);
-  }
-  .carousel-item.accent:hover{ color:var(--cta); }
-  @keyframes scroll-left{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
-  @keyframes scroll-right{ from{transform:translateX(-50%)} to{transform:translateX(0)} }
-  .carousel-closer{
-    margin-top:72px;
-    display:flex; align-items:baseline; justify-content:space-between;
-    gap:40px; flex-wrap:wrap;
-    padding-top:40px;
-    border-top:1px solid var(--rule);
-  }
-  .carousel-closer .line{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:clamp(22px,2.2vw,30px); color:var(--paper-dim);
-    letter-spacing:-0.01em; max-width:46ch;
-    text-wrap:balance;
-  }
-  .carousel-closer .line b{
-    color:var(--paper); font-style:normal; font-weight:500;
-  }
-  .carousel-closer .line em{
-    color:var(--brass); font-style:italic;
-  }
-  .carousel-closer .tally{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px;
-    letter-spacing:0.2em; color:var(--paper-faint); text-transform:uppercase;
-    text-align:right;
-  }
-  .carousel-closer .tally b{
-    display:block; color:var(--brass);
-    font-family:'EB Garamond',serif; font-weight:500; font-size:32px;
-    letter-spacing:-0.02em; text-transform:none; margin-bottom:2px;
+  .intro-body p b{color:var(--paper); font-weight:500}
+  .intro-body p em{color:var(--brass); font-style:italic}
+  .intro-body .lede{
+    font-family:'EB Garamond',serif;
+    font-size:23px; line-height:1.5;
+    color:var(--paper); margin:0 0 24px;
+    border-left:2px solid var(--brass); padding-left:22px;
+    font-style:italic; max-width:48ch;
   }
 
-  /* -------- USE CASES — restrained rows -------- */
-  .uc-list{ border-top:1px solid var(--rule-strong); }
-  .uc-row{
-    display:grid; grid-template-columns: 60px 260px 1fr 40px;
-    gap:48px; padding:44px 8px;
+  .value-strip{
+    margin:48px 0 0;
+    padding:24px 0 4px;
+    border-top:1px solid var(--rule);
+    display:flex; flex-wrap:wrap; gap:8px 22px;
+    font-family:'EB Garamond',serif;
+    font-size:17px; color:var(--paper);
+    line-height:1.5;
+  }
+  .value-strip .vs-label{
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--paper-faint); margin-right:8px; align-self:center;
+  }
+  .value-strip span:not(.vs-label){
+    color:var(--paper);
+    border-bottom:1px dotted var(--brass-dim);
+    padding-bottom:1px;
+  }
+
+  /* -------- INLINE COMPARE -------- */
+  .intro-compare{
+    display:flex; flex-direction:column; gap:0;
+    margin:8px 0 28px;
+    border-top:1px solid var(--rule);
     border-bottom:1px solid var(--rule);
-    align-items:baseline; cursor:pointer;
-    transition:background .25s, padding .25s;
   }
-  .uc-row:hover{background:rgba(200,147,79,0.04); padding-left:20px; padding-right:20px}
-  .uc-row .n{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--brass); letter-spacing:0.12em;}
-  .uc-row .who{
-    font-family:'EB Garamond',serif; font-style:italic; font-weight:400;
-    font-size:26px; color:var(--brass); letter-spacing:-0.01em;
+  .ic-row{
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:0;
+    border-top:1px solid var(--rule);
   }
-  .uc-row .what{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(24px,2.4vw,34px); line-height:1.18;
-    letter-spacing:-0.018em; color:var(--paper);
-    max-width:28ch;
+  .ic-row:first-child{ border-top:none; }
+  .ic-before, .ic-after{
+    padding:18px 20px 18px 0;
+    font-family:'EB Garamond',serif;
+    font-size:16px; line-height:1.45;
   }
-  .uc-row .arrow{
-    text-align:right; color:var(--paper-faint); font-size:18px;
-    font-family:'EB Garamond',serif; transition:all .25s;
+  .ic-before{
+    color:var(--paper-dim);
+    border-right:1px solid var(--rule);
+    padding-right:24px;
   }
-  .uc-row:hover .arrow{color:var(--brass); transform:translateX(6px)}
+  .ic-after{
+    color:var(--paper);
+    padding-left:24px;
+  }
+  .ic-after em{ color:var(--brass); font-style:italic; }
+  .ic-label{
+    display:block;
+    font-family:'JetBrains Mono',monospace; font-size:9.5px;
+    letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--paper-faint); margin:0 0 6px; font-weight:500;
+  }
+  .ic-after .ic-label{ color:var(--brass); }
   @media (max-width:900px){
-    .uc-row{grid-template-columns: 40px 1fr; gap:12px; padding:32px 0}
-    .uc-row:hover{padding-left:0; padding-right:0}
-    .uc-row .who{grid-column:2; font-size:20px}
-    .uc-row .what{grid-column:1/-1; margin-top:12px}
-    .uc-row .arrow{display:none}
+    .ic-row{ grid-template-columns:1fr; }
+    .ic-before{ border-right:none; border-bottom:1px solid var(--rule); padding:16px 0; }
+    .ic-after{ padding:16px 0; }
   }
 
   /* -------- PRINCIPLES -------- */
-  .principles{
-    display:grid; grid-template-columns:repeat(4,1fr);
-    border-top:1px solid var(--rule-strong);
-    border-bottom:1px solid var(--rule-strong);
+  #principles{ padding:28px 0; border-top:none; }
+  @media (max-width:900px){ #principles{padding:24px 0} }
+  .principles-marquee{
+    position:relative;
+    overflow:hidden;
+    padding:0;
+    -webkit-mask-image:linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+            mask-image:linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
   }
-  @media (max-width:900px){ .principles{grid-template-columns:repeat(2,1fr)} }
-  .principle{ padding:64px 36px 56px; position:relative; border-right:1px solid var(--rule); display:flex; flex-direction:column;}
-  .principle:last-child{border-right:none}
-  @media (max-width:900px){
-    .principle:nth-child(2){border-right:none}
-    .principle:nth-child(1),.principle:nth-child(2){border-bottom:1px solid var(--rule)}
+  .principles-track{
+    display:flex;
+    width:max-content;
+    animation:principles-scroll 56s linear infinite;
+    will-change:transform;
   }
-  .principle .pnum{
-    font-family:'JetBrains Mono',monospace; font-size:10px;
-    color:var(--paper-faint); letter-spacing:0.18em;
-    margin-bottom:48px;
+  .principles-marquee:hover .principles-track{ animation-play-state:paused; }
+  @keyframes principles-scroll{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
   }
-  .principle .glyph{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:44px; color:var(--brass); line-height:1; margin-bottom:28px;
+  .p-card{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:38px;
+    padding-right:38px;
+    white-space:nowrap;
   }
-  .principle h5{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(26px, 2.4vw, 32px); letter-spacing:-0.022em;
-    margin:0 0 14px; line-height:1.05;
+  .p-card h4{
+    font-family:'EB Garamond',serif; font-weight:400;
+    font-size:clamp(20px,1.7vw,26px); letter-spacing:-0.012em;
+    margin:0; line-height:1; color:var(--paper);
   }
-  .principle p{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:16px; color:var(--paper-dim); margin:0; line-height:1.5;
-    max-width:22ch;
+  .p-card:nth-child(2n) h4{
+    font-style:italic; color:var(--brass);
+  }
+  .p-dot{
+    width:5px; height:5px; border-radius:50%;
+    background:var(--brass); opacity:0.55;
+    flex-shrink:0;
   }
 
-  /* -------- WHY — 9 tile grid -------- */
+  /* -------- CAPABILITIES -------- */
   .why-grid{
     display:grid; grid-template-columns:repeat(3,1fr);
     border-top:1px solid var(--rule-strong);
@@ -426,190 +313,166 @@
   @media (max-width:900px){ .why-grid{grid-template-columns:repeat(2,1fr)} }
   @media (max-width:620px){ .why-grid{grid-template-columns:1fr} }
   .why-cell{
-    padding:48px 36px 52px;
+    padding:48px 36px;
     border-right:1px solid var(--rule);
     border-bottom:1px solid var(--rule);
-    min-height:220px;
-    display:flex; flex-direction:column;
-    position:relative;
+    min-height:200px;
+    display:flex; flex-direction:column; justify-content:center;
     transition:background .25s;
   }
-  .why-cell:hover{background:rgba(200,147,79,0.025)}
+  .why-cell:hover{background:rgba(200,147,79,0.03)}
   .why-grid .why-cell:nth-child(3n){border-right:none}
   .why-grid .why-cell:nth-last-child(-n+3){border-bottom:none}
   @media (max-width:900px){
     .why-grid .why-cell{border-right:1px solid var(--rule) !important; border-bottom:1px solid var(--rule) !important}
     .why-grid .why-cell:nth-child(2n){border-right:none !important}
   }
-  .why-cell .num{
-    font-family:'JetBrains Mono',monospace; font-size:10px;
-    color:var(--brass); letter-spacing:0.18em;
-    margin-bottom:56px;
-  }
   .why-cell h4{
     font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(22px,2vw,26px); letter-spacing:-0.018em;
-    line-height:1.15; margin:0 0 12px; max-width:15ch;
+    font-size:clamp(20px,1.9vw,26px); letter-spacing:-0.022em;
+    line-height:1.12; margin:0 0 12px; max-width:18ch;
   }
+  .why-cell h4 em{font-style:italic; color:var(--brass)}
   .why-cell p{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:16px; line-height:1.5; color:var(--paper-dim);
-    margin:0; max-width:28ch;
+    font-family:'EB Garamond',serif;
+    font-size:16px; line-height:1.55; color:var(--paper-dim);
+    margin:0; max-width:34ch;
   }
 
   /* -------- SERVICES -------- */
+  .svc-edge-intro{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:24px; padding:0;
+    border:none;
+    background:none;
+    opacity:0.65;
+  }
+  .svc-edge-intro .badge{
+    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
+    color:var(--brass-dim); letter-spacing:0.16em; text-transform:uppercase;
+    border:1px solid var(--rule); padding:3px 7px;
+    white-space:nowrap; flex-shrink:0;
+  }
+  .svc-edge-intro p{
+    margin:0; font-family:'EB Garamond',serif; font-style:italic;
+    font-size:13px; line-height:1.4; color:var(--paper-dim); max-width:64ch;
+  }
+  .svc-edge-intro p em{color:var(--paper-dim); font-style:italic}
+
   .services{display:flex; flex-direction:column}
   .svc{
-    display:grid; grid-template-columns:60px 1.1fr 1.5fr 120px;
-    gap:48px; padding:48px 8px;
+    display:grid; grid-template-columns:auto 1.2fr 1.6fr;
+    gap:32px; padding:36px 0;
     border-top:1px solid var(--rule);
     align-items:baseline;
-    transition:background .25s;
+    transition:background .25s, padding-left .25s;
   }
-  .svc:first-child{border-top:1px solid var(--rule-strong)}
-  .svc:last-child{border-bottom:1px solid var(--rule-strong)}
-  .svc:hover{background:rgba(200,147,79,0.025)}
+  .svc:first-child{border-top:none}
+  .svc:hover{background:rgba(200,147,79,0.025); padding-left:14px;}
   @media (max-width:900px){
-    .svc{grid-template-columns:40px 1fr; gap:16px; padding:32px 0}
-    .svc .svc-desc,.svc .svc-meta{grid-column:1/-1}
-    .svc-meta{text-align:left !important; flex-direction:row !important; gap:24px !important}
-    .svc-meta a{margin-left:0 !important}
+    .svc{grid-template-columns:auto 1fr; gap:14px 18px; padding:28px 0}
+    .svc-desc{grid-column:1 / -1; padding-left:0;}
+    .svc:hover{padding-left:0;}
   }
-  .svc-n{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--brass); letter-spacing:0.18em; padding-top:8px;}
+  .svc-num{
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    letter-spacing:0.18em; color:var(--paper-faint); font-weight:500;
+    padding-top:8px;
+  }
   .svc-title h4{
     font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(30px,3vw,40px); letter-spacing:-0.022em;
-    line-height:1.05; margin:0;
-    display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+    font-size:clamp(24px,2.4vw,32px); letter-spacing:-0.024em;
+    line-height:1.06; margin:0 0 8px; max-width:14ch;
+  }
+  .svc-title h4 .svc-suffix{ color:inherit; font-weight:inherit;}
+  .svc-title .svc-noun{
+    display:block;
+    font-family:'EB Garamond',serif; font-style:italic; font-weight:400;
+    font-size:16px; color:var(--brass); letter-spacing:0;
+    margin-top:4px; line-height:1.35; max-width:32ch;
   }
   .svc-title .edge{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:500;
+    display:inline-block; margin-left:8px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
     color:var(--cta); letter-spacing:0.14em;
-    border:1px solid rgba(224,90,43,.45); padding:3px 7px;
-    transform:translateY(-4px);
-  }
-  .svc-title .tag{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:18px; color:var(--brass); margin-top:14px;
+    border:1px solid rgba(224,90,43,.45); padding:3px 6px;
+    vertical-align:middle; transform:translateY(-2px);
   }
   .svc-desc{
-    font-family:'EB Garamond',serif; font-size:17px; line-height:1.55;
-    color:var(--paper-dim); max-width:44ch;
+    font-family:'EB Garamond',serif; font-size:16px; line-height:1.55;
+    color:var(--paper-dim); max-width:48ch;
   }
-  .svc-desc .spec{
-    display:flex; gap:6px; flex-wrap:wrap; margin-top:20px;
-    font-family:'JetBrains Mono',monospace; font-size:10px;
-    color:var(--paper-faint); letter-spacing:0.12em; text-transform:uppercase;
-  }
-  .svc-desc .spec span{border:1px solid var(--rule); padding:5px 10px; white-space:nowrap}
-  .svc-meta{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px;
-    color:var(--paper-faint); text-transform:uppercase; letter-spacing:0.1em;
-    display:flex; flex-direction:column; gap:8px; text-align:right;
-  }
-  .svc-meta a{color:var(--brass); text-decoration:none; border-bottom:1px dotted var(--brass-dim); padding-bottom:1px; display:inline-block; width:fit-content; margin-left:auto;}
-  .svc-meta a:hover{color:var(--cta)}
-  .svc-meta .dot-live{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--brass); margin-right:6px;}
 
-  /* -------- PARTICIPANTS -------- */
+  /* -------- PARTICIPANTS — network mesh -------- */
   .pt-intro{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:24px; color:var(--paper-dim); max-width:52ch;
-    margin:-40px 0 96px; line-height:1.45;
+    font-family:'EB Garamond',serif;
+    font-size:20px; color:var(--paper-dim); max-width:54ch;
+    margin:-32px 0 56px; line-height:1.5;
   }
-  .pt-grid{
-    display:grid; grid-template-columns:1fr 1fr; gap:0;
-    border-top:1px solid var(--rule-strong);
-    border-bottom:1px solid var(--rule-strong);
+  .pt-intro b{color:var(--paper); font-weight:500;}
+  .pt-intro em{color:var(--brass); font-style:italic;}
+
+  .pt-mesh-wrap{
+    display:grid;
+    grid-template-columns: 1.45fr 0.55fr;
+    gap:56px;
+    align-items:stretch;
   }
-  @media (max-width:900px){ .pt-grid{grid-template-columns:1fr} }
-  .pt-col{padding:56px 0;}
-  .pt-col + .pt-col{border-left:1px solid var(--rule); padding-left:64px}
-  .pt-col:first-child{padding-right:64px}
-  @media (max-width:900px){
-    .pt-col{padding:40px 0 !important}
-    .pt-col + .pt-col{border-left:none; padding-left:0; border-top:1px solid var(--rule)}
+  .pt-mesh{
+    position:relative;
+    aspect-ratio: 1080 / 780;
+    border:1px solid var(--rule);
+    background:radial-gradient(ellipse at 50% 50%, rgba(200,147,79,0.04), transparent 70%);
+    overflow:hidden;
   }
-  .pt-col h4{
-    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+  .pt-mesh svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  .pt-mesh .hub-hit{ cursor:pointer; }
+  .pt-mesh .hub-dot{ transition: fill .2s, r .2s; }
+  .pt-mesh .hub-ring{ transition: stroke .2s, stroke-opacity .2s; }
+  .pt-mesh .hub-name{ transition: fill .2s; font-family:'EB Garamond',serif; font-style:italic; font-weight:500; }
+
+  /* detail panel */
+  .pt-detail-panel{
+    padding:8px 0 0 32px;
+    border-left:1px solid var(--rule);
+    display:flex; flex-direction:column;
+  }
+  .pt-detail-eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
     letter-spacing:0.2em; color:var(--brass); text-transform:uppercase;
-    margin:0 0 40px;
+    margin-bottom:18px;
   }
-  .pt-item{
-    display:grid; grid-template-columns:180px 1fr; gap:32px;
-    padding:24px 0; border-bottom:1px solid var(--rule);
-    align-items:baseline;
-  }
-  .pt-item:last-child{border-bottom:none; padding-bottom:0}
-  .pt-item .name{
+  .pt-detail-name{
     font-family:'EB Garamond',serif; font-weight:500;
-    font-size:22px; letter-spacing:-0.012em;
+    font-size:48px; letter-spacing:-0.022em; line-height:1.05;
+    margin:0 0 16px; color:var(--paper);
   }
-  .pt-item .desc{
+  .pt-detail-name em{ color:var(--brass); font-style:italic; }
+  .pt-detail-tagline{
     font-family:'EB Garamond',serif; font-style:italic;
-    font-size:16px; color:var(--paper-dim); line-height:1.5;
+    font-size:21px; color:var(--paper); line-height:1.4;
+    margin:0 0 22px; max-width:36ch;
   }
-  @media (max-width:600px){
-    .pt-item{grid-template-columns:1fr; gap:6px}
+  .pt-detail-text{
+    font-family:'EB Garamond',serif;
+    font-size:17px; color:var(--paper-dim); line-height:1.55;
+    margin:0 0 28px; max-width:42ch;
   }
 
-  /* -------- COMPOSER -------- */
-  .composer{
-    background:rgba(245,242,236,0.015);
-    border:1px solid var(--rule-strong);
-    padding:64px;
-    display:grid; grid-template-columns:1fr 1.2fr; gap:80px;
-    align-items:center;
+  @media (max-width:920px){
+    .pt-mesh-wrap{ grid-template-columns:1fr; gap:32px; }
+    .pt-detail-panel{ padding:24px 0 0; border-left:none; border-top:1px solid var(--rule); }
+    .pt-detail-name{ font-size:36px; }
+    .pt-mesh{ aspect-ratio: 1080/700; }
   }
-  @media (max-width:900px){ .composer{grid-template-columns:1fr; padding:36px; gap:40px} }
-  .composer label{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:500;
-    letter-spacing:0.14em; color:var(--brass); text-transform:uppercase;
-    display:block; margin-bottom:12px;
-  }
-  .composer .sel-col{display:flex; flex-direction:column; gap:32px}
-  .composer .pill-row{display:flex; flex-wrap:wrap; gap:8px}
-  .composer .pill{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px;
-    letter-spacing:0.1em; color:var(--paper-dim);
-    border:1px solid var(--rule-strong);
-    padding:9px 13px; cursor:pointer; background:transparent;
-    text-transform:uppercase; white-space:nowrap;
-    transition:all .15s ease;
-  }
-  .composer .pill:hover{color:var(--paper); border-color:var(--paper-faint)}
-  .composer .pill.active{ color:var(--ink); background:var(--brass); border-color:var(--brass);}
-  .composer .scenario{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(26px,2.8vw,38px); line-height:1.3;
-    letter-spacing:-0.01em; color:var(--paper);
-    min-height:6em;
-  }
-  .composer .scenario b{color:var(--brass); font-weight:500}
-  .composer .scenario em{font-style:italic; color:var(--paper-dim)}
-  .composer .scenario .cta-text{color:var(--cta)}
-  .composer .scenario .settled{
-    display:block; margin-top:20px;
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    letter-spacing:0.1em; color:var(--brass-dim); text-transform:uppercase;
-    font-style:normal; font-weight:500;
-  }
-  .composer .reroll{
-    margin-top:20px; display:inline-flex; align-items:center; gap:8px;
-    background:transparent; color:var(--paper);
-    border:1px solid var(--paper-faint);
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    padding:10px 18px; cursor:pointer; letter-spacing:0.1em;
-    text-transform:uppercase;
-  }
-  .composer .reroll:hover{border-color:var(--brass); color:var(--brass)}
 
   /* -------- FOOTER CTA -------- */
   .footer-cta{
-    padding:200px 0 180px; border-top:1px solid var(--rule);
+    padding:160px 0 140px; border-top:1px solid var(--rule);
     position:relative; overflow:hidden;
   }
-  @media (max-width:900px){ .footer-cta{padding:120px 0} }
+  @media (max-width:900px){ .footer-cta{padding:96px 0} }
   .footer-cta .bg-glow{
     position:absolute; right:-200px; top:50%; transform:translateY(-50%);
     width:700px; height:700px; pointer-events:none;
@@ -617,946 +480,33 @@
   }
   .footer-cta h2{
     font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(56px,7vw,112px);
-    line-height:0.94; letter-spacing:-0.03em;
-    margin:24px 0 32px; max-width:18ch; position:relative;
+    font-size:clamp(48px,6vw,96px);
+    line-height:0.96; letter-spacing:-0.03em;
+    margin:18px 0 28px; max-width:18ch; position:relative;
   }
   .footer-cta h2 em{font-style:italic; color:var(--brass)}
   .footer-cta .kicker{
     font-family:'EB Garamond',serif; font-style:italic;
-    font-size:22px; color:var(--paper-dim); max-width:44ch;
-    margin:0 0 48px; position:relative;
+    font-size:21px; color:var(--paper-dim); max-width:46ch;
+    margin:0 0 40px; position:relative;
   }
 
   footer{
     border-top:1px solid var(--rule);
-    padding:56px 0 72px;
+    padding:48px 0 64px;
     display:grid; grid-template-columns:1fr 2fr 1fr; gap:48px;
     font-family:'JetBrains Mono',monospace; font-size:11px;
     letter-spacing:0.14em; color:var(--paper-faint); text-transform:uppercase;
     align-items:start;
   }
   @media (max-width:900px){ footer{grid-template-columns:1fr; gap:32px} }
-  footer .cols{display:flex; gap:72px; flex-wrap:wrap}
-  footer .col{display:flex; flex-direction:column; gap:12px}
+  footer .cols{display:flex; gap:64px; flex-wrap:wrap}
+  footer .col{display:flex; flex-direction:column; gap:10px}
   footer .col b{color:var(--paper-dim); font-weight:500; margin-bottom:6px}
   footer a{color:inherit; text-decoration:none}
   footer a:hover{color:var(--brass)}
 
   ::selection{background:var(--cta); color:var(--paper)}
-
-  /* =========================================
-     SECTION 02 — USE CASES as PARTICIPANT CARDS
-     ========================================= */
-  .uc-cards{
-    display:grid; grid-template-columns:repeat(5,1fr); gap:0;
-    border-top:1px solid var(--rule-strong);
-    border-bottom:1px solid var(--rule-strong);
-  }
-  @media (max-width:1100px){ .uc-cards{grid-template-columns:repeat(2,1fr)} }
-  @media (max-width:600px){ .uc-cards{grid-template-columns:1fr} }
-  .uc-card{
-    position:relative; padding:44px 28px 36px;
-    border-right:1px solid var(--rule);
-    display:flex; flex-direction:column; min-height:440px;
-    transition:background .25s;
-  }
-  .uc-card:last-child{border-right:none}
-  @media (max-width:1100px){
-    .uc-card{border-right:1px solid var(--rule); border-bottom:1px solid var(--rule)}
-    .uc-card:nth-child(2n){border-right:none}
-  }
-  .uc-card:hover{background:rgba(200,147,79,0.03)}
-  .uc-card .uc-n{
-    font-family:'JetBrains Mono',monospace; font-size:10px;
-    color:var(--brass); letter-spacing:0.2em;
-    border-bottom:1px solid var(--rule); padding-bottom:14px; margin-bottom:28px;
-    display:flex; justify-content:space-between;
-  }
-  .uc-card .uc-n .tag{color:var(--paper-faint)}
-  .uc-card .uc-glyph{
-    width:72px; height:72px; margin-bottom:28px;
-    display:flex; align-items:center; justify-content:center;
-    border:1px solid var(--brass-dim);
-    font-family:'EB Garamond',serif; font-style:italic; font-weight:500;
-    font-size:46px; color:var(--brass); line-height:1;
-    border-radius:50%;
-  }
-  .uc-card h3{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:30px; letter-spacing:-0.02em; line-height:1.05;
-    margin:0 0 6px;
-  }
-  .uc-card .uc-kicker{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:15px; color:var(--brass); margin-bottom:22px;
-  }
-  .uc-card ul{
-    list-style:none; padding:0; margin:0 0 auto;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .uc-card li{
-    font-family:'EB Garamond',serif; font-size:15.5px; line-height:1.45;
-    color:var(--paper-dim); padding-left:16px; position:relative;
-  }
-  .uc-card li::before{
-    content:''; position:absolute; left:0; top:11px;
-    width:6px; height:1px; background:var(--brass-dim);
-  }
-
-  /* =========================================
-     SECTION 04 — WHY as ORBITAL DIAGRAM
-     ========================================= */
-  .orbit-wrap{
-    position:relative; width:100%; max-width:860px; margin:0 auto;
-    aspect-ratio:1/1;
-  }
-  @media (max-width:900px){ .orbit-wrap{max-width:100%; aspect-ratio:auto; min-height:auto} }
-  .orbit-svg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none;}
-  @media (max-width:900px){ .orbit-svg{display:none} }
-  .orbit-core{
-    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-    width:196px; height:196px; border-radius:50%;
-    border:1px solid var(--brass-dim);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; background:radial-gradient(circle, rgba(200,147,79,0.08), transparent 70%);
-    z-index:2; padding:0 20px;
-  }
-  .orbit-core .lbl{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
-    color:var(--paper-faint); letter-spacing:0.22em; text-transform:uppercase;
-  }
-  .orbit-core .brand{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:38px; letter-spacing:-0.02em; margin-top:8px; color:var(--paper);
-    line-height:1;
-  }
-  .orbit-core .count{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:13px; color:var(--brass); margin-top:10px; line-height:1.3;
-  }
-  .orbit-node{
-    position:absolute; transform:translate(-50%,-50%);
-    width:180px; max-width:40vw;
-    display:flex; flex-direction:column; gap:6px;
-    cursor:default;
-  }
-  .orbit-node .dot{
-    width:10px; height:10px; border-radius:50%;
-    background:var(--brass); box-shadow:0 0 0 4px rgba(200,147,79,0.14);
-    margin-bottom:6px;
-  }
-  .orbit-node .on{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
-    color:var(--brass); letter-spacing:0.18em;
-  }
-  .orbit-node h4{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:18px; letter-spacing:-0.015em; line-height:1.15;
-    margin:0; color:var(--paper);
-  }
-  .orbit-node p{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:13.5px; color:var(--paper-dim); margin:0; line-height:1.4;
-  }
-  /* Mobile fallback: stack as simple list */
-  .orbit-mobile{display:none}
-  @media (max-width:900px){
-    .orbit-wrap > .orbit-core, .orbit-wrap > .orbit-node{display:none}
-    .orbit-mobile{display:grid; grid-template-columns:1fr 1fr; gap:0;
-      border-top:1px solid var(--rule-strong); border-left:1px solid var(--rule);}
-    .orbit-mobile .m-cell{padding:28px 20px; border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); min-height:160px;}
-    .orbit-mobile .m-cell .n{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--brass); letter-spacing:0.18em; margin-bottom:20px;}
-    .orbit-mobile .m-cell h4{font-family:'EB Garamond',serif; font-weight:500; font-size:20px; margin:0 0 6px; letter-spacing:-0.015em;}
-    .orbit-mobile .m-cell p{font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:var(--paper-dim); margin:0;}
-  }
-  @media (max-width:600px){ .orbit-mobile{grid-template-columns:1fr} }
-
-  /* =========================================
-     SECTION 05 — SERVICES as DOCUMENT CARDS
-     ========================================= */
-  .svc-docs{display:grid; grid-template-columns:repeat(2,1fr); gap:0;
-    border-top:1px solid var(--rule-strong); border-left:1px solid var(--rule-strong);}
-  @media (max-width:900px){ .svc-docs{grid-template-columns:1fr} }
-  .svc-doc{
-    display:grid; grid-template-columns:88px 1fr; gap:0;
-    border-right:1px solid var(--rule-strong); border-bottom:1px solid var(--rule-strong);
-    min-height:280px; position:relative;
-    transition:background .25s;
-  }
-  .svc-doc:hover{background:rgba(200,147,79,0.025)}
-  .svc-doc .doc-spine{
-    border-right:1px solid var(--rule);
-    display:flex; flex-direction:column; justify-content:space-between;
-    padding:28px 0; align-items:center;
-    background:rgba(245,242,236,0.012);
-  }
-  .svc-doc .doc-n{
-    font-family:'EB Garamond',serif; font-weight:500; font-size:42px;
-    color:var(--brass); line-height:1; letter-spacing:-0.02em;
-  }
-  .svc-doc .doc-vertical{
-    writing-mode:vertical-rl; transform:rotate(180deg);
-    font-family:'JetBrains Mono',monospace; font-size:10px;
-    letter-spacing:0.24em; color:var(--paper-faint); text-transform:uppercase;
-  }
-  .svc-doc .doc-body{padding:32px 36px 32px 32px; display:flex; flex-direction:column;}
-  .svc-doc .doc-head{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:4px; flex-wrap:wrap;}
-  .svc-doc h4{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:28px; letter-spacing:-0.022em; line-height:1.05;
-    margin:0;
-  }
-  .svc-doc .doc-right{
-    display:flex; flex-direction:column; align-items:flex-end; gap:8px;
-  }
-  .svc-doc .edge{
-    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
-    color:var(--cta); letter-spacing:0.16em;
-    border:1px solid rgba(224,90,43,.45); padding:3px 7px;
-    white-space:nowrap;
-  }
-  .svc-doc .doc-tag{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:16px; color:var(--brass); margin:6px 0 16px;
-  }
-  .svc-doc .doc-desc{
-    font-family:'EB Garamond',serif; font-size:16px; line-height:1.55;
-    color:var(--paper-dim); margin:0 0 20px; max-width:42ch;
-  }
-  .svc-doc .doc-specs{
-    display:flex; flex-wrap:wrap; gap:6px; margin-top:auto;
-    padding-top:18px; border-top:1px dashed var(--rule);
-  }
-  .svc-doc .doc-specs span{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
-    color:var(--paper-faint); letter-spacing:0.14em; text-transform:uppercase;
-    border:1px solid var(--rule); padding:4px 9px;
-  }
-  /* =========================================
-     SECTION 05 — SERVICES as JIGSAW PUZZLE
-     ========================================= */
-  .puzzle-wrap{
-    position:relative; width:100%;
-    padding:0;
-    overflow:visible;
-    background:transparent;
-    border:none;
-  }
-  .puzzle-caption{
-    display:flex; justify-content:space-between; align-items:baseline;
-    font-family:'JetBrains Mono',monospace; font-size:10.5px;
-    letter-spacing:0.2em; color:var(--paper-faint);
-    text-transform:uppercase; margin-bottom:40px;
-    padding-bottom:20px; border-bottom:1px solid var(--rule);
-  }
-  .puzzle-caption b{color:var(--brass); font-weight:500;}
-  .puzzle-caption em{font-style:italic; text-transform:none; letter-spacing:0.02em; font-family:'EB Garamond',serif; font-size:15px; color:var(--paper-dim);}
-  .puzzle-grid{
-    position:relative; width:100%;
-    aspect-ratio: 1600/900;
-  }
-  .puzzle-svg{
-    position:absolute; inset:0; width:100%; height:100%;
-    overflow:visible;
-  }
-  .puzzle-piece{
-    transform-box: fill-box;
-    transform-origin: center;
-    transform: scale(0.978);
-    transition: transform .45s cubic-bezier(.2,.8,.2,1), filter .45s;
-    filter: drop-shadow(0 8px 14px rgba(0,0,0,.45)) drop-shadow(0 2px 4px rgba(0,0,0,.35));
-  }
-  .puzzle-piece-bg{
-    fill:#101A31;
-    stroke:rgba(200,147,79,0.42); stroke-width:1;
-    transition:fill .4s, stroke .4s;
-  }
-  .puzzle-piece-bg.edge{
-    stroke:rgba(224,90,43,.55);
-    fill:#14192A;
-  }
-  .puzzle-piece-bg.fabric{
-    fill:#1B1A22;
-    stroke:var(--brass);
-  }
-  /* highlight rim (top-left) */
-  .puzzle-piece-hl{
-    fill:none; stroke:rgba(245,242,236,0.07); stroke-width:1;
-    transform: translate(-0.6px,-0.6px);
-    pointer-events:none;
-  }
-  /* shadow rim (bottom-right) */
-  .puzzle-piece-sh{
-    fill:none; stroke:rgba(0,0,0,0.55); stroke-width:1;
-    transform: translate(0.8px,0.8px);
-    pointer-events:none;
-  }
-  .puzzle-piece:hover{
-    transform: scale(0.992);
-    filter: drop-shadow(0 14px 22px rgba(0,0,0,.55)) drop-shadow(0 3px 6px rgba(0,0,0,.4));
-  }
-  .puzzle-piece:hover .puzzle-piece-bg{
-    fill:#15213D;
-  }
-  .puzzle-piece:hover .puzzle-piece-bg.edge{
-    fill:#1A1E33;
-  }
-  .puzzle-content{
-    position:absolute;
-    display:flex; flex-direction:column; justify-content:flex-end;
-    padding:60px 40px 36px; pointer-events:none;
-    box-sizing:border-box;
-  }
-  .puzzle-content.fabric-center{
-    align-items:center; justify-content:center; text-align:center;
-    padding:40px;
-  }
-  .puzzle-content .edge-badge{
-    position:absolute; top:40px; right:42px;
-    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
-    color:var(--cta); letter-spacing:0.22em;
-    padding:0;
-    white-space:nowrap; border:none;
-  }
-  .puzzle-content .edge-badge::before{
-    content:'★ '; color:var(--cta);
-  }
-  .puzzle-content h4{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(20px,1.9vw,26px); letter-spacing:-0.022em; line-height:1.02;
-    margin:0 0 12px; color:var(--paper);
-  }
-  .puzzle-content .desc{
-    font-family:'EB Garamond',serif; font-size:13.5px; line-height:1.5;
-    color:var(--paper-dim); margin:0; max-width:26ch;
-  }
-  .puzzle-content.fabric-center{
-    align-items:center; justify-content:center; text-align:center;
-    padding:40px !important;
-  }
-  .puzzle-content.fabric-center .brand{
-    font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(28px,3vw,44px); letter-spacing:-0.03em;
-    line-height:1; color:var(--paper); margin:0;
-  }
-  .puzzle-content.fabric-center .brand em{font-style:italic; color:var(--brass); display:block; margin-top:4px;}
-  .puzzle-content.fabric-center .sub{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:15px; color:var(--paper-dim); margin-top:18px;
-    max-width:22ch; line-height:1.4;
-  }
-  .puzzle-content.fabric-center .meta{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
-    color:var(--brass); letter-spacing:0.24em;
-    text-transform:uppercase; margin-bottom:18px;
-  }
-
-  @media (max-width:1000px){
-    .puzzle-wrap .puzzle-grid{display:none}
-    .puzzle-fallback{display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px}
-    .puzzle-fallback .pf-card{
-      border:1px solid var(--rule-strong); padding:24px 26px;
-      background:rgba(245,242,236,0.018);
-    }
-    .puzzle-fallback .pf-card.edge{border-color:rgba(224,90,43,.45); background:rgba(224,90,43,0.025)}
-    .puzzle-fallback h4{font-family:'EB Garamond',serif;font-weight:500;font-size:26px;margin:6px 0 10px;letter-spacing:-0.022em}
-    .puzzle-fallback .pf-desc{font-family:'EB Garamond',serif;font-size:15px;color:var(--paper-dim);line-height:1.5;margin:0}
-    .puzzle-fallback .pf-head{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--brass);text-transform:uppercase}
-    .puzzle-fallback .pf-head .ed{color:var(--cta)}
-  }
-  @media (min-width:1001px){ .puzzle-fallback{display:none} }
-
-  /* =========================================
-     SECTION 07 — PARTICIPANTS as EDITORIAL MOSAIC
-     ========================================= */
-  .pt-mosaic{
-    display:grid;
-    grid-template-columns:repeat(12,1fr);
-    grid-auto-rows:minmax(140px,auto);
-    gap:1px;
-    background:var(--rule);
-    border:1px solid var(--rule-strong);
-  }
-  .pt-tile{
-    background:var(--ink); padding:28px 24px;
-    display:flex; flex-direction:column; justify-content:space-between;
-    position:relative; transition:background .25s;
-  }
-  .pt-tile:hover{background:#0D182E}
-  .pt-tile .pt-tag{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
-    color:var(--brass); letter-spacing:0.2em; text-transform:uppercase;
-    margin-bottom:12px;
-  }
-  .pt-tile h4{
-    font-family:'EB Garamond',serif; font-weight:500; margin:0;
-    font-size:clamp(22px,2.2vw,32px); letter-spacing:-0.022em; line-height:1.05;
-  }
-  .pt-tile h4 em{font-style:italic; color:var(--brass)}
-  .pt-tile p{
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:14.5px; color:var(--paper-dim); line-height:1.45;
-    margin:14px 0 0; max-width:32ch;
-  }
-  .pt-tile.tall{grid-row:span 2}
-  .pt-tile.wide{grid-column:span 2}
-  .pt-tile.hero{
-    background:rgba(200,147,79,0.06);
-    border:1px solid var(--brass-dim);
-  }
-  .pt-tile.hero h4{font-size:clamp(28px,2.8vw,42px)}
-  .pt-tile.hero h4 em{color:var(--brass)}
-  .pt-tile.dark{background:#050A14}
-  .pt-tile .pt-num{
-    position:absolute; top:20px; right:20px;
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:14px; color:var(--paper-ghost);
-  }
-  @media (max-width:1000px){
-    .pt-mosaic{grid-template-columns:repeat(6,1fr)}
-    .pt-tile.wide{grid-column:span 3}
-    .pt-tile.tall{grid-row:auto}
-  }
-  @media (max-width:600px){
-    .pt-mosaic{grid-template-columns:1fr}
-    .pt-tile.wide{grid-column:auto}
-  }
-
-  /* =========================================
-     SECTION 02 — USE CASES as CARD DECK
-     ========================================= */
-  .deck-stage{
-    position:relative;
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    user-select:none;
-  }
-  .deck-frame{
-    position:relative;
-    width:100%;
-    height:580px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    perspective: 1600px;
-  }
-  @media (max-width:1100px){ .deck-frame{height:540px} }
-  @media (max-width:700px){ .deck-frame{height:500px} }
-
-  .deck-card{
-    position:absolute;
-    width:440px;
-    height:560px;
-    /* warmer cream with vertical sheen for a premium paper feel */
-    background:
-      linear-gradient(180deg, #FBF8F1 0%, #F5F1E6 48%, #EFE9DB 100%);
-    color:var(--ink);
-    padding:0;
-    box-sizing:border-box;
-    display:flex;
-    flex-direction:column;
-    transform-origin: 50% 60%;
-    transition:
-      transform .7s cubic-bezier(0.2, 0.9, 0.3, 1),
-      opacity   .45s cubic-bezier(0.2, 0.9, 0.3, 1),
-      box-shadow .45s ease;
-    will-change: transform, opacity;
-    /* outer brass hairline */
-    border: 1px solid rgba(200,147,79,0.45);
-  }
-  /* inner double-frame (brass hairline offset from edge) */
-  .deck-card::before{
-    content:'';
-    position:absolute;
-    inset:10px;
-    border:1px solid rgba(200,147,79,0.55);
-    pointer-events:none;
-    z-index:1;
-  }
-  /* hairline above the inner frame for the double-rule look */
-  .deck-card::after{
-    content:'';
-    position:absolute;
-    inset:14px;
-    border:1px solid rgba(200,147,79,0.16);
-    pointer-events:none;
-    z-index:1;
-  }
-  /* card content sits inside the frame */
-  .deck-card > *{
-    position:relative;
-    z-index:2;
-  }
-  .card-body{
-    padding:46px 42px 40px;
-    display:flex; flex-direction:column; height:100%;
-    box-sizing:border-box;
-  }
-  @media (max-width:1100px){
-    .deck-card{width:400px; height:520px}
-    .card-body{padding:40px 36px 34px}
-  }
-  @media (max-width:700px){
-    .deck-card{width:min(86vw, 380px); height:auto; min-height:480px}
-    .card-body{padding:34px 28px 28px}
-  }
-
-  .deck-card.is-top{ cursor:pointer; }
-  .deck-card.is-top:active{ cursor:grabbing; }
-
-  /* Corner ornaments — small brass flourishes in each inner corner */
-  .card-corner-ornament{
-    position:absolute;
-    width:18px; height:18px;
-    z-index:2;
-    pointer-events:none;
-    color:rgba(200,147,79,0.7);
-  }
-  .card-corner-ornament.tl{ top:18px; left:18px; }
-  .card-corner-ornament.tr{ top:18px; right:18px; transform:rotate(90deg); }
-  .card-corner-ornament.bl{ bottom:18px; left:18px; transform:rotate(-90deg); }
-  .card-corner-ornament.br{ bottom:18px; right:18px; transform:rotate(180deg); }
-  .card-corner-ornament svg{ width:100%; height:100%; display:block; }
-
-  /* Persona icon medallion — top center */
-  .deck-card .card-icon{
-    align-self:center;
-    width:72px; height:72px;
-    color:var(--brass);
-    border:1px solid rgba(200,147,79,0.5);
-    border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    padding:12px;
-    background:
-      radial-gradient(circle at 50% 40%, rgba(200,147,79,0.1), transparent 70%);
-    margin-bottom:26px;
-    flex-shrink:0;
-  }
-  @media (max-width:700px){
-    .deck-card .card-icon{ width:62px; height:62px; padding:10px; margin-bottom:20px }
-  }
-  .deck-card .card-icon svg{ width:100%; height:100%; display:block }
-
-  /* Category eyebrow */
-  .card-eyebrow{
-    font-family:'JetBrains Mono',monospace;
-    font-size:10px; letter-spacing:0.28em;
-    color:var(--brass); text-transform:uppercase;
-    text-align:center;
-    margin:0 0 14px;
-    display:flex; align-items:center; justify-content:center; gap:10px;
-  }
-  .card-eyebrow::before,
-  .card-eyebrow::after{
-    content:''; width:26px; height:1px;
-    background:rgba(200,147,79,0.4);
-  }
-
-  .deck-card .card-title{
-    font-family:'EB Garamond',serif;
-    font-weight:500;
-    font-size:clamp(32px, 3vw, 42px);
-    line-height:1.02;
-    letter-spacing:-0.025em;
-    color:var(--ink);
-    margin:0 0 10px;
-    text-align:center;
-  }
-  .deck-card .card-tagline{
-    font-family:'EB Garamond',serif;
-    font-style:italic;
-    font-size:17.5px;
-    line-height:1.3;
-    color:var(--brass);
-    margin:0 0 22px;
-    letter-spacing:-0.005em;
-    text-align:center;
-  }
-  /* Divider between tagline and narrative */
-  .card-divider{
-    align-self:center;
-    width:40px; height:12px;
-    margin:0 auto 22px;
-    color:rgba(200,147,79,0.7);
-    flex-shrink:0;
-  }
-  .card-divider svg{ width:100%; height:100%; display:block }
-
-  .deck-card .card-narrative{
-    font-family:'EB Garamond',serif;
-    font-size:15px;
-    line-height:1.55;
-    color:var(--ink);
-    margin:0;
-    max-width:44ch;
-    flex:1 1 auto;
-    text-align:left;
-  }
-  @media (max-width:1100px){
-    .deck-card .card-title{font-size:34px}
-    .deck-card .card-narrative{font-size:14.5px; line-height:1.52}
-  }
-  @media (max-width:700px){
-    .deck-card .card-title{font-size:28px}
-    .deck-card .card-tagline{font-size:16px; margin-bottom:18px}
-    .deck-card .card-narrative{font-size:14px; line-height:1.5}
-  }
-
-  /* Background cards — masked content, just paper + frames */
-  .deck-card:not(.is-top) .card-body,
-  .deck-card:not(.is-top) .card-corner-ornament{
-    opacity:0;
-  }
-  .deck-card:not(.is-top){
-    /* keep the warm paper and frames, just add a muting overlay */
-    background:
-      linear-gradient(180deg, #F5F1E6 0%, #EEE7D6 100%);
-  }
-  .deck-card:not(.is-top)::before{
-    border-color: rgba(200,147,79,0.3);
-  }
-  .deck-card:not(.is-top)::after{
-    border-color: rgba(200,147,79,0.08);
-  }
-  /* darkening tint for back cards so the top card pops */
-  .deck-card .card-tint{
-    position:absolute; inset:0;
-    background:rgba(10,18,36,0.12);
-    pointer-events:none;
-    z-index:0;
-    opacity:0;
-    transition:opacity .45s ease;
-  }
-  .deck-card:not(.is-top) .card-tint{ opacity:1 }
-
-  /* Premium drop shadow only for the top card */
-  .deck-card.is-top{
-    box-shadow:
-      0 30px 60px -20px rgba(0,0,0,0.55),
-      0 8px 18px -8px rgba(0,0,0,0.35),
-      inset 0 1px 0 rgba(255,255,255,0.6);
-  }
-
-  /* Exit animation — tossed up and right */
-  .deck-card.is-exiting{
-    transform: translate(var(--exit-x, 120%), -40%) rotate(var(--exit-rot, 10deg)) !important;
-    opacity:0 !important;
-    pointer-events:none;
-    transition:
-      transform .55s cubic-bezier(0.2, 0.9, 0.3, 1),
-      opacity .4s ease-out;
-  }
-
-  /* Drag state — no transitions, direct control */
-  .deck-card.is-dragging{
-    transition: none !important;
-  }
-
-  /* Deck controls */
-  .deck-controls{
-    margin-top:36px;
-    display:flex; align-items:center; justify-content:center; gap:28px;
-    font-family:'JetBrains Mono',monospace;
-  }
-  .deck-btn{
-    background:transparent;
-    border:1px solid var(--rule-strong);
-    color:var(--brass);
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px; letter-spacing:0.16em;
-    padding:12px 20px;
-    cursor:pointer;
-    text-transform:uppercase;
-    transition: all .18s ease;
-    min-width:72px;
-    text-align:center;
-  }
-  .deck-btn:hover{
-    color:var(--paper);
-    border-color:var(--brass);
-    background:rgba(200,147,79,0.06);
-  }
-  .deck-count{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px; letter-spacing:0.22em;
-    color:var(--paper-dim);
-    min-width:72px; text-align:center;
-    font-variant-numeric: tabular-nums;
-  }
-  .deck-count b{color:var(--paper); font-weight:500}
-
-  .deck-dots{
-    margin-top:22px;
-    display:flex; gap:10px; justify-content:center;
-  }
-  .deck-dot{
-    width:6px; height:6px; border-radius:50%;
-    background:var(--paper-ghost);
-    transition: background .3s, transform .3s;
-    cursor:pointer;
-    border:none; padding:0;
-  }
-  .deck-dot.active{
-    background:var(--brass);
-    transform:scale(1.35);
-  }
-  .deck-dot:hover:not(.active){
-    background:var(--paper-faint);
-  }
-
-  .deck-closer{
-    margin-top:72px;
-    text-align:center;
-    font-family:'EB Garamond',serif;
-    font-style:italic;
-    font-size:clamp(20px, 1.9vw, 24px);
-    line-height:1.5;
-    color:var(--paper-dim);
-    max-width:52ch; margin-left:auto; margin-right:auto;
-    letter-spacing:-0.005em;
-    text-wrap:balance;
-  }
-  .deck-closer b{
-    color:var(--paper); font-weight:500; font-style:normal;
-  }
-
-  .deck-hint{
-    margin-top:18px;
-    text-align:center;
-    font-family:'JetBrains Mono',monospace;
-    font-size:10px; letter-spacing:0.2em;
-    color:var(--paper-faint); text-transform:uppercase;
-  }
-  .deck-hint kbd{
-    font-family:'JetBrains Mono',monospace;
-    font-size:10px;
-    border:1px solid var(--rule);
-    padding:2px 6px; margin:0 2px;
-    color:var(--paper-dim);
-  }
-
-  /* Reduced motion — collapse to horizontal scrollable row */
-  @media (prefers-reduced-motion: reduce){
-    .deck-frame{
-      height:auto;
-      display:flex;
-      overflow-x:auto;
-      overflow-y:hidden;
-      justify-content:flex-start;
-      gap:20px;
-      padding:8px 4px 24px;
-      perspective:none;
-      scroll-snap-type: x mandatory;
-    }
-    .deck-card{
-      position:relative;
-      flex:0 0 auto;
-      transform:none !important;
-      opacity:1 !important;
-      transition:none !important;
-      scroll-snap-align:center;
-      box-shadow: 0 10px 24px -12px rgba(0,0,0,0.35);
-    }
-    .deck-card:not(.is-top) .card-tint{display:none}
-    .deck-card:not(.is-top) .card-body,
-    .deck-card:not(.is-top) .card-corner-ornament{opacity:1}
-    .deck-dots{display:none}
-  }
-
-  /* =========================================
-     PRINCIPLES — full-width stages
-     ========================================= */
-  .principles-stages{
-    border-top:1px solid var(--rule-strong);
-    border-bottom:1px solid var(--rule-strong);
-  }
-  .pstage{
-    display:grid;
-    grid-template-columns: 120px minmax(0,1fr) minmax(0,0.7fr);
-    gap:48px;
-    align-items:center;
-    padding:56px 0;
-    border-bottom:1px solid var(--rule);
-    min-height:240px;
-  }
-  .pstage:last-child{border-bottom:none}
-  .pstage-num{
-    font-family:'EB Garamond',serif; font-style:italic; font-weight:500;
-    font-size:clamp(72px,7vw,108px); color:var(--brass);
-    line-height:0.9; letter-spacing:-0.04em;
-  }
-  .pstage-body h3{
-    font-family:'EB Garamond',serif; font-style:italic; font-weight:500;
-    font-size:clamp(52px,5.6vw,80px); letter-spacing:-0.03em; line-height:1;
-    color:var(--brass); margin:0 0 22px;
-  }
-  .pstage-lead{
-    font-family:'EB Garamond',serif; font-size:22px; line-height:1.4;
-    color:var(--paper); margin:0 0 10px; max-width:36ch;
-  }
-  .pstage-sub{
-    font-family:'EB Garamond',serif; font-style:italic; font-size:17px;
-    color:var(--paper-dim); margin:0; max-width:36ch;
-  }
-  .pstage-visual{
-    display:flex; align-items:center; justify-content:center;
-    min-height:160px;
-  }
-  .pstage-visual svg{ width:100%; max-width:220px; height:auto; }
-  @media (max-width:900px){
-    .pstage{grid-template-columns: 60px 1fr; gap:24px; padding:44px 0}
-    .pstage-visual{grid-column:1/-1; margin-top:16px; justify-content:flex-start}
-    .pstage-num{font-size:56px}
-    .pstage-body h3{font-size:44px; margin-bottom:14px}
-    .pstage-lead{font-size:19px}
-  }
-
-  /* Viz: permissionless terminal */
-  .viz-term, .viz-spec{
-    width:100%; max-width:240px;
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    line-height:1.6; color:var(--paper-dim);
-    padding:16px 18px; background:rgba(0,0,0,0.28);
-    border:1px solid var(--rule); min-height:130px;
-    overflow:hidden;
-  }
-  .viz-term .p{color:var(--brass)}
-  .viz-term .ok{color:var(--paper-dim)}
-  .viz-spec{
-    max-width:260px; min-height:150px;
-    border-color:var(--rule-strong);
-    color:var(--paper-faint);
-    white-space:pre; overflow:hidden;
-  }
-  .viz-spec b{color:var(--brass); font-weight:500}
-
-  /* Viz: user-centric — absorb animation */
-  .viz-return .viz-return-a{
-    animation: absorbA 4.5s ease-in-out infinite;
-  }
-  .viz-return .viz-return-b{
-    animation: absorbB 4.5s ease-in-out infinite;
-  }
-  @keyframes absorbA{
-    0%,100%{transform:translateX(0);opacity:1}
-    45%,55%{transform:translateX(80px);opacity:0.1}
-  }
-  @keyframes absorbB{
-    0%,100%{transform:translateX(0);opacity:1}
-    45%,55%{transform:translateX(-80px);opacity:0.1}
-  }
-
-  /* Viz: decentralised — traveling glow */
-  .viz-ring-dot{fill:rgba(245,242,236,0.4); transition:fill .3s, filter .3s;}
-  .viz-ring-dot.on{fill:#C8934F; filter:drop-shadow(0 0 4px rgba(200,147,79,0.8));}
-
-  /* =========================================
-     AGENTS section
-     ========================================= */
-  .agents-grid{
-    display:grid; grid-template-columns:1fr 1.2fr; gap:64px;
-    align-items:stretch;
-    border-top:1px solid var(--rule-strong);
-    padding-top:56px;
-  }
-  @media (max-width:1000px){ .agents-grid{grid-template-columns:1fr; gap:40px} }
-  .agents-manifesto{
-    font-family:'EB Garamond',serif; font-size:20px; line-height:1.55;
-    color:var(--paper); margin:0 0 40px; max-width:48ch;
-  }
-  .agents-caps{
-    display:flex; flex-direction:column; gap:22px;
-    border-top:1px solid var(--rule); padding-top:28px;
-  }
-  .agents-cap-title{
-    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
-    letter-spacing:0.2em; color:var(--paper); text-transform:uppercase;
-    margin-bottom:6px;
-    display:flex; align-items:center; gap:12px;
-  }
-  .agents-cap .hex{color:var(--brass); font-size:16px}
-  .agents-cap-sub{
-    font-family:'EB Garamond',serif; font-style:italic; font-size:16px;
-    color:var(--paper-dim); padding-left:28px;
-  }
-  .agents-term{
-    background:rgba(0,0,0,0.38);
-    border:1px solid var(--brass-dim);
-    height:100%;
-    display:flex; flex-direction:column;
-  }
-  .agents-term-head{
-    display:flex; align-items:center; gap:10px;
-    padding:12px 18px; border-bottom:1px solid var(--rule);
-    font-family:'JetBrains Mono',monospace; font-size:10.5px;
-    letter-spacing:0.14em; color:var(--paper-faint);
-    text-transform:uppercase;
-  }
-  .agents-term-head .pulse{
-    width:7px; height:7px; border-radius:50%; background:var(--cta);
-    animation:pulse 2s infinite;
-  }
-  .agents-term-body{
-    padding:18px 20px;
-    font-family:'JetBrains Mono',monospace; font-size:12.5px;
-    line-height:1.7;
-    color:var(--paper-dim);
-    min-height:380px; max-height:380px;
-    overflow:hidden;
-    display:flex; flex-direction:column; justify-content:flex-end;
-    gap:2px;
-  }
-  .agents-line{
-    white-space:pre;
-    opacity:0; animation: fadein .4s ease forwards;
-    font-variant-numeric:tabular-nums;
-  }
-  @keyframes fadein{to{opacity:1}}
-  .agents-line .ts{color:var(--paper-faint)}
-  .agents-line .orch{color:var(--paper)}
-  .agents-line .reg{color:var(--paper)}
-  .agents-line .set{color:var(--cta)}
-  .agents-line .rep{color:var(--brass)}
-  .agents-line .agent{color:var(--paper-dim)}
-  .agents-line .sfx{color:var(--paper-faint)}
-  .agents-line .arr{color:var(--paper-faint); margin:0 6px}
-  .agents-line .ok{color:var(--brass)}
-  .agents-closer{
-    margin-top:56px;
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:clamp(22px,2.4vw,30px);
-    color:var(--paper-dim); text-align:center;
-    max-width:52ch; margin-left:auto; margin-right:auto;
-    letter-spacing:-0.01em;
-  }
-
-  /* =========================================
-     Chapter pull-quotes
-     ========================================= */
-  .chapter-mark{
-    text-align:center;
-    padding:80px 0;
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:clamp(22px,2.4vw,32px);
-    color:var(--brass); letter-spacing:-0.01em;
-    border-top:1px solid var(--rule);
-    border-bottom:1px solid var(--rule);
-  }
-
-  /* Composer — settlement + primitive stack additions */
-  .composer .stack-pills{
-    margin-top:22px;
-    display:flex; flex-wrap:wrap; gap:6px;
-    font-family:'JetBrains Mono',monospace; font-size:10px;
-    letter-spacing:0.16em; text-transform:uppercase;
-    color:var(--paper-faint);
-  }
-  .composer .stack-pills span{
-    border:1px solid var(--rule); padding:4px 8px;
-  }
 </style>
 </head>
 <body>
@@ -1567,317 +517,245 @@
     <div class="wordmark">
       <span class="nfh-fabric">NFH fabric</span>
     </div>
-    <nav class="topnav">
-      <a href="#moves">What moves</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" id="navToggle">Menu</button>
+    <nav class="topnav" id="topnav" aria-label="Primary">
+      <a href="#vision">What it is</a>
+      <a href="#principles">Principles</a>
+      <a href="#capabilities">Capabilities</a>
       <a href="#services">Services</a>
       <a href="#participants">Participants</a>
+      <a href="https://github.com/Networks-for-Humanity/fabric-support/issues" class="spec" target="_blank" rel="noopener">Support &#8599;</a>
     </nav>
   </header>
 
+  <main>
   <!-- HERO -->
-  <section class="hero" style="border-top:none; padding-top:84px">
+  <section class="hero" style="border-top:none;">
     <div>
-      <div class="eyebrow"><span class="bar"></span><span>For humans, businesses, institutions, and agents.</span></div>
-      <h1>The network for <em>everything</em> of value<span class="dot-golden">.</span></h1>
-      <p class="sub">Discover, own, and exchange anything — with anyone, anywhere.</p>
-      <div>
-        <a class="cta" href="#join">[ Join the network <span class="arrow">→</span> ]</a>
-      </div>
-      <div style="margin-top:28px; font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.24em; color:var(--paper-faint); text-transform:uppercase;">
-        HUMANS · BUSINESSES · INSTITUTIONS · AGENTS
+      <div class="eyebrow"><span>For humans, businesses &amp; agents</span></div>
+      <h1>The infrastructure for <em>any value<span class="dot-golden">.</span></em></h1>
+      <p class="sub">
+        <b>Discover, buy, own, exchange, publish</b> — anything of value, with anyone, anywhere. One open network for humans, businesses, and autonomous agents.
+      </p>
+      <div class="cta-row">
+        <a class="cta" href="#join">Join the network <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="cta ghost" href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Read the docs <span class="arrow" aria-hidden="true">&#8599;</span></a>
       </div>
     </div>
     <div class="globe-stage">
-      <canvas id="globe-canvas"></canvas>
-      <div class="legend" id="globe-legend"></div>
-      <div class="globe-meta">
-        <span class="live-badge"><span class="pulse"></span>LIVE</span>
-        <span><b id="stream-count">18</b>&nbsp;streams &nbsp;·&nbsp; <span id="time-ticker" class="mono">00:00:00</span></span>
-      </div>
+      <canvas id="globe-canvas" role="img" aria-label="Animated globe showing flows of money, energy, credentials, goods, data, services and reputation between nodes worldwide."></canvas>
     </div>
   </section>
+  </main>
 
-  
-
-  <!-- 01 · WHAT MOVES (carousel) -->
-  <section id="moves">
-    <div class="carousel-head">
-      <div>
-        <div class="snum"><span>01</span><span class="bullet">·</span><span>What moves on Fabric</span></div>
-        <h2>Anything of <em>value</em>.</h2>
-      </div>
-      <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:19px;color:var(--paper-dim);max-width:32ch;text-align:right;line-height:1.5;justify-self:end;padding-bottom:6px">
-        Money and markets. Goods and services. Public programs and the cutting edge. A fraction of what the fabric already carries.
-      </div>
-    </div>
-
-    <div class="carousel-band">
-      <div class="carousel" id="carousel-1"></div>
-    </div>
-    <div class="carousel-band">
-      <div class="carousel reverse" id="carousel-2"></div>
-    </div>
-    <div class="carousel-band">
-      <div class="carousel" id="carousel-3"></div>
-    </div>
-  </section>
-
-  <!-- 02 · USE CASES — CARD DECK -->
-  <section id="usecases">
+  <!-- VISION -->
+  <section id="vision">
     <div class="section-head">
       <div>
-        <div class="snum"><span>02</span><span class="bullet">·</span><span>For whom</span></div>
-        <h2>Every participant. <em>Same rails.</em></h2>
+        <div class="snum"><span>What it is</span></div>
+        <h2>The internet moved information. <em>Fabric moves value.</em></h2>
       </div>
       <div class="side">
-        Six cards. Six protagonists. Shuffle through.
+        Open by design. Anyone uses it. Anyone runs it. Anyone builds on it.
       </div>
     </div>
 
-    <div class="deck-stage" id="deck-stage">
-      <div class="deck-frame" id="deck-frame" aria-roledescription="card deck" aria-label="Use cases — shuffle through six cards"></div>
-
-      <div class="deck-controls" role="group" aria-label="Deck navigation">
-        <button class="deck-btn" id="deck-prev" aria-label="Previous card">← Prev</button>
-        <div class="deck-count" id="deck-count"><b>01</b> / 06</div>
-        <button class="deck-btn" id="deck-next" aria-label="Next card">Next →</button>
+    <div class="intro-body">
+      <div>
+        <p class="lede">Any kind of value — published once, discovered everywhere, settled the moment conditions are met.</p>
+        <p>Today every kind of value lives on its own private rails. <b>Each network is closed. Each integration is bilateral. Each new use case starts from zero.</b></p>
+        <p>Built by <a href="https://networksforhumanity.org/" target="_blank" rel="noopener" style="color:var(--paper); text-decoration:underline; text-decoration-color:var(--brass-dim); text-underline-offset:3px;">Networks for Humanity</a>.</p>
       </div>
 
-      <div class="deck-dots" id="deck-dots" role="tablist" aria-label="Deck position"></div>
-
-      <div class="deck-hint">
-        <kbd>←</kbd><kbd>→</kbd> to shuffle · click the card to advance
+      <div>
+        <div class="intro-compare">
+          <div class="ic-row">
+            <div class="ic-before"><span class="ic-label">Before</span>KYC repeated at every counter.</div>
+            <div class="ic-after"><span class="ic-label">On Fabric</span>Verify once. <em>Reuse anywhere.</em></div>
+          </div>
+          <div class="ic-row">
+            <div class="ic-before"><span class="ic-label">Before</span>Invoices reconciled by hand.</div>
+            <div class="ic-after"><span class="ic-label">On Fabric</span>Programmable invoices. <em>Self-settling.</em></div>
+          </div>
+          <div class="ic-row">
+            <div class="ic-before"><span class="ic-label">Before</span>Loyalty locked to one brand.</div>
+            <div class="ic-after"><span class="ic-label">On Fabric</span>Tokens that travel. <em>Redeemable everywhere.</em></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <p class="deck-closer">
-      Individuals, businesses, agents, institutions, communities —<br/>
-      <b>the fabric works for each the way it works for all.</b>
-    </p>
+    <div class="value-strip" aria-label="Examples of value on Fabric">
+      <span class="vs-label">What can you exchange on fabric?</span>
+      <span>A ride</span><span>A meal</span><span>A parcel</span><span>A kilowatt</span><span>A stablecoin</span><span>An invoice</span><span>A tokenised share</span><span>A carbon credit</span><span>A GPU-hour</span><span>An LLM call</span><span>A credential</span><span>A prescription</span><span>A land title</span><span>A vote</span><span>A sneaker</span><span>A second-hand car</span><span>An agent</span><span>An API endpoint</span><span>A data-centre operator</span>
+    </div>
   </section>
 
-  <div class="chapter-mark"><em>Every kind of value. Every kind of participant.</em></div>
-
-  <!-- 03 · PRINCIPLES -->
+  <!-- PRINCIPLES -->
   <section id="principles">
-    <div class="section-head">
-      <div>
-        <div class="snum"><span>03</span><span class="bullet">·</span><span>Principles</span></div>
-        <h2>Four commitments. <em>Non-negotiable.</em></h2>
-      </div>
-      <div class="side">The rules of the road for a public value network.</div>
-    </div>
-    <div class="principles-stages">
-      <div class="pstage">
-        <div class="pstage-num">I</div>
-        <div class="pstage-body">
-          <h3>Decentralised.</h3>
-          <p class="pstage-lead">No single point of control, ownership, or failure.</p>
-          <p class="pstage-sub"><em>The network is governed by everyone who runs it.</em></p>
-        </div>
-        <div class="pstage-visual">
-          <svg class="viz-ring" viewBox="0 0 120 120" aria-hidden="true">
-            <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(200,147,79,0.18)" stroke-width="0.6"/>
-            <g id="viz-ring-dots"></g>
-          </svg>
-        </div>
-      </div>
-      <div class="pstage">
-        <div class="pstage-num">II</div>
-        <div class="pstage-body">
-          <h3>Permissionless.</h3>
-          <p class="pstage-lead">Anyone can join, subject to rule of land.</p>
-          <p class="pstage-sub"><em>No gatekeeper. No vendor to sign up with.</em></p>
-        </div>
-        <div class="pstage-visual">
-          <div class="viz-term" id="viz-term"></div>
-        </div>
-      </div>
-      <div class="pstage">
-        <div class="pstage-num">III</div>
-        <div class="pstage-body">
-          <h3>Open standards.</h3>
-          <p class="pstage-lead">The specification is the network.</p>
-          <p class="pstage-sub"><em>Not owned by any one company, country, or consortium.</em></p>
-        </div>
-        <div class="pstage-visual">
-          <div class="viz-spec" id="viz-spec"></div>
-        </div>
-      </div>
-      <div class="pstage">
-        <div class="pstage-num">IV</div>
-        <div class="pstage-body">
-          <h3>User-centric.</h3>
-          <p class="pstage-lead">Your identity, your assets, your data. Under your control.</p>
-          <p class="pstage-sub"><em>Fabric never becomes the middleman.</em></p>
-        </div>
-        <div class="pstage-visual">
-          <svg class="viz-return" viewBox="0 0 200 120" aria-hidden="true">
-            <rect x="78" y="44" width="44" height="32" rx="2" fill="none" stroke="rgba(200,147,79,0.7)" stroke-width="1"/>
-            <line x1="78" y1="52" x2="122" y2="52" stroke="rgba(200,147,79,0.4)"/>
-            <circle cx="100" cy="64" r="3" fill="#C8934F"/>
-            <circle class="viz-return-a" cx="20" cy="60" r="5" fill="none" stroke="rgba(245,242,236,0.8)" stroke-width="1"/>
-            <circle class="viz-return-b" cx="180" cy="60" r="5" fill="none" stroke="rgba(245,242,236,0.8)" stroke-width="1"/>
-          </svg>
-        </div>
+    <div class="principles-marquee" aria-label="Network principles">
+      <div class="principles-track">
+        <div class="p-card"><h4>Decentralised.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Permissionless.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Open standards.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>User centric.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Composable.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Agent-native.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <!-- duplicate for seamless loop -->
+        <div class="p-card"><h4>Decentralised.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Permissionless.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Open standards.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>User centric.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Composable.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Agent-native.</h4><span class="p-dot" aria-hidden="true"></span></div>
       </div>
     </div>
   </section>
 
-  <!-- 03b · AGENTS ARE FIRST-CLASS -->
-  <section id="agents">
+  <!-- CAPABILITIES -->
+  <section id="capabilities">
     <div class="section-head">
       <div>
-        <div class="snum"><span>04</span><span class="bullet">·</span><span>Agents are first-class</span></div>
-        <h2>Built agent-native. <em>From the ground up.</em></h2>
+        <div class="snum"><span>What's built in</span></div>
+        <h2>What you get on <em>fabric.</em></h2>
       </div>
-      <div class="side">Every primitive works for an autonomous agent the way it works for a human.</div>
+      <div class="side">Out of the box. On the network from day one. </div>
     </div>
-    <div class="agents-grid">
-      <div class="agents-left">
-        <p class="agents-manifesto">
-          Most networks were built for humans, with agents bolted on. Fabric is built the other way. An agent on Fabric has its own verifiable identity, its own wallet, its own reputation that travels with it. It can discover, negotiate, contract, and settle — with humans, businesses, or other agents — at machine speed, under a policy envelope set by its principal.
-        </p>
-        <div class="agents-caps">
-          <div class="agents-cap">
-            <div class="agents-cap-title"><span class="hex">⬡</span> AGENT IDENTITY</div>
-            <div class="agents-cap-sub"><em>Verifiable, portable, revocable.</em></div>
-          </div>
-          <div class="agents-cap">
-            <div class="agents-cap-title"><span class="hex">⬡</span> DELEGATED AUTHORITY</div>
-            <div class="agents-cap-sub"><em>Act on behalf — within a policy envelope.</em></div>
-          </div>
-          <div class="agents-cap">
-            <div class="agents-cap-title"><span class="hex">⬡</span> PER-TASK SETTLEMENT</div>
-            <div class="agents-cap-sub"><em>Pay per inference. Pay per call. Pay per outcome.</em></div>
-          </div>
-        </div>
+    <div class="why-grid">
+      <div class="why-cell">
+        <h4>Publish once. <em>Found everywhere.</em></h4>
+        <p>One catalogue, one identity, one reputation — reachable across every app and sub-network on fabric.</p>
       </div>
-      <div class="agents-right">
-        <div class="agents-term">
-          <div class="agents-term-head">
-            <span class="pulse"></span>
-            <span>agents.fabric — live transcript</span>
-          </div>
-          <div class="agents-term-body" id="agents-term-body"></div>
-        </div>
+      <div class="why-cell">
+        <h4>Contracts that <em>run themselves.</em></h4>
+        <p>Terms encoded, not negotiated. Self-executing, self-settling on delivery confirmation.</p>
+      </div>
+      <div class="why-cell">
+        <h4>Guarantees, <em>built in.</em></h4>
+        <p>If a counterparty doesn't deliver, the network refunds, escrows, or arbitrates — without lawyers or chargebacks.</p>
+      </div>
+      <div class="why-cell">
+        <h4>Reputation that <em>travels.</em></h4>
+        <p>Earn trust once. Carry it across networks. Verifiable without revealing the underlying record.</p>
+      </div>
+      <div class="why-cell">
+        <h4>Settlement, <em>instant.</em></h4>
+        <p>Value moves the moment conditions are met. No reconciliation. No multi-day clearing.</p>
+      </div>
+      <div class="why-cell">
+        <h4>One identity. <em>Many proofs.</em></h4>
+        <p>Stack a KYC check, a licence, a credit rating, a tax ID on one fabric ID. Reveal only what each counterparty needs.</p>
       </div>
     </div>
-    <p class="agents-closer"><em>Agents don't need a seat at the table. Fabric is the table.</em></p>
   </section>
 
-  <div class="chapter-mark"><em>The rules. The properties. The machinery.</em></div>
-
-  <!-- 04 · WHY -->
-  <section id="why">
-    <div class="section-head">
-      <div>
-        <div class="snum"><span>04</span><span class="bullet">·</span><span>Why Fabric works</span></div>
-        <h2>Nine features. <em>One coherent network.</em></h2>
-      </div>
-      <div class="side">Every capability a public network of value needs — open, interoperable, composable.</div>
-    </div>
-    <div class="orbit-wrap" id="orbit-wrap"></div>
-    <div class="orbit-mobile" id="orbit-mobile"></div>
-  </section>
-
-  <!-- 05 · SERVICES -->
+  <!-- SERVICES -->
   <section id="services">
     <div class="section-head">
       <div>
-        <div class="snum"><span>05</span><span class="bullet">·</span><span>What Fabric is made of</span></div>
-        <h2>Seven open services.</h2>
+        <div class="snum"><span>Services</span></div>
+        <h2>Seven primitives. <em>Composing end-to-end.</em></h2>
       </div>
       <div class="side">
-        Services marked <span class="mono" style="color:var(--cta)">★ EDGE</span> run inside each participant's own infrastructure — no central chokepoint.
+        Join. Publish. Discover. Contract. Settle. Own. Build a reputation.
       </div>
     </div>
-    <div class="puzzle-wrap">
-      <div class="puzzle-caption">
-        <span>◆ The Fabric <em>· seven services, one surface</em></span>
-        <span>Each piece snaps — none stands alone</span>
+
+    <div class="svc-edge-intro">
+      <span class="badge">&#9733; Edge</span>
+      <p style="text-align: left">Edge services run <em>inside each participant's own infrastructure</em>.</p>
+    </div>
+
+    <div class="services">
+      <div class="svc">
+        <div class="svc-num">01</div>
+        <div class="svc-title">
+          <h4>Registry <span class="svc-suffix">service.</span></h4>
+          <span class="svc-noun">Verifiable network identities for every participant.</span>
+        </div>
+        <div class="svc-desc">Cryptographic trust without bilateral key exchange. Everyone on fabric has an identity anyone can resolve and verify.</div>
       </div>
-      <div class="puzzle-grid" id="puzzle-grid"></div>
-      <div class="puzzle-fallback" id="puzzle-fallback"></div>
+      <div class="svc">
+        <div class="svc-num">02</div>
+        <div class="svc-title">
+          <h4>Credentialling <span class="svc-suffix">service.</span> <span class="edge">&#9733; Edge</span></h4>
+          <span class="svc-noun">Issue, carry, and verify portable, tamper-proof claims.</span>
+        </div>
+        <div class="svc-desc">A licence, a degree, a KYC check, an eligibility proof — issued, transported, and verified without revealing the underlying record.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">03</div>
+        <div class="svc-title">
+          <h4>Cataloguing <span class="svc-suffix">service.</span></h4>
+          <span class="svc-noun">Provider offerings, published once, at network scale.</span>
+        </div>
+        <div class="svc-desc">Schema-aware, syndicated across every app and sub-network on fabric. List a product, a service, an asset, an appointment, a credential — once.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">04</div>
+        <div class="svc-title">
+          <h4>Discovery <span class="svc-suffix">service.</span> <span class="edge">&#9733; Edge</span></h4>
+          <span class="svc-noun">Find any offering across the network with one query.</span>
+        </div>
+        <div class="svc-desc">Buyers and agents reach every catalogue, in any sector, in a single call. Runs inside the participant's own infrastructure.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">05</div>
+        <div class="svc-title">
+          <h4>Network Adapters <span class="edge">&#9733; Edge</span></h4>
+          <span class="svc-noun">Secure, compliant, peer-to-peer message exchange.</span>
+        </div>
+        <div class="svc-desc">The shared messaging layer that handles signing, routing, and schema validation so any two participants can transact directly.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">06</div>
+        <div class="svc-title">
+          <h4>Tokenisation <span class="svc-suffix">service.</span></h4>
+          <span class="svc-noun">Any form of value as a programmable, transferable token.</span>
+        </div>
+        <div class="svc-desc">Money, equity, energy, an invoice, a credit, a credential — represented as composable tokens that move across ledgers.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">07</div>
+        <div class="svc-title">
+          <h4>Observability &amp; Audit <span class="svc-suffix">services.</span></h4>
+          <span class="svc-noun">End-to-end transaction tracing and verifiable audit trails.</span>
+        </div>
+        <div class="svc-desc">Inspectable across every hop, for participants, regulators, and counterparties alike. Trust isn't just established — it's verifiable after the fact.</div>
+      </div>
     </div>
   </section>
 
-  <div class="chapter-mark"><em>Now — play with it.</em></div>
-
-  <!-- 06 · COMPOSER -->
-  <section id="compose">
-    <div class="section-head">
-      <div>
-        <div class="snum"><span>06</span><span class="bullet">·</span><span>An exchange, composed</span></div>
-        <h2>Who · what · with whom.</h2>
-      </div>
-      <div class="side">Everything the fabric carries is a sentence you can say out loud.</div>
-    </div>
-    <div class="composer">
-      <div class="sel-col">
-        <div><label>Who</label><div class="pill-row" data-group="who"></div></div>
-        <div><label>What</label><div class="pill-row" data-group="what"></div></div>
-        <div><label>With whom</label><div class="pill-row" data-group="with"></div></div>
-        <div><label>Settles in</label><div class="pill-row" data-group="settle"></div></div>
-      </div>
-      <div>
-        <div class="scenario" id="scenario"></div>
-        <div class="stack-pills" id="scenario-stack"></div>
-        <button class="reroll" id="reroll">↻ Re-roll</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 07 · PARTICIPANTS -->
+  <!-- PARTICIPANTS -->
   <section id="participants">
     <div class="section-head">
       <div>
-        <div class="snum"><span>07</span><span class="bullet">·</span><span>Who's on the fabric</span></div>
-        <h2>A network, <em>not a platform.</em></h2>
+        <div class="snum"><span>Participants</span></div>
+        <h2>Anyone can build on <em>fabric.</em></h2>
       </div>
     </div>
-    <p class="pt-intro">No gatekeepers. No rulemaker. No vendor. If you have value to offer — or something to build — the primitives are open.</p>
-    <div class="pt-mosaic">
-      <div class="pt-tile hero" style="grid-column:span 5; grid-row:span 2">
-        <div>
-          <div class="pt-tag">◆ The participants</div>
-          <h4>Eight kinds of actor. <em>One open fabric.</em></h4>
-        </div>
-        <p>No permission required. Agents and institutions join on equal terms. The rails don't know the difference.</p>
-      </div>
-      <div class="pt-tile" style="grid-column:span 4"><div class="pt-num">01</div><div><div class="pt-tag">Seeker</div><h4>Seekers</h4></div><p>Looking to discover and transact.</p></div>
-      <div class="pt-tile dark" style="grid-column:span 3"><div class="pt-num">02</div><div><div class="pt-tag">Provider</div><h4>Providers</h4></div><p>Offering value — products, services, credentials, assets.</p></div>
 
-      <div class="pt-tile" style="grid-column:span 3"><div class="pt-num">03</div><div><div class="pt-tag">Aggregator</div><h4>Aggregators</h4></div><p>Providers into coherent experiences.</p></div>
-      <div class="pt-tile dark" style="grid-column:span 4"><div class="pt-num">04</div><div><div class="pt-tag">VAS</div><h4>VAS providers</h4></div><p>Insurance, analytics, logistics, financing.</p></div>
+    <p class="pt-intro">Open infrastructure. Many participants, all peers — buyers, providers, regulators, agents and more — <b>exchanging value across one network.</b></p>
 
-      <div class="pt-tile" style="grid-column:span 4"><div class="pt-num">05</div><div><div class="pt-tag">Community</div><h4>Community organisers</h4></div><p>Clubs, cooperatives, sector networks.</p></div>
-      <div class="pt-tile" style="grid-column:span 4"><div class="pt-num">06</div><div><div class="pt-tag">Token</div><h4>Token managers</h4></div><p>Issuing, custodying, servicing tokenised assets.</p></div>
-      <div class="pt-tile dark" style="grid-column:span 4"><div class="pt-num">07</div><div><div class="pt-tag">Institution</div><h4>Institutions</h4></div><p>Governments, regulators, public markets.</p></div>
-
-      <div class="pt-tile hero" style="grid-column:span 5"><div class="pt-num">08</div><div><div class="pt-tag">Agent</div><h4>Agents. <em>First-class.</em></h4></div><p>Autonomous software on every primitive.</p></div>
-      <div class="pt-tile" style="grid-column:span 7">
-        <div class="pt-tag">◆ What they build</div>
-        <h4 style="margin-top:8px">Networked apps · Discovery engines · Credential apps · Public registries · Tokenisation apps · SDKs · Sub-networks <em>— and yours.</em></h4>
+    <div class="pt-mesh-wrap">
+      <div class="pt-mesh" id="ptMesh"></div>
+      <div class="pt-detail-panel">
+        <div class="pt-detail-eyebrow" id="ptDetailEyebrow">Featured role</div>
+        <h3 class="pt-detail-name" id="ptDetailName">Agents. <em>First-class.</em></h3>
+        <p class="pt-detail-tagline" id="ptDetailTagline">Autonomous software with the same rights as a human.</p>
+        <p class="pt-detail-text" id="ptDetailText">An agent on fabric holds an identity, signs transactions, holds tokens, earns reputation, and is accountable for what it does. Every primitive works for it the way it works for a person or a business — no wrapper, no second-class API.</p>
       </div>
     </div>
   </section>
 
-  <!-- 08 · FOOTER CTA -->
+  <!-- FOOTER CTA -->
   <section class="footer-cta" id="join">
     <div class="bg-glow"></div>
-    <div class="snum"><span>08</span><span class="bullet">·</span><span>Join</span></div>
-    <div style="margin-top:28px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.22em; color:var(--paper-faint); text-transform:uppercase; display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
-      <span><b style="color:var(--paper); font-weight:500;">127</b> participants</span><span>·</span>
-      <span><b style="color:var(--paper); font-weight:500;">14</b> networks</span><span>·</span>
-      <span><b style="color:var(--paper); font-weight:500;">9</b> countries</span><span>·</span>
-      <span class="live-badge" style="color:var(--brass)"><span class="pulse" style="width:6px;height:6px;border-radius:50%;background:var(--cta);display:inline-block;margin-right:6px;animation:pulse 2s infinite"></span>LIVE</span>
-    </div>
-    <h2>The rails are open.<br/><em>Build</em> what the world has never had.</h2>
-    <p class="kicker">To build on Fabric is to join the network. They are the same thing.</p>
-    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-      <a class="cta" href="#">[ Join the network <span class="arrow">→</span> ]</a>
-      <a class="cta-ghost" href="#">Read the spec →</a>
+    <h2>The infra is ready.<br/><em>Build on it.</em></h2>
+    <p class="kicker">The infrastructural product from Networks for Humanity. <em>Publish. Issue. Settle. Run a node. Bring a sub-network of your own.</em></p>
+    <div class="cta-row">
+      <a class="cta" href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Build on fabric <span class="arrow" aria-hidden="true">&#8599;</span></a>
+      <a class="cta ghost" href="https://networksforhumanity.org/" target="_blank" rel="noopener">About NFH <span class="arrow" aria-hidden="true">&#8599;</span></a>
     </div>
   </section>
 
@@ -1886,719 +764,204 @@
       <span class="nfh-fabric" style="font-size:18px">NFH fabric</span>
     </div>
     <div class="cols">
-      <div class="col"><b>Network</b><a href="#">Specification</a><a href="#">Root directory</a><a href="#">Governance</a></div>
-      <div class="col"><b>Build</b><a href="#">SDKs</a><a href="#">Reference nodes</a><a href="#">Sandbox</a></div>
-      <div class="col"><b>Read</b><a href="#">The note</a><a href="#">Working group</a><a href="#">Changelog</a></div>
+      <div class="col"><b>Network</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Specification</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Registry</a><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Governance</a></div>
+      <div class="col"><b>Build</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">SDKs</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Reference nodes</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Sandbox</a></div>
+      <div class="col"><b>Read</b><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">The note</a><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Working group</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Changelog</a></div>
     </div>
     <div style="text-align:right">
-      <div>© 2026 NFH Foundation</div>
-      <div style="margin-top:6px; color:var(--paper-ghost)">Open source · Apache-2.0</div>
+      <div>&copy; 2026 NFH Foundation</div>
+      <div style="margin-top:6px; color:var(--paper-ghost)">Open source &middot; CC-BY-SA</div>
     </div>
   </footer>
 </div>
 
 <script>
-/* ================== DATA ================== */
-
-// Finance & markets
-const MOVES_ROW_1 = [
-  "a stablecoin","a green bond","a listed equity","an unpaid invoice",
-  "a working-capital loan","a term deposit","a cross-border remittance","a music royalty",
-  "a carbon credit","a land title","an insurance cover","a transaction guarantee",
-  "a credit score","an escrow","a dispute resolution"
-];
-// Services, goods & everyday
-const MOVES_ROW_2 = [
-  "a city cab","a hot meal","a specialist consult","a hostel bed",
-  "an airline seat","a courier parcel","a concert ticket","a plumber visit",
-  "a prescription refill","a language tutor","a logistics handoff","a fraud check",
-  "a tax filing","a marketing placement"
-];
-// Public programs & the cutting edge
-const MOVES_ROW_3 = [
-  "an airline mile","a direct benefit transfer","a meal voucher","a research scholarship",
-  "an import licence","a GPU hour","an LLM call","a research agent",
-  "an open model","a training shard","a data licence"
-];
-
-const ORNAMENT = `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1"><path d="M1 1h6M1 1v6M1 1l2 2"/><circle cx="4" cy="4" r="1" fill="currentColor" stroke="none"/></svg>`;
-const DIVIDER = `<svg viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1"><line x1="0" y1="6" x2="14" y2="6"/><line x1="26" y1="6" x2="40" y2="6"/><path d="M16 6l4-4 4 4-4 4z" fill="currentColor" stroke="none" opacity=".8"/></svg>`;
-
-const PERSONA_ICONS = {
-  "The Commuter": `<svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="28" cy="28" r="26" opacity=".35"/><path d="M14 34h28M18 34v-6l4-10h12l4 10v6M22 40a3 3 0 1 1-6 0M40 40a3 3 0 1 1-6 0"/><path d="M22 28h12" opacity=".5"/></svg>`,
-  "The Small Business": `<svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="28" cy="28" r="26" opacity=".35"/><path d="M14 22l14-8 14 8v20H14z"/><path d="M24 42V30h8v12" opacity=".7"/><path d="M14 22h28" opacity=".5"/></svg>`,
-  "The Developer": `<svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="28" cy="28" r="26" opacity=".35"/><path d="M22 20l-8 8 8 8M34 20l8 8-8 8M31 18l-6 20"/></svg>`,
-  "The API": `<svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="28" cy="28" r="26" opacity=".35"/><circle cx="18" cy="28" r="4"/><circle cx="38" cy="18" r="4"/><circle cx="38" cy="38" r="4"/><path d="M22 28l12-8M22 28l12 8" opacity=".7"/></svg>`,
-  "The Treasury": `<svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="28" cy="28" r="26" opacity=".35"/><path d="M14 22L28 14l14 8M16 22v16M40 22v16M22 24v14M28 24v14M34 24v14M12 40h32"/></svg>`,
-  "The Group": `<svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="28" cy="28" r="26" opacity=".35"/><circle cx="28" cy="28" r="14"/><path d="M14 28h28M28 14v28M18 18l20 20M38 18L18 38" opacity=".5"/></svg>`,
-};
-
-const USECASES = [
-  {
-    category:"Everyday",
-    title:"The Commuter",
-    tagline:"Any ride. Any app. Any currency.",
-    narrative:"A passenger in Munich opens her banking app and searches for a ride to the station. The fabric surfaces offers from seven mobility providers — cabs, e-bikes, car shares, the city bus. She picks a cab, pays from the same app, tips her driver in stablecoin, and the receipt lands directly in her corporate expense workflow. The driver is paid the moment the trip completes. No app download. No second account.",
-    specs:["Discovery","Adapters","Tokenisation","Audit"]
-  },
-  {
-    category:"Everyday",
-    title:"The Small Business",
-    tagline:"One catalogue. Global buyers. Instant capital.",
-    narrative:"A shoe atelier in Porto publishes its catalogue once. A boutique in Tokyo orders samples, a department store in New York places a private-label run, and a procurement agent in Singapore bundles it into a gift programme. Outstanding invoices tokenise as the orders ship; a local Portuguese bank advances 80% against them within the hour. On-time fulfilment compounds globally as portable reputation.",
-    specs:["Catalogue","Discovery","Tokenisation","Reputation"]
-  },
-  {
-    category:"Cutting Edge",
-    title:"The Developer",
-    tagline:"A team of agents, assembled on demand.",
-    narrative:"In San Francisco, a solo developer spawns a product launch task. Her orchestrator agent discovers and hires three specialists on the fabric — a research agent in London, a codegen agent in Seoul, a verification agent on a consortium node in Zurich. They coordinate, commit code, and disband in four hours. Each is paid per task. Each carries its reputation to the next hire.",
-    specs:["Discovery","Reputation","Tokenisation","Adapters"]
-  },
-  {
-    category:"Cutting Edge",
-    title:"The API",
-    tagline:"Machine-native commerce.",
-    narrative:"A three-person startup in Berlin publishes a specialist API on the fabric. Any agent, anywhere, can discover it, call it, and pay per request — no accounts, no seat licences, no contracts. Its own dependencies bill the same way. Payments settle by the millisecond; reputation accrues per successful response. Commerce at the speed of a network call.",
-    specs:["Discovery","Tokenisation","Reputation","Adapters"]
-  },
-  {
-    category:"Government",
-    title:"The Treasury",
-    tagline:"Sovereign issuance. Atomic settlement. Audit in real time.",
-    narrative:"A finance ministry in Singapore issues tokenised green bonds directly on the fabric. Pension funds in Seoul, sovereign wealth in Abu Dhabi, and retail investors in Jakarta subscribe through their own brokers — all settling atomically against tokenised central-bank money. Coupons stream to holders automatically. The regulator watches the full cap table in real time; tax events precompute themselves; audit is continuous, not quarterly.",
-    specs:["Registry","Tokenisation","Observability","Adapters"]
-  },
-  {
-    category:"Multinational",
-    title:"The Group",
-    tagline:"Forty countries. One ledger view.",
-    narrative:"A German industrial giant runs procurement, energy, and compliance for forty country operations on one fabric. Local factories bid for renewable capacity in their own markets. Supplier onboarding completes in hours with portable reputation. Carbon credits from its solar estate in Andalucía tokenise and clear against its Swiss manufacturing footprint. Cross-border payments settle in minutes, not days. The group CFO sees the real ledger — across currencies, jurisdictions, and entities — in a single view.",
-    specs:["Catalogue","Tokenisation","Observability","Registry","Reputation"]
-  },
-];
-
-const WHY = [
-  ["Publish once.","Be discoverable everywhere."],
-  ["Programmable contracts.","Agreements self-execute."],
-  ["Smart guarantees.","Conditions verified. Recourse built in."],
-  ["Portable reputation.","Earn trust once. Carry it everywhere."],
-  ["Instant settlement.","No reconciliation. No waiting."],
-  ["Layered identifiers.","Stack attestations on one identity."],
-  ["Policy as code.","Compliance, not paperwork."],
-  ["Multi-region. Always on.","Any workload, any scale, anywhere."],
-  ["Agents, first-class.","Every primitive works for them too."]
-];
-
-const SERVICES = [
-  {n:"01", name:"Registry",              tag:"Trusted identity.",         edge:false, desc:"Every participant publishes identity, keys, and addressability under their own verified domain. Cryptographic trust without key exchanges.", specs:["DID-compatible","DNS-anchored","Self-custody"]},
-  {n:"02", name:"Catalogue",             tag:"Offerings at scale.",       edge:false, desc:"Publish, validate, and syndicate provider offerings across the whole network. Schema-aware, subscription-based, observable.",          specs:["Schema-aware","Subscription","Observable"]},
-  {n:"03", name:"Discovery",             tag:"Find anything.",            edge:true,  desc:"Runtime discovery across every catalogue, provider, and sector. One query reaches the whole fabric.",                                     specs:["Edge-run","Query-once","Any sector"]},
-  {n:"04", name:"Verifiable Credentials",tag:"Prove anything.",           edge:true,  desc:"Issue and verify tamper-proof credentials locally. Private keys never leave the issuer. Trust travels with the transaction.",            specs:["W3C-VC","Selective disclosure","Offline-verify"]},
-  {n:"05", name:"Network Adapters",      tag:"Connect to everything.",    edge:true,  desc:"Middleware for signing, schema validation, routing, message integrity. Your app code focuses on business logic.",                        specs:["Plugin-based","Domain-agnostic","Signed"]},
-  {n:"06", name:"Observability & Audit", tag:"Audit anything.",           edge:false, desc:"End-to-end transaction tracing, verifiable audit trails, live health signals across every hop. Trust isn't just established — it's inspectable.", specs:["E2E tracing","Verifiable trails","Live signals"]},
-  {n:"07", name:"Tokenisation",          tag:"Tokenise anything of value.",edge:false, desc:"Money, assets, credentials, invoices, energy — as programmable tokens. Custodied on unified ledgers. Movable across them.",             specs:["Unified ledgers","Interledger","Programmable"]},
-];
-
-/* ================== POPULATE ================== */
-
-function fillCarousel(id, items){
-  const el = document.getElementById(id);
-  const doubled = [...items, ...items];
-  el.innerHTML = `<div class="carousel-track">${doubled.map((it,i)=>`
-    <div class="carousel-item ${(i%5===2)?'accent':''}">
-      <span>${it}</span>
-      <span class="sep"></span>
-    </div>`).join('')}</div>`;
-}
-fillCarousel('carousel-1', MOVES_ROW_1);
-fillCarousel('carousel-2', MOVES_ROW_2);
-fillCarousel('carousel-3', MOVES_ROW_3);
-
-document.getElementById('deck-frame').__init = true;
-
-/* ============== CARD DECK (Section 02) ============== */
-(function buildDeck(){
-  const frame = document.getElementById('deck-frame');
-  const countEl = document.getElementById('deck-count');
-  const dotsEl = document.getElementById('deck-dots');
-  const prevBtn = document.getElementById('deck-prev');
-  const nextBtn = document.getElementById('deck-next');
-  if(!frame) return;
-
-  const N = USECASES.length;
-  const MAX_STACK = 5; // how many cards visible behind the top
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Build all cards once, in DOM order matching USECASES index.
-  // We will rotate `top` pointer to change which card is on top.
-  const cards = USECASES.map((uc, i) => {
-    const el = document.createElement('article');
-    el.className = 'deck-card';
-    el.setAttribute('data-idx', i);
-    el.setAttribute('role','group');
-    el.setAttribute('aria-label', `Card ${i+1} of ${N}: ${uc.title}`);
-    el.innerHTML = `
-      <div class="card-tint" aria-hidden="true"></div>
-      <span class="card-corner-ornament tl" aria-hidden="true">${ORNAMENT}</span>
-      <span class="card-corner-ornament tr" aria-hidden="true">${ORNAMENT}</span>
-      <span class="card-corner-ornament bl" aria-hidden="true">${ORNAMENT}</span>
-      <span class="card-corner-ornament br" aria-hidden="true">${ORNAMENT}</span>
-      <div class="card-body">
-        <div class="card-icon" aria-hidden="true">${PERSONA_ICONS[uc.title] || ''}</div>
-        <div class="card-eyebrow">${uc.category}</div>
-        <h3 class="card-title">${uc.title}</h3>
-        <p class="card-tagline">${uc.tagline}</p>
-        <div class="card-divider" aria-hidden="true">${DIVIDER}</div>
-        <p class="card-narrative">${uc.narrative}</p>
-      </div>
-    `;
-    frame.appendChild(el);
-    return el;
-  });
-
-  // Build dots
-  USECASES.forEach((_, i) => {
-    const b = document.createElement('button');
-    b.className = 'deck-dot';
-    b.type = 'button';
-    b.setAttribute('role','tab');
-    b.setAttribute('aria-label', `Go to card ${i+1}`);
-    b.addEventListener('click', () => go(i));
-    dotsEl.appendChild(b);
-  });
-
-  let topIdx = 0;
-  let isAnimating = false;
-
-  function updateIndicators(){
-    countEl.innerHTML = `<b>${String(topIdx+1).padStart(2,'0')}</b> / ${String(N).padStart(2,'0')}`;
-    [...dotsEl.children].forEach((d, i) => {
-      d.classList.toggle('active', i === topIdx);
-      d.setAttribute('aria-selected', i === topIdx);
-    });
-  }
-
-  function layout(animated){
-    // Each card's position relative to top: (i - topIdx + N) % N
-    cards.forEach((card, i) => {
-      const rel = (i - topIdx + N) % N;
-      positionCard(card, rel, animated);
-    });
-    updateIndicators();
-  }
-
-  // Pre-computed stack offsets: rel 0 = top. Each step further back.
-  // Offsets alternate left/right slightly so the fan looks organic.
-  const STACK_OFFSETS = [
-    // rel: [tx, ty, rot, opacityOverlay]
-    { tx:  0,  ty:  0,  rot:  0,   op: 0 },     // top
-    { tx:  8,  ty:  6,  rot:  1.8, op: 0.15 },
-    { tx: -7,  ty: 10,  rot: -2.4, op: 0.2 },
-    { tx:  10, ty: 14,  rot:  2.6, op: 0.26 },
-    { tx: -6,  ty: 18,  rot: -1.6, op: 0.3 },
-    { tx:  4,  ty: 22,  rot:  2.0, op: 0.35 },
+/* ================== PARTICIPANTS NETWORK MESH ================== */
+(function(){
+  const mesh = document.getElementById('ptMesh');
+  if(!mesh) return;
+  const W = 1080, H = 780;
+  const items = [
+    { id:'seekers',     name:'Seekers',       em:null,
+      tagline:'Anyone looking for something on the network.',
+      detail:'Buyers, riders, patients, employers, procurers, citizens. They discover offers, verify counterparties, and transact through any app on fabric.' },
+    { id:'providers',   name:'Providers',     em:null,
+      tagline:'Anyone with something to offer.',
+      detail:'A merchant, a bank, a hospital, a software vendor, a sole trader. Publish offerings once, settle directly, accrue reputation that travels.' },
+    { id:'aggregators', name:'Aggregators',   em:null,
+      tagline:'Many providers, one experience.',
+      detail:'Apps that bundle providers into a single buyer-facing surface. They make supply legible to demand.' },
+    { id:'vas',         name:'VAS providers', em:null,
+      tagline:'Layered onto any transaction.',
+      detail:'Insurance, analytics, logistics, financing, fraud — services that compose on top of any exchange on the network.' },
+    { id:'communities', name:'Communities',   em:null,
+      tagline:'Sub-networks for members.',
+      detail:'Cooperatives, guilds, sector bodies. They run their own sub-networks for members on shared open rails.' },
+    { id:'tokens',      name:'Token managers',em:null,
+      tagline:'Issuers and custodians.',
+      detail:'Stewards of tokenised assets — money, securities, carbon credits, invoices, energy. Custody under the rules of land, movable across ledgers.' },
+    { id:'institutions',name:'Institutions',  em:null,
+      tagline:'Public infrastructure operators.',
+      detail:'Governments, central banks, exchanges. They issue identifiers, settle money, run public markets — on the same rails as everyone else.' },
+    { id:'regulators',  name:'Regulators',    em:null,
+      tagline:'Policy as code, enforced inline.',
+      detail:'Read the network in real time. Enforce rules at transaction time, not in quarterly audits. Inspect the trail of any exchange end-to-end.' },
+    { id:'agents',      name:'Agents',        em:'First-class.',
+      tagline:'Autonomous software with the same rights as a human.',
+      detail:'An agent on fabric holds an identity, signs transactions, holds tokens, earns reputation, and is accountable for what it does. Every primitive works for it the way it works for a person or a business — no wrapper, no second-class API.',
+      feature:true },
   ];
 
-  function positionCard(card, rel, animated){
-    card.classList.remove('is-exiting','is-dragging');
-    // Cards beyond visible stack: hidden behind
-    const visible = rel <= MAX_STACK;
-    const slot = STACK_OFFSETS[Math.min(rel, STACK_OFFSETS.length-1)];
-    card.style.transition = animated === false ? 'none' : '';
-    card.style.zIndex = String(100 - rel);
-    card.style.opacity = visible ? '1' : '0';
-    card.style.pointerEvents = rel === 0 ? 'auto' : 'none';
-    // rel 0 is top card
-    if (rel === 0){
-      card.classList.add('is-top');
-      card.style.transform = `translate(0px, 0px) rotate(0deg)`;
-    } else {
-      card.classList.remove('is-top');
-      card.style.transform = `translate(${slot.tx}px, ${slot.ty}px) rotate(${slot.rot}deg)`;
-    }
-  }
+  // seeded RNG for stable layout
+  let seed = 7;
+  const rnd = ()=>{ seed = (seed*9301 + 49297) % 233280; return seed/233280; };
 
-  function advance(dir = 1){
-    if (isAnimating) return;
-    if (reduced){
-      // Instant swap
-      topIdx = (topIdx + dir + N) % N;
-      layout(false);
-      return;
-    }
-    isAnimating = true;
-    const topCard = cards[topIdx];
-    // Toss: up and to the right if next; up and left if prev
-    const exitX = dir > 0 ? 120 : -120;
-    const exitRot = dir > 0 ? 10 : -10;
-    topCard.style.setProperty('--exit-x', `${exitX}%`);
-    topCard.style.setProperty('--exit-rot', `${exitRot}deg`);
-    topCard.classList.add('is-exiting');
-
-    // After exit begins, slide the rest forward
-    // We change topIdx immediately so layout() repositions the remaining cards,
-    // but the exiting card is pinned by .is-exiting.
-    topIdx = (topIdx + dir + N) % N;
-    updateIndicators();
-    // Re-layout non-exiting cards
-    cards.forEach((card, i) => {
-      if (card === topCard) return;
-      const rel = (i - topIdx + N) % N;
-      positionCard(card, rel, true);
-    });
-
-    // After the exit animation completes, drop the exiting card into the back of the stack
-    const cleanup = () => {
-      topCard.removeEventListener('transitionend', cleanup);
-      topCard.classList.remove('is-exiting');
-      // Place at its new rel position (back of stack) WITHOUT transition
-      const rel = (cards.indexOf(topCard) - topIdx + N) % N;
-      topCard.style.transition = 'none';
-      positionCard(topCard, rel, false);
-      // Force reflow then re-enable transitions
-      // eslint-disable-next-line no-unused-expressions
-      topCard.offsetHeight;
-      topCard.style.transition = '';
-      isAnimating = false;
-    };
-    topCard.addEventListener('transitionend', cleanup, { once: true });
-    // Safety timeout in case transitionend doesn't fire
-    setTimeout(() => { if (isAnimating) cleanup(); }, 800);
-  }
-
-  function go(idx){
-    if (idx === topIdx || isAnimating) return;
-    // Choose direction that gives the shorter visual path forward
-    // But for a deck, always go forward (dir=1) feels more natural
-    const dir = ((idx - topIdx + N) % N) <= (N/2) ? 1 : -1;
-    advance(dir);
-    // If the single advance didn't land on idx (rare for N=6), iterate
-    // Actually simpler: just advance once; user can keep tapping.
-    // For direct jumps, do instant layout:
-    if (topIdx !== idx){
-      // cancel iterative; snap after current animation
-      const snap = () => {
-        if (isAnimating) { setTimeout(snap, 50); return; }
-        topIdx = idx;
-        layout(true);
-      };
-      snap();
-    }
-  }
-
-  // Wire up controls
-  nextBtn.addEventListener('click', () => advance(1));
-  prevBtn.addEventListener('click', () => advance(-1));
-
-  // Click on top card advances
-  frame.addEventListener('click', (e) => {
-    const card = e.target.closest('.deck-card.is-top');
-    if (card && !isAnimating && !didDrag) advance(1);
+  // 9 named hubs in a 3x3 grid w/ jitter
+  const hubs = items.map((it,i)=>{
+    const cols=3, rows=3;
+    const col=i%cols, row=Math.floor(i/cols);
+    const cellW=W/cols, cellH=H/rows;
+    const jx=(rnd()-0.5)*cellW*0.45;
+    const jy=(rnd()-0.5)*cellH*0.45;
+    return Object.assign({}, it, { kind:'hub', x:cellW*(col+0.5)+jx, y:cellH*(row+0.5)+jy });
   });
-
-  // Keyboard (when deck is in view)
-  const onKey = (e) => {
-    // Only if deck is visible in viewport
-    const rect = frame.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight * 0.8 && rect.bottom > window.innerHeight * 0.2;
-    if (!inView) return;
-    // Don't capture arrows if user is typing in an input
-    if (document.activeElement && /input|textarea|select/i.test(document.activeElement.tagName)) return;
-    if (e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
-  };
-  window.addEventListener('keydown', onKey);
-
-  // Drag to toss
-  let didDrag = false;
-  let dragStart = null;
-  let dragCard = null;
-
-  const onPointerDown = (e) => {
-    if (isAnimating || reduced) return;
-    const card = e.target.closest('.deck-card.is-top');
-    if (!card) return;
-    dragCard = card;
-    dragStart = { x: e.clientX, y: e.clientY, t: Date.now() };
-    didDrag = false;
-    dragCard.classList.add('is-dragging');
-    dragCard.setPointerCapture?.(e.pointerId);
-  };
-  const onPointerMove = (e) => {
-    if (!dragCard || !dragStart) return;
-    const dx = e.clientX - dragStart.x;
-    const dy = e.clientY - dragStart.y;
-    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) didDrag = true;
-    const rot = dx * 0.04;
-    dragCard.style.transform = `translate(${dx}px, ${dy * 0.3}px) rotate(${rot}deg)`;
-  };
-  const onPointerUp = (e) => {
-    if (!dragCard || !dragStart) return;
-    const dx = e.clientX - dragStart.x;
-    const dt = Date.now() - dragStart.t;
-    const velocity = Math.abs(dx) / Math.max(dt, 1);
-    dragCard.classList.remove('is-dragging');
-    dragCard.style.transform = '';
-    const threshold = 120;
-    if (Math.abs(dx) > threshold || velocity > 0.5) {
-      advance(dx > 0 ? -1 : 1);
-    }
-    dragCard = null;
-    dragStart = null;
-    // Small timeout so the click handler can check didDrag
-    setTimeout(() => { didDrag = false; }, 50);
-  };
-  frame.addEventListener('pointerdown', onPointerDown);
-  window.addEventListener('pointermove', onPointerMove);
-  window.addEventListener('pointerup', onPointerUp);
-  window.addEventListener('pointercancel', onPointerUp);
-
-  // Initial layout
-  layout(false);
-})();
-
-/* ============== ORBITAL DIAGRAM for WHY ============== */
-(function buildOrbit(){
-  const wrap = document.getElementById('orbit-wrap');
-  const mobile = document.getElementById('orbit-mobile');
-  if(!wrap) return;
-  // Core
-  wrap.insertAdjacentHTML('beforeend', `
-    <div class="orbit-core">
-      <div class="lbl">Fabric · Core</div>
-      <div class="brand">Nine</div>
-      <div class="count">features,<br/>one network</div>
-    </div>`);
-  // 9 nodes on a ring
-  const N = WHY.length;
-  WHY.forEach((w,i)=>{
-    const angle = (i / N) * Math.PI*2 - Math.PI/2; // start top
-    const rx = 40, ry = 40; // percent from center
-    const x = 50 + Math.cos(angle)*rx;
-    const y = 50 + Math.sin(angle)*ry;
-    // Align text based on quadrant
-    const leftSide = Math.cos(angle) < -0.3;
-    const rightSide = Math.cos(angle) > 0.3;
-    let align = 'center', tx = '-50%';
-    if(leftSide){ align='right'; tx='-100%'; }
-    else if(rightSide){ align='left'; tx='0%'; }
-    wrap.insertAdjacentHTML('beforeend', `
-      <div class="orbit-node" style="left:${x}%;top:${y}%;transform:translate(${tx},-50%);text-align:${align}">
-        <div class="dot" style="${align==='right'?'margin-left:auto':''}"></div>
-        <div class="on">FEATURE · ${String(i+1).padStart(2,'0')}</div>
-        <h4>${w[0]}</h4>
-        <p>${w[1]}</p>
-      </div>`);
-  });
-  // SVG connector lines
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(svgNS,'svg');
-  svg.setAttribute('class','orbit-svg');
-  svg.setAttribute('viewBox','0 0 100 100');
-  svg.setAttribute('preserveAspectRatio','none');
-  // outer ring
-  const ring = document.createElementNS(svgNS,'circle');
-  ring.setAttribute('cx','50'); ring.setAttribute('cy','50');
-  ring.setAttribute('r','40'); ring.setAttribute('fill','none');
-  ring.setAttribute('stroke','rgba(200,147,79,0.18)'); ring.setAttribute('stroke-width','0.15');
-  ring.setAttribute('stroke-dasharray','0.5 0.7');
-  svg.appendChild(ring);
-  // inner spokes
-  WHY.forEach((w,i)=>{
-    const angle = (i / N) * Math.PI*2 - Math.PI/2;
-    const x2 = 50 + Math.cos(angle)*40;
-    const y2 = 50 + Math.sin(angle)*40;
-    const x1 = 50 + Math.cos(angle)*12;
-    const y1 = 50 + Math.sin(angle)*12;
-    const line = document.createElementNS(svgNS,'line');
-    line.setAttribute('x1',x1); line.setAttribute('y1',y1);
-    line.setAttribute('x2',x2); line.setAttribute('y2',y2);
-    line.setAttribute('stroke','rgba(200,147,79,0.24)');
-    line.setAttribute('stroke-width','0.12');
-    svg.appendChild(line);
-  });
-  wrap.appendChild(svg);
-  // Mobile fallback
-  mobile.innerHTML = WHY.map((w,i)=>`
-    <div class="m-cell">
-      <div class="n">${String(i+1).padStart(2,'0')} / 09</div>
-      <h4>${w[0]}</h4>
-      <p>${w[1]}</p>
-    </div>`).join('');
-})();
-
-/* ================== JIGSAW PUZZLE (services) ================== */
-(function buildPuzzle(){
-  const grid = document.getElementById('puzzle-grid');
-  const fallback = document.getElementById('puzzle-fallback');
-  if(!grid) return;
-
-  // 4 cols × 2 rows grid; 8 cells. Layout:
-  //  [01 Registry][02 Catalogue][03 Discovery★][FABRIC]
-  //  [04 Verifiable★][05 Adapters★][06 Obs][07 Token]
-  const COLS = 4, ROWS = 2;
-  const W = 1600, H = 900;
-  const cw = W/COLS, ch = H/ROWS;
-
-  // Tab: + outward, - inward. Using deterministic per-edge sign so neighbors interlock.
-  // Generate a path for a piece at (col,row) with tab config {top,right,bottom,left}
-  // each = +1 (tab out), -1 (tab in), 0 (flat / grid edge).
-  const tabSize = Math.min(cw,ch) * 0.14;
-
-  function edgePath(len, dir){
-    // dir: 0 flat, +1 tab outward, -1 tab inward
-    // returns relative path segments that traverse 'len' in the +x direction (we'll rotate via transform in calling code)
-    if(dir===0) return `l ${len} 0`;
-    const neckBefore = len*0.38;
-    const neckAfter  = len*0.38;
-    const neckW      = len*0.24;
-    const h = tabSize * dir * -1; // outward means up when walking along top edge (-y)
-    // cubic bezier for a rounded tab
-    // travel neckBefore, then arc out and back, then neckAfter
-    return [
-      `l ${neckBefore} 0`,
-      `c ${neckW*0.15} ${h*0.1}, ${-neckW*0.05} ${h*0.95}, ${neckW*0.5} ${h}`,
-      `c ${neckW*0.55} ${h*0.05}, ${neckW*0.35} ${-h*0.95}, ${neckW*0.5} ${-h}`,
-      `l ${neckAfter} 0`
-    ].join(' ');
+  // 22 anonymous nodes, well-spaced
+  const small=[]; let tries=0;
+  while(small.length<22 && tries<1500){
+    tries++;
+    const x=60+rnd()*(W-120), y=60+rnd()*(H-120);
+    const minH=Math.min.apply(null, hubs.map(function(h){return Math.hypot(h.x-x,h.y-y);}));
+    if(minH<110) continue;
+    const minS=small.length?Math.min.apply(null, small.map(function(s){return Math.hypot(s.x-x,s.y-y);})):999;
+    if(minS<100) continue;
+    small.push({ id:'s'+small.length, kind:'small', x:x, y:y });
   }
+  const all=hubs.concat(small);
+  // full mesh: every node to every node
+  const edges=[];
+  for(let i=0;i<all.length;i++) for(let j=i+1;j<all.length;j++) edges.push({a:all[i], b:all[j]});
 
-  // For each edge between two cells, pick a sign (deterministic). +1 means the left/top cell has a tab going OUT (to the right/down). So the right/bottom cell has a tab going INTO itself.
-  // We'll seed by position so it's stable.
-  function edgeSign(kind, a, b){
-    // simple deterministic pseudo-random
-    const s = kind + ':' + a + ',' + b;
-    let h = 2166136261;
-    for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619);}
-    return ((h>>>0)%2)===0 ? 1 : -1;
-  }
-
-  function pieceConfig(col,row){
-    const cfg = {top:0,right:0,bottom:0,left:0};
-    // top edge: shared with (col,row-1)
-    if(row>0) cfg.top = -edgeSign('h', col, row-1); // if upper piece had bottom tab out (+1), this piece has top tab in (-1)
-    if(row<ROWS-1) cfg.bottom = edgeSign('h', col, row);
-    if(col>0) cfg.left = -edgeSign('v', col-1, row);
-    if(col<COLS-1) cfg.right = edgeSign('v', col, row);
-    return cfg;
-  }
-
-  function buildPiecePath(col,row){
-    const x0 = col*cw, y0 = row*ch;
-    const cfg = pieceConfig(col,row);
-    // Walk: top (L->R), right (T->B), bottom (R->L), left (B->T)
-    // For each edge we need to express the tab path. We built edgePath for the top direction;
-    // for other orientations we need to flip sign appropriately.
-    // top: tab OUTWARD means -y, so dir=+1 with our formula (h = -tab)
-    // right: we walk +y; outward means +x; need separate formula
-    // Instead: build via separate inline path segments per edge.
-
-    const parts = [`M ${x0} ${y0}`];
-
-    // TOP edge: walk +x for length cw
-    parts.push(edgeSegment(cw, cfg.top, 'top'));
-    // RIGHT edge: walk +y for length ch
-    parts.push(edgeSegment(ch, cfg.right, 'right'));
-    // BOTTOM edge: walk -x for length cw
-    parts.push(edgeSegment(cw, cfg.bottom, 'bottom'));
-    // LEFT edge: walk -y for length ch
-    parts.push(edgeSegment(ch, cfg.left, 'left'));
-    parts.push('Z');
-    return parts.join(' ');
-  }
-
-  function edgeSegment(len, dir, side){
-    // Returns relative segments for one edge. dir: 0 flat, +1 tab out, -1 tab in.
-    if(dir===0){
-      switch(side){
-        case 'top': return `l ${len} 0`;
-        case 'right': return `l 0 ${len}`;
-        case 'bottom': return `l ${-len} 0`;
-        case 'left': return `l 0 ${-len}`;
-      }
-    }
-    const nb = len*0.38, na = len*0.38, nw = len*0.24;
-    // 'out' direction perpendicular to travel
-    // top: travel +x, outward = -y
-    // right: travel +y, outward = +x
-    // bottom: travel -x, outward = +y
-    // left: travel -y, outward = -x
-    const T = tabSize * dir; // magnitude along outward
-    const s = {
-      top:    {tx:[nb,0], cx:[nw*0.15, -0.05*nw, nw*0.5], cy:[-T*0.1,-T*0.95,-T], cx2:[nw*0.55, nw*0.35, nw*0.5], cy2:[-T*0.05, T*0.95, T], ta:[na,0]},
-      right:  {tx:[0,nb], cx:[T*0.1,T*0.95,T], cy:[nw*0.15, -0.05*nw, nw*0.5], cx2:[T*0.05, -T*0.95, -T], cy2:[nw*0.55, nw*0.35, nw*0.5], ta:[0,na]},
-      bottom: {tx:[-nb,0], cx:[-nw*0.15, nw*0.05, -nw*0.5], cy:[T*0.1, T*0.95, T], cx2:[-nw*0.55, -nw*0.35, -nw*0.5], cy2:[T*0.05, -T*0.95, -T], ta:[-na,0]},
-      left:   {tx:[0,-nb], cx:[-T*0.1,-T*0.95,-T], cy:[-nw*0.15, 0.05*nw, -nw*0.5], cx2:[-T*0.05, T*0.95, T], cy2:[-nw*0.55, -nw*0.35, -nw*0.5], ta:[0,-na]},
-    }[side];
-    return [
-      `l ${s.tx[0]} ${s.tx[1]}`,
-      `c ${s.cx[0]} ${s.cy[0]}, ${s.cx[1]} ${s.cy[1]}, ${s.cx[2]} ${s.cy[2]}`,
-      `c ${s.cx2[0]} ${s.cy2[0]}, ${s.cx2[1]} ${s.cy2[1]}, ${s.cx2[2]} ${s.cy2[2]}`,
-      `l ${s.ta[0]} ${s.ta[1]}`
-    ].join(' ');
-  }
-
-  // SVG
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(svgNS,'svg');
-  svg.setAttribute('class','puzzle-svg');
-  svg.setAttribute('viewBox',`-20 -20 ${W+40} ${H+40}`);
+  // build SVG
+  const svgNS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(svgNS,'svg');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
   svg.setAttribute('preserveAspectRatio','xMidYMid meet');
-  grid.appendChild(svg);
-
-  // Layout: position services in 8 cells with fabric in (col=3, row=0)
-  const FABRIC = {col:3,row:0,fabric:true};
-  const layout = [
-    {col:0,row:0, svc:SERVICES[0]},
-    {col:1,row:0, svc:SERVICES[1]},
-    {col:2,row:0, svc:SERVICES[2]},
-    FABRIC,
-    {col:0,row:1, svc:SERVICES[3]},
-    {col:1,row:1, svc:SERVICES[4]},
-    {col:2,row:1, svc:SERVICES[5]},
-    {col:3,row:1, svc:SERVICES[6]},
-  ];
-
-  layout.forEach((cell,i)=>{
-    const g = document.createElementNS(svgNS,'g');
-    g.setAttribute('class','puzzle-piece');
-    const d = buildPiecePath(cell.col, cell.row);
-    // shadow rim (drawn first, offset down-right)
-    const psh = document.createElementNS(svgNS,'path');
-    psh.setAttribute('d', d);
-    psh.setAttribute('class','puzzle-piece-sh');
-    g.appendChild(psh);
-    // main piece
-    const p = document.createElementNS(svgNS,'path');
-    p.setAttribute('d', d);
-    p.setAttribute('class','puzzle-piece-bg' + (cell.fabric?' fabric': (cell.svc&&cell.svc.edge?' edge':'')));
-    g.appendChild(p);
-    // highlight rim (drawn on top, offset up-left)
-    const phl = document.createElementNS(svgNS,'path');
-    phl.setAttribute('d', d);
-    phl.setAttribute('class','puzzle-piece-hl');
-    g.appendChild(phl);
-    svg.appendChild(g);
-
-    // overlay HTML content positioned over the cell
-    const x = cell.col*cw, y = cell.row*ch;
-    const left = (x / W) * 100;
-    const top  = (y / H) * 100;
-    const width = (cw / W) * 100;
-    const height = (ch / H) * 100;
-    const overlay = document.createElement('div');
-    overlay.className = 'puzzle-content' + (cell.fabric?' fabric-center':'');
-    overlay.style.cssText = `left:${left}%; top:${top}%; width:${width}%; height:${height}%;`;
-    if(cell.fabric){
-      overlay.innerHTML = `
-        <div class="meta">◆ NFH · Fabric</div>
-        <h3 class="brand">Seven services. <em>One fabric.</em></h3>
-        <div class="sub">Each piece is open. Together they interlock.</div>
-      `;
-    } else {
-      const s = cell.svc;
-      overlay.innerHTML = `
-        ${s.edge?'<span class="edge-badge">EDGE</span>':''}
-        <h4>${s.name}</h4>
-        <div class="desc">${s.desc}</div>
-      `;
-    }
-    grid.appendChild(overlay);
+  // edges
+  edges.forEach(function(e){
+    const ln=document.createElementNS(svgNS,'line');
+    ln.setAttribute('x1',e.a.x); ln.setAttribute('y1',e.a.y);
+    ln.setAttribute('x2',e.b.x); ln.setAttribute('y2',e.b.y);
+    ln.setAttribute('stroke','rgba(245,242,236,0.045)');
+    ln.setAttribute('stroke-width','0.5');
+    svg.appendChild(ln);
   });
+  // small anonymous nodes — same size as hubs
+  small.forEach(function(p){
+    const c=document.createElementNS(svgNS,'circle');
+    c.setAttribute('cx',p.x); c.setAttribute('cy',p.y); c.setAttribute('r','18');
+    c.setAttribute('fill','var(--ink-2)');
+    c.setAttribute('stroke','var(--rule-strong)');
+    c.setAttribute('stroke-width','1');
+    svg.appendChild(c);
+  });
+  // hubs — single circle + label below
+  const hubEls={};
+  hubs.forEach(function(h){
+    const g=document.createElementNS(svgNS,'g');
+    g.setAttribute('class','hub-hit');
+    g.setAttribute('data-id',h.id);
+    const halo=document.createElementNS(svgNS,'circle');
+    halo.setAttribute('cx',h.x); halo.setAttribute('cy',h.y);
+    halo.setAttribute('r', 22+14);
+    halo.setAttribute('fill','none');
+    halo.setAttribute('stroke','var(--brass)');
+    halo.setAttribute('stroke-opacity','0');
+    halo.setAttribute('stroke-width','1');
+    g.appendChild(halo);
+    const ring=document.createElementNS(svgNS,'circle');
+    ring.setAttribute('cx',h.x); ring.setAttribute('cy',h.y);
+    ring.setAttribute('r', 22);
+    ring.setAttribute('fill', h.feature ? 'rgba(200,147,79,0.18)' : 'var(--ink-2)');
+    ring.setAttribute('stroke','var(--brass)');
+    ring.setAttribute('stroke-width','1.2');
+    ring.setAttribute('class','hub-ring');
+    g.appendChild(ring);
+    const label=document.createElementNS(svgNS,'text');
+    label.setAttribute('x',h.x); label.setAttribute('y',h.y + 22 + 18);
+    label.setAttribute('text-anchor','middle');
+    label.setAttribute('fill','var(--paper)');
+    label.setAttribute('font-size','14');
+    label.setAttribute('font-weight','500');
+    label.setAttribute('class','hub-name');
+    if(h.feature) label.setAttribute('font-style','italic');
+    label.textContent = h.name;
+    g.appendChild(label);
+    svg.appendChild(g);
+    hubEls[h.id]={g:g, halo:halo, ring:ring, label:label, feature:h.feature};
+  });
+  mesh.appendChild(svg);
 
-  // Mobile fallback cards
-  fallback.innerHTML = SERVICES.map(s=>`
-    <div class="pf-card${s.edge?' edge':''}">
-      <div class="pf-head"><span>${s.tag}</span>${s.edge?'<span class="ed">★ EDGE</span>':''}</div>
-      <h4>${s.name}</h4>
-      <div class="pf-desc">${s.desc}</div>
-    </div>
-  `).join('');
+  // detail panel refs
+  const eyEl=document.getElementById('ptDetailEyebrow');
+  const nmEl=document.getElementById('ptDetailName');
+  const tgEl=document.getElementById('ptDetailTagline');
+  const txEl=document.getElementById('ptDetailText');
+
+  // safe DOM construction for the role name (avoids innerHTML)
+  function setName(name, em){
+    while(nmEl.firstChild) nmEl.removeChild(nmEl.firstChild);
+    nmEl.appendChild(document.createTextNode(name));
+    if(em){
+      nmEl.appendChild(document.createTextNode(' '));
+      const e = document.createElement('em');
+      e.textContent = em;
+      nmEl.appendChild(e);
+    }
+  }
+
+  let active='agents';
+  function paint(){
+    hubs.forEach(function(h){
+      const lit = h.id===active;
+      const e=hubEls[h.id];
+      e.ring.setAttribute('fill', lit ? 'var(--brass)' : (h.feature ? 'rgba(200,147,79,0.18)' : 'var(--ink-2)'));
+      e.ring.setAttribute('stroke', 'var(--brass)');
+      e.ring.setAttribute('stroke-width', '1.2');
+      e.halo.setAttribute('stroke-opacity', lit ? '0.35' : '0');
+      e.label.setAttribute('fill', lit ? 'var(--brass)' : 'var(--paper)');
+    });
+    const it=items.find(function(x){return x.id===active;});
+    eyEl.textContent = it.feature ? 'Featured role' : 'Role on fabric';
+    setName(it.name, it.em);
+    tgEl.textContent = it.tagline;
+    txEl.textContent = it.detail;
+  }
+  paint();
+
+  Object.values(hubEls).forEach(function(rec){
+    const id=rec.g.getAttribute('data-id');
+    rec.g.addEventListener('click', function(){ active=id; paint(); });
+    rec.g.addEventListener('mouseenter', function(){ active=id; paint(); });
+  });
 })();
 
-/* ================== COMPOSER ================== */
-const COMPOSER = {
-  who:[
-    {label:"an individual", loc:["in Nairobi","in Mumbai","in São Paulo","in Berlin","in Tokyo","in Jakarta"]},
-    {label:"a business", loc:["in Frankfurt","in Singapore","in Bangalore","in Lagos","in Stockholm"]},
-    {label:"an agent", loc:["running in Dublin","hosted in Seoul","on a co-op node"]},
-    {label:"an institution", loc:["in Geneva","in Brasília","in Pretoria"]},
-    {label:"a community", loc:["in rural Kenya","in a co-op in Kerala","in a mesh in Guatemala"]},
-  ],
-  what:[
-    {label:"carbon credit", kind:"sells a", stack:["DISCOVERY","TOKENISATION","OBSERVABILITY"]},
-    {label:"kilowatt of solar", kind:"routes a", stack:["DISCOVERY","ADAPTERS","TOKENISATION"]},
-    {label:"tokenised invoice", kind:"settles a", stack:["TOKENISATION","OBSERVABILITY","ADAPTERS"]},
-    {label:"medical record", kind:"shares a", stack:["CREDENTIALS","OBSERVABILITY"]},
-    {label:"verified credential", kind:"issues a", stack:["CREDENTIALS","REGISTRY"]},
-    {label:"GPU-hour", kind:"leases a", stack:["DISCOVERY","TOKENISATION","REPUTATION"]},
-    {label:"piece of music", kind:"licences a", stack:["CATALOGUE","TOKENISATION","REPUTATION"]},
-    {label:"dataset", kind:"publishes a", stack:["CATALOGUE","DISCOVERY","CREDENTIALS"]},
-  ],
-  with:[
-    {label:"a business in Frankfurt"},
-    {label:"an agent in Jakarta"},
-    {label:"a cooperative in Peru"},
-    {label:"an institution in Singapore"},
-    {label:"a buyer in Addis Ababa"},
-    {label:"a town in Gujarat"},
-  ],
-  settle:[
-    {label:"stablecoin"},
-    {label:"CBDC"},
-    {label:"a programmable voucher"},
-    {label:"loyalty points"},
-    {label:"a carbon credit"},
-    {label:"a model-access token"},
-  ]
-};
-const cstate = { who:0, what:0, with:0, settle:0 };
-let typingTimer = null;
-function renderPills(){
-  document.querySelectorAll('.pill-row').forEach(row=>{
-    const g = row.dataset.group;
-    if(!COMPOSER[g]) return;
-    row.innerHTML = COMPOSER[g].map((x,i)=>`<button class="pill ${cstate[g]===i?'active':''}" data-i="${i}">${x.label}</button>`).join('');
-    row.querySelectorAll('.pill').forEach(b=>b.addEventListener('click', ()=>{ cstate[g]=parseInt(b.dataset.i); renderPills(); renderScenario(); }));
+/* ================== NAV TOGGLE ================== */
+(function(){
+  const t = document.getElementById('navToggle');
+  const n = document.getElementById('topnav');
+  if(!t || !n) return;
+  t.addEventListener('click', function(){
+    const open = n.classList.toggle('open');
+    t.setAttribute('aria-expanded', open?'true':'false');
   });
-}
-function renderScenario(){
-  const w=COMPOSER.who[cstate.who], wh=COMPOSER.what[cstate.what], wt=COMPOSER.with[cstate.with], st=COMPOSER.settle[cstate.settle];
-  const loc = w.loc[Math.floor(Math.random()*w.loc.length)];
-  const html = `<em>An exchange —</em> <b>${w.label}</b> ${loc} ${wh.kind} <span class="cta-text">${wh.label}</span> to <b>${wt.label}</b>, settled in <b>${st.label}</b>.<span class="settled">◆ Settled · Verifiable · Portable</span>`;
-  const target = document.getElementById('scenario');
-  const stack = document.getElementById('scenario-stack');
-  if(typingTimer) clearInterval(typingTimer);
-
-  // Type plain text while preserving the eventual HTML. Simpler: reveal char-by-char using clip.
-  target.innerHTML = html;
-  target.style.opacity = '0';
-  requestAnimationFrame(()=>{
-    target.style.transition = 'opacity .35s ease';
-    target.style.opacity = '1';
-  });
-
-  if(stack){
-    stack.innerHTML = '';
-    setTimeout(()=>{
-      stack.innerHTML = wh.stack.map(s=>`<span>${s}</span>`).join('');
-    }, 280);
-  }
-}
-document.getElementById('reroll').addEventListener('click', ()=>{
-  cstate.who=Math.floor(Math.random()*COMPOSER.who.length);
-  cstate.what=Math.floor(Math.random()*COMPOSER.what.length);
-  cstate.with=Math.floor(Math.random()*COMPOSER.with.length);
-  cstate.settle=Math.floor(Math.random()*COMPOSER.settle.length);
-  renderPills(); renderScenario();
-});
-renderPills(); renderScenario();
+  n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');});});
+})();
 
 /* ================== GLOBE ================== */
 const canvas = document.getElementById('globe-canvas');
 const ctx = canvas.getContext('2d');
 const DPR = Math.min(window.devicePixelRatio||1, 2);
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let W=0,H=0,R=0,cx=0,cy=0;
 const projection = d3.geoOrthographic().clipAngle(90).precision(0.6);
 const path = d3.geoPath(projection, ctx);
@@ -2614,6 +977,7 @@ const STREAM_TYPES = [
   { id:"reputation", label:"Reputation",  color:"#E6C88A", width:1.5, speed:0.006, weight:2, tail:0.30, dashed:false },
 ];
 const typeFilter = new Set(STREAM_TYPES.map(t=>t.id));
+let focusType = null;
 
 function weightedType(){
   const list = STREAM_TYPES.filter(t=>typeFilter.has(t.id));
@@ -2641,13 +1005,18 @@ const NODES = [
   [36.75,3.06],[-0.95,37.37],[-13.16,-72.54],[28.01,86.91],[-22.91,-43.17],
   [29.30,47.98],[-9.43,147.18],[62.03,129.73],[-41.29,174.78]
 ];
+
+const NODE_LABELS = ["Delhi","Mumbai","Bengaluru","Kolkata","Chennai","Ahmedabad","Hyderabad","Colombo","Kathmandu","Dhaka","Karachi","Islamabad","Singapore","Jakarta","Bangkok","Manila","Hanoi","Kuala Lumpur","Ho Chi Minh","Tokyo","Beijing","Shanghai","Hong Kong","Seoul","Taipei","Sydney","Melbourne","Auckland","Brisbane","Dubai","Riyadh","Cairo","Tel Aviv","Istanbul","Tehran","Damascus","Nairobi","Johannesburg","Lagos","Mombasa","Addis Ababa","Dakar","Kinshasa","Casablanca","Cape Town","Kampala","Dar es Salaam","Bissau","London","Paris","Berlin","Rome","Madrid","Stockholm","Moscow","Prague","Budapest","Amsterdam","Dublin","Helsinki","Lisbon","Copenhagen","New York","Los Angeles","Chicago","San Francisco","Seattle","Toronto","Montreal","Houston","Miami","Mexico City","São Paulo","Buenos Aires","Lima","Bogotá","Quito","Santiago","Brasília","Caracas","La Paz","Manaus","Havana","Santo Domingo","Reykjavík","Oslo","Tashkent","Almaty","Algiers","Eldoret","Cusco","Lukla","Rio","Kuwait City","Port Moresby","Yakutsk","Wellington"];
+
 const streams = [], flares = [];
+let hoverNode = null;
+
 function spawnStream(){
   const t = weightedType(); if(!t) return;
   let a,b,tries=0;
   do{ a=NODES[Math.floor(Math.random()*NODES.length)]; b=NODES[Math.floor(Math.random()*NODES.length)]; tries++;}while(a===b&&tries<5);
   const d = d3.geoDistance([a[1],a[0]],[b[1],b[0]]); if(d<0.2) return;
-  streams.push({ type:t, origin:a, dest:b, interp:d3.geoInterpolate([a[1],a[0]],[b[1],b[0]]), t:0, speed:t.speed*(0.8+Math.random()*0.4) });
+  streams.push({ type:t, origin:a, dest:b, originIdx:NODES.indexOf(a), destIdx:NODES.indexOf(b), interp:d3.geoInterpolate([a[1],a[0]],[b[1],b[0]]), t:0, speed:t.speed*(0.8+Math.random()*0.4) });
 }
 function hexToRGBA(hex,a){const h=hex.replace('#','');return `rgba(${parseInt(h.substring(0,2),16)},${parseInt(h.substring(2,4),16)},${parseInt(h.substring(4,6),16)},${a})`;}
 function isFront(lng,lat){const rot=projection.rotate();const λ=(lng+rot[0])*Math.PI/180;const φ=lat*Math.PI/180;const φ0=-rot[1]*Math.PI/180;return Math.sin(φ0)*Math.sin(φ)+Math.cos(φ0)*Math.cos(φ)*Math.cos(λ)>0;}
@@ -2661,10 +1030,29 @@ function resize(){
   projection.translate([cx,cy]).scale(R);
 }
 
+/* Mouse hover detection */
+canvas.addEventListener('mousemove', (e)=>{
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX-rect.left, my = e.clientY-rect.top;
+  let best=null, bestD=12;
+  for(let i=0;i<NODES.length;i++){
+    const [lat,lng]=NODES[i]; if(!isFront(lng,lat)) continue;
+    const p=projection([lng,lat]); if(!p) continue;
+    const d=Math.hypot(p[0]-mx,p[1]-my);
+    if(d<bestD){ bestD=d; best=i; }
+  }
+  hoverNode = best;
+  canvas.style.cursor = best!=null ? 'pointer' : 'default';
+});
+canvas.addEventListener('mouseleave', ()=>{
+  hoverNode = null; canvas.style.cursor='default';
+});
+
 let lastSpawn=0, lastBurst=0;
 function tick(now){
   ctx.clearRect(0,0,W,H);
-  const rot = projection.rotate(); projection.rotate([rot[0]+0.022,-12,0]);
+  const rot = projection.rotate();
+  if(!REDUCED) projection.rotate([rot[0]+0.06,-12,0]);
 
   const halo = ctx.createRadialGradient(cx,cy,R*0.92,cx,cy,R*1.18);
   halo.addColorStop(0,'rgba(0,0,0,0)'); halo.addColorStop(0.55,'rgba(200,147,79,0.08)'); halo.addColorStop(1,'rgba(0,0,0,0)');
@@ -2687,14 +1075,19 @@ function tick(now){
   for(let i=0;i<NODES.length;i++){
     const [lat,lng]=NODES[i]; if(!isFront(lng,lat)) continue;
     const p = projection([lng,lat]); if(!p) continue;
+    const isHov = (i===hoverNode);
     const pulse = 0.45+0.55*Math.abs(Math.sin(now*0.0008+i*0.9));
-    ctx.beginPath(); ctx.arc(p[0],p[1],4,0,Math.PI*2); ctx.fillStyle=`rgba(245,242,236,${0.08+pulse*0.08})`; ctx.fill();
-    ctx.beginPath(); ctx.arc(p[0],p[1],1.8,0,Math.PI*2); ctx.fillStyle=`rgba(245,242,236,${0.55+pulse*0.35})`; ctx.fill();
+    const ringR = isHov?7:4;
+    ctx.beginPath(); ctx.arc(p[0],p[1],ringR,0,Math.PI*2);
+    ctx.fillStyle = isHov?'rgba(200,147,79,0.35)':`rgba(245,242,236,${0.08+pulse*0.08})`; ctx.fill();
+    ctx.beginPath(); ctx.arc(p[0],p[1],isHov?2.4:1.8,0,Math.PI*2);
+    ctx.fillStyle = isHov?'#C8934F':`rgba(245,242,236,${0.55+pulse*0.35})`; ctx.fill();
   }
 
   const elevMax = R*0.18;
   for(let i=streams.length-1;i>=0;i--){
     const s=streams[i];
+    const dimmed = focusType && s.type.id !== focusType;
     if(s.t>=1){ flareAt(s.dest,s.type.color); streams.splice(i,1); continue; }
     const tail=s.type.tail, head=s.t, t0=Math.max(0,head-tail), segs=22;
     const pts=[];
@@ -2708,21 +1101,22 @@ function tick(now){
     }
     ctx.lineCap='round'; ctx.lineJoin='round';
     if(s.type.dashed) ctx.setLineDash([4,3]); else ctx.setLineDash([]);
+    const dimMul = dimmed?0.15:1;
     for(let k=0;k<segs;k++){
       const A=pts[k], B=pts[k+1]; if(!A||!B) continue;
       const p=(k+1)/segs;
-      ctx.strokeStyle=hexToRGBA(s.type.color, Math.pow(p,1.4)*0.95);
+      ctx.strokeStyle=hexToRGBA(s.type.color, Math.pow(p,1.4)*0.95*dimMul);
       ctx.lineWidth=s.type.width*(0.55+p*0.6);
       ctx.beginPath(); ctx.moveTo(A[0],A[1]); ctx.lineTo(B[0],B[1]); ctx.stroke();
     }
     ctx.setLineDash([]);
     const hp=pts[pts.length-1];
     if(hp){
-      ctx.beginPath(); ctx.arc(hp[0],hp[1],s.type.width*2.2,0,Math.PI*2); ctx.fillStyle=hexToRGBA(s.type.color,0.28); ctx.fill();
-      ctx.beginPath(); ctx.arc(hp[0],hp[1],s.type.width*1.1,0,Math.PI*2); ctx.fillStyle=hexToRGBA(s.type.color,1); ctx.fill();
+      ctx.beginPath(); ctx.arc(hp[0],hp[1],s.type.width*2.2,0,Math.PI*2); ctx.fillStyle=hexToRGBA(s.type.color,0.28*dimMul); ctx.fill();
+      ctx.beginPath(); ctx.arc(hp[0],hp[1],s.type.width*1.1,0,Math.PI*2); ctx.fillStyle=hexToRGBA(s.type.color,1*dimMul); ctx.fill();
     }
     if(s.t<0.03) flareAt(s.origin,s.type.color);
-    s.t += s.speed;
+    s.t += s.speed * (REDUCED?0.4:1);
   }
 
   for(let i=flares.length-1;i>=0;i--){
@@ -2734,8 +1128,28 @@ function tick(now){
     ctx.beginPath(); ctx.arc(p[0],p[1],1.5+(1-k)*3,0,Math.PI*2); ctx.fillStyle=hexToRGBA(f.color,0.9*k); ctx.fill();
   }
 
-  if(now-lastSpawn>400){
-    if(streams.length<20) spawnStream();
+  /* Hover label */
+  if(hoverNode!=null){
+    const [lat,lng]=NODES[hoverNode];
+    if(isFront(lng,lat)){
+      const p=projection([lng,lat]); if(p){
+        ctx.font = '500 11px JetBrains Mono, monospace';
+        const label = (NODE_LABELS[hoverNode]||'Node').toUpperCase();
+        const tw = ctx.measureText(label).width;
+        ctx.fillStyle = 'rgba(10,18,36,0.92)';
+        ctx.fillRect(p[0]+12, p[1]-10, tw+14, 22);
+        ctx.strokeStyle = 'rgba(200,147,79,0.55)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(p[0]+12, p[1]-10, tw+14, 22);
+        ctx.fillStyle = '#C8934F';
+        ctx.fillText(label, p[0]+19, p[1]+5);
+      }
+    }
+  }
+
+  if(now-lastSpawn>260){
+    if(streams.length<27) spawnStream();
+    if(Math.random()<0.5 && streams.length<31) spawnStream();
     lastSpawn=now;
   }
   if(now-lastBurst>6500+Math.random()*2500){
@@ -2748,146 +1162,16 @@ function tick(now){
     }
     flareAt(origin,'#F5F2EC'); lastBurst=now;
   }
-  const scEl = document.getElementById('stream-count'); if(scEl) scEl.textContent = String(streams.length).padStart(2,'0');
-  const sec=Math.floor(now/1000);
-  const ttEl = document.getElementById('time-ticker'); if(ttEl) ttEl.textContent = `${String(Math.floor(sec/3600)%24).padStart(2,'0')}:${String(Math.floor(sec/60)%60).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
   requestAnimationFrame(tick);
 }
 
 (async ()=>{
   resize();
-  // Populate legend
-  const legendEl = document.getElementById('globe-legend');
-  if(legendEl){
-    legendEl.innerHTML = STREAM_TYPES.map(t=>`
-      <div class="item" data-id="${t.id}">
-        <span class="sw" style="background:${t.color}"></span>${t.label}
-      </div>`).join('');
-    legendEl.querySelectorAll('.item').forEach(el=>{
-      el.addEventListener('click',()=>{
-        const id = el.dataset.id;
-        if(typeFilter.has(id)){ typeFilter.delete(id); el.classList.add('off'); }
-        else { typeFilter.add(id); el.classList.remove('off'); }
-      });
-    });
-  }
   try{ const w = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json').then(r=>r.json()); land = topojson.feature(w, w.objects.countries); }catch(e){}
-  for(let i=0;i<18;i++) spawnStream();
+  for(let i=0;i<22;i++) spawnStream();
   requestAnimationFrame(tick);
 })();
 window.addEventListener('resize', resize);
-
-/* ================== PRINCIPLES VISUALS ================== */
-(function(){
-  // I. Decentralised — ring of 12 dots with travelling brass glow
-  const dotsG = document.getElementById('viz-ring-dots');
-  if(dotsG){
-    const N = 12, cx=60, cy=60, r=44;
-    for(let i=0;i<N;i++){
-      const a = (i/N)*Math.PI*2 - Math.PI/2;
-      const x = cx + Math.cos(a)*r, y = cy + Math.sin(a)*r;
-      const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      c.setAttribute('cx',x.toFixed(2)); c.setAttribute('cy',y.toFixed(2));
-      c.setAttribute('r','2.2'); c.setAttribute('class','viz-ring-dot');
-      c.dataset.i = i;
-      dotsG.appendChild(c);
-    }
-    let cursor = 0;
-    setInterval(()=>{
-      dotsG.querySelectorAll('.viz-ring-dot').forEach((d,i)=>{
-        const dist = Math.min((i-cursor+N)%N, (cursor-i+N)%N);
-        d.classList.toggle('on', dist<=1);
-      });
-      cursor = (cursor+1)%N;
-    }, 320);
-  }
-
-  // II. Permissionless — terminal: > join / ✓ accepted
-  const term = document.getElementById('viz-term');
-  if(term){
-    const lines = [
-      {t:'> node join fabric.net', k:'p'},
-      {t:'  handshake...', k:'ok'},
-      {t:'  ✓ accepted', k:'ok'},
-      {t:'> agent register', k:'p'},
-      {t:'  ✓ accepted', k:'ok'},
-      {t:'> seeker join', k:'p'},
-      {t:'  ✓ accepted', k:'ok'},
-      {t:'> community join', k:'p'},
-      {t:'  ✓ accepted', k:'ok'},
-    ];
-    let i = 0;
-    function tick(){
-      const visible = lines.slice(0, (i%lines.length)+1);
-      term.innerHTML = visible.map(l=>`<div class="${l.k}">${l.t}</div>`).join('');
-      i++;
-      if(i%lines.length===0){ setTimeout(()=>{ term.innerHTML=''; tick(); }, 1400); }
-      else setTimeout(tick, 520);
-    }
-    tick();
-  }
-
-  // III. Open standards — scrolling spec fragment
-  const spec = document.getElementById('viz-spec');
-  if(spec){
-    const frags = [
-`# fabric.spec  v0.4
-<b>service</b>: discovery
-  kind: edge
-  shape: query/offer
-  verifies: did+schema`,
-`<b>service</b>: tokenisation
-  kind: shared
-  shape: mint/transfer
-  verifies: receipt`,
-`<b>service</b>: credentials
-  kind: edge
-  shape: issue/present
-  verifies: vc-jwt`,
-`<b>service</b>: observability
-  kind: shared
-  shape: attestation
-  verifies: zk-proof`,
-    ];
-    let idx = 0;
-    function cycle(){
-      spec.innerHTML = frags[idx%frags.length];
-      idx++;
-      setTimeout(cycle, 2400);
-    }
-    cycle();
-  }
-})();
-
-/* ================== AGENTS — live transcript ================== */
-(function(){
-  const body = document.getElementById('agents-term-body');
-  if(!body) return;
-  const ENTRIES = [
-    `<span class="p">&gt;</span> agent.<span class="agent">alpha-7</span> <span class="arr">→</span> <span class="rep">discover</span>(<span class="sfx">solar, &lt;5km, kWh</span>)`,
-    `  <span class="ok">✓</span> 3 offers · agent.<span class="agent">meter-14</span>, agent.<span class="agent">meter-22</span>, agent.<span class="agent">meter-41</span>`,
-    `<span class="p">&gt;</span> agent.<span class="agent">alpha-7</span> <span class="arr">→</span> <span class="set">settle</span>(agent.<span class="agent">meter-22</span>, 12kWh, stablecoin)`,
-    `  <span class="ok">✓</span> receipt · portable · 0.02s`,
-    `<span class="p">&gt;</span> agent.<span class="agent">beta-3</span> <span class="arr">→</span> <span class="rep">reputation</span>(agent.<span class="agent">meter-22</span>)`,
-    `  <span class="ok">✓</span> 4.8 · 1,204 settlements · 0 disputes`,
-    `<span class="p">&gt;</span> agent.<span class="agent">gamma-1</span> <span class="arr">→</span> <span class="set">licence</span>(catalogue/music/82f1, 1x, voucher)`,
-    `  <span class="ok">✓</span> issued · expires 2026-11-30`,
-    `<span class="p">&gt;</span> agent.<span class="agent">delta-9</span> <span class="arr">→</span> <span class="rep">credential</span>(did:fabric:co-op-k4)`,
-    `  <span class="ok">✓</span> verified · 3 issuers concurring`,
-  ];
-  let i = 0;
-  function push(){
-    const line = document.createElement('div');
-    line.className = 'agents-line';
-    line.innerHTML = ENTRIES[i%ENTRIES.length];
-    body.appendChild(line);
-    // keep last ~10 lines
-    while(body.children.length > 10) body.removeChild(body.firstChild);
-    i++;
-    setTimeout(push, 900 + Math.random()*700);
-  }
-  push();
-})();
 </script>
 </body>
 </html>
