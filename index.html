@@ -1,1491 +1,1178 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NFH Fabric — The Agentic Rails</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
-  <style>
-    /* ── Reset ───────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:         #f8f5f0;
-      --bg-card:    #ffffff;
-      --bg-card-h:  #fffdfb;
-      --border:     rgba(0,0,0,0.08);
-      --border-h:   rgba(139,58,42,0.3);
-      --text-1:     #100e0b;
-      --text-2:     #5a4f48;
-      --text-3:     #a0948c;
-      --accent-1:   #8b3a2a;
-      --accent-2:   #6d2c1e;
-      --accent-3:   #c8623e;
-      --accent-lt:  #f2e8e4;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text-1);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      line-height: 1.65;
-      overflow-x: hidden;
-    }
-
-    /* ── Subtle warm mesh background ─────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse 70% 60% at 10% 15%, rgba(139,58,42,0.05) 0%, transparent 65%),
-        radial-gradient(ellipse 50% 50% at 90% 80%, rgba(200,98,62,0.04) 0%, transparent 65%),
-        radial-gradient(ellipse 60% 40% at 50% 50%, rgba(248,240,232,0.6) 0%, transparent 80%);
-    }
-
-    /* ── Layout ───────────────────────────────────────────────── */
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    section { padding: 7rem 0; }
-
-    /* ── Nav ──────────────────────────────────────────────────── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 1.1rem 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(248,245,240,0.88);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--text-1);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .nav-logo .logo-fabric {
-      color: var(--accent-1);
-    }
-
-    .nav-logo .logo-domain {
-      color: var(--text-1);
-      font-weight: 600;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2.25rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-2);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 400;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--text-1); }
-
-    .nav-cta {
-      background: var(--text-1) !important;
-      color: var(--bg) !important;
-      padding: 0.5rem 1.2rem;
-      border-radius: 6px;
-      font-weight: 500 !important;
-      font-size: 0.85rem !important;
-    }
-
-    .nav-cta:hover { opacity: 0.85; }
-
-    /* ── Hero ─────────────────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: 4rem;
-      padding-top: 5rem;
-    }
-
-    .hero-left { position: relative; z-index: 1; }
-
-    .hero-label {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent-1);
-      margin-bottom: 1.75rem;
-    }
-
-    .hero-label::before {
-      content: '—';
-      color: var(--accent-1);
-    }
-
-    .hero-title {
-      font-family: 'Lora', Georgia, serif;
-      font-size: clamp(2.8rem, 4.5vw, 4.4rem);
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
-      color: var(--text-1);
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--accent-1);
-    }
-
-    .hero-sub {
-      font-size: 1.05rem;
-      color: var(--text-2);
-      max-width: 500px;
-      margin-bottom: 2.5rem;
-      line-height: 1.75;
-      font-weight: 400;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 0.9rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: var(--accent-1);
-      color: #fff;
-      padding: 0.8rem 1.7rem;
-      border-radius: 7px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-2);
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: transparent;
-      color: var(--text-1);
-      padding: 0.8rem 1.4rem;
-      border-radius: 7px;
-      border: 1px solid var(--border);
-      font-weight: 400;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .btn-secondary:hover {
-      border-color: rgba(0,0,0,0.2);
-      background: rgba(0,0,0,0.02);
-    }
-
-    .hero-attribution {
-      margin-top: 2.5rem;
-      font-size: 0.78rem;
-      color: var(--text-3);
-    }
-
-    /* ── Hero Network Illustration ────────────────────────────── */
-    .hero-right {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-    }
-
-    .network-wrap {
-      position: relative;
-      width: 520px;
-      height: 460px;
-    }
-
-    .network-svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Node styles */
-    .node-circle {
-      transition: r 0.3s;
-    }
-
-    .node-hub {
-      animation: hub-pulse 3s ease-in-out infinite;
-    }
-
-    @keyframes hub-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    .node-outer {
-      animation: node-float 4s ease-in-out infinite;
-    }
-
-    .node-outer:nth-child(odd) { animation-delay: -2s; }
-
-    @keyframes node-float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-4px); }
-    }
-
-    /* Flow dots along paths */
-    .flow-dot {
-      r: 3;
-      fill: var(--accent-1);
-      opacity: 0.7;
-    }
-
-    /* ── Section shared ───────────────────────────────────────── */
-    .section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent-1);
-      margin-bottom: 1.1rem;
-    }
-
-    .section-label::before {
-      content: '';
-      display: block;
-      width: 20px; height: 1px;
-      background: var(--accent-1);
-    }
-
-    .section-title {
-      font-family: 'Lora', Georgia, serif;
-      font-size: clamp(2rem, 3.2vw, 2.8rem);
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      line-height: 1.18;
-      margin-bottom: 1rem;
-      color: var(--text-1);
-    }
-
-    .section-title em {
-      font-style: italic;
-      color: var(--accent-1);
-    }
-
-    .section-sub {
-      font-size: 1.05rem;
-      color: var(--text-2);
-      max-width: 580px;
-      line-height: 1.75;
-    }
-
-    /* ── Dividers ─────────────────────────────────────────────── */
-    .section-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-    }
-
-    /* ── What is Fabric ───────────────────────────────────────── */
-    #what { padding: 7rem 0; }
-
-    .what-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 6rem;
-      align-items: start;
-      margin-top: 3.5rem;
-    }
-
-    .what-points {
-      display: flex;
-      flex-direction: column;
-      gap: 1.75rem;
-    }
-
-    .what-point {
-      display: flex;
-      gap: 1.1rem;
-      align-items: flex-start;
-      padding-bottom: 1.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .what-point:last-child { border-bottom: none; padding-bottom: 0; }
-
-    .what-point-icon {
-      flex-shrink: 0;
-      width: 38px; height: 38px;
-      border-radius: 9px;
-      background: var(--accent-lt);
-      border: 1px solid rgba(139,58,42,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-    }
-
-    .what-point-text h4 {
-      font-family: 'Lora', serif;
-      font-weight: 500;
-      font-size: 1rem;
-      margin-bottom: 0.3rem;
-      color: var(--text-1);
-    }
-
-    .what-point-text p {
-      font-size: 0.88rem;
-      color: var(--text-2);
-      line-height: 1.68;
-    }
-
-    /* What — stat box */
-    .what-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.75rem;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-      display: flex;
-      gap: 1.25rem;
-      align-items: flex-start;
-    }
-
-    .stat-card-text { flex: 1; }
-
-    .stat-heading {
-      display: flex;
-      align-items: baseline;
-      gap: 0.45rem;
-      margin-bottom: 0.55rem;
-      line-height: 1;
-    }
-
-    .stat-num {
-      font-family: 'Lora', serif;
-      font-size: 2.2rem;
-      font-weight: 400;
-      color: var(--accent-1);
-      line-height: 1;
-    }
-
-    .stat-word {
-      font-family: 'Lora', Georgia, serif;
-      font-size: 2.2rem;
-      font-weight: 400;
-      font-style: italic;
-      color: #a07030;
-      line-height: 1;
-      letter-spacing: -0.01em;
-    }
-
-    .stat-illus {
-      flex-shrink: 0;
-      width: 72px;
-      height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--text-2);
-      line-height: 1.5;
-    }
-
-    /* ── Use Cases ────────────────────────────────────────────── */
-    #usecases { padding: 7rem 0; }
-
-    .usecases-header {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-
-    .usecases-header .section-sub { margin: 0 auto; }
-
-    .cases-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-
-    .case-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.75rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-      cursor: default;
-    }
-
-    .case-card:hover {
-      border-color: rgba(139,58,42,0.2);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.08);
-      transform: translateY(-3px);
-    }
-
-    .case-card.featured {
-      grid-column: span 2;
-      background: linear-gradient(135deg, #fff9f7, #fff5f2);
-      border-color: rgba(139,58,42,0.15);
-    }
-
-    .case-emoji { font-size: 1.8rem; margin-bottom: 0.9rem; }
-
-    .case-title {
-      font-family: 'Lora', serif;
-      font-size: 1.05rem;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      color: var(--text-1);
-    }
-
-    .case-desc {
-      font-size: 0.86rem;
-      color: var(--text-2);
-      line-height: 1.68;
-    }
-
-    .case-tag {
-      display: inline-block;
-      margin-top: 1rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: var(--accent-1);
-      background: var(--accent-lt);
-      padding: 0.22rem 0.7rem;
-      border-radius: 100px;
-    }
-
-    /* ── How it Works ─────────────────────────────────────────── */
-    #how { padding: 7rem 0; }
-
-    .how-inner {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 6rem;
-      align-items: start;
-      margin-top: 3.5rem;
-    }
-
-    .how-steps { display: flex; flex-direction: column; }
-
-    .how-step {
-      display: flex;
-      gap: 1.5rem;
-      padding: 1.6rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .how-step:first-child { padding-top: 0; }
-    .how-step:last-child { border-bottom: none; }
-
-    .step-num {
-      flex-shrink: 0;
-      font-family: 'Lora', serif;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--accent-1);
-      letter-spacing: 0.04em;
-      padding-top: 0.25rem;
-    }
-
-    .step-content h4 {
-      font-family: 'Lora', serif;
-      font-weight: 500;
-      font-size: 1rem;
-      margin-bottom: 0.35rem;
-      color: var(--text-1);
-    }
-
-    .step-content p {
-      font-size: 0.87rem;
-      color: var(--text-2);
-      line-height: 1.68;
-    }
-
-    /* Agent stack */
-    .agent-stack { display: flex; flex-direction: column; gap: 0.75rem; }
-
-    .stack-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.1rem 1.35rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-      transition: border-color 0.25s;
-    }
-
-    .stack-card:hover { border-color: rgba(139,58,42,0.2); }
-
-    .stack-card.highlight {
-      background: linear-gradient(135deg, #fff9f7, #fff5f2);
-      border-color: rgba(139,58,42,0.25);
-      box-shadow: 0 4px 20px rgba(139,58,42,0.08);
-    }
-
-    .stack-icon {
-      width: 34px; height: 34px;
-      border-radius: 8px;
-      background: var(--accent-lt);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.95rem;
-      flex-shrink: 0;
-    }
-
-    .stack-card.highlight .stack-icon {
-      background: var(--accent-1);
-    }
-
-    .stack-label {
-      font-family: 'Lora', serif;
-      font-size: 0.92rem;
-      font-weight: 500;
-      color: var(--text-1);
-    }
-
-    .stack-desc {
-      font-size: 0.78rem;
-      color: var(--text-2);
-      margin-top: 0.1rem;
-    }
-
-    .stack-connector {
-      text-align: center;
-      color: var(--text-3);
-      font-size: 1rem;
-      line-height: 1;
-    }
-
-    .stack-unlocks {
-      margin-top: 0.5rem;
-      padding: 1.1rem 1.35rem;
-      background: var(--accent-lt);
-      border: 1px solid rgba(139,58,42,0.12);
-      border-radius: 12px;
-    }
-
-    .stack-unlocks-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent-1);
-      margin-bottom: 0.45rem;
-    }
-
-    .stack-unlocks-items {
-      font-size: 0.82rem;
-      color: var(--text-2);
-      line-height: 1.7;
-    }
-
-    /* ── Pillars ──────────────────────────────────────────────── */
-    #pillars { padding: 7rem 0; }
-
-    .pillars-header { text-align: center; margin-bottom: 4rem; }
-    .pillars-header .section-sub { margin: 0 auto; }
-
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-
-    .pillar-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.75rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-    }
-
-    .pillar-card:hover {
-      border-color: rgba(139,58,42,0.2);
-      box-shadow: 0 6px 22px rgba(0,0,0,0.07);
-      transform: translateY(-2px);
-    }
-
-    .pillar-icon { font-size: 1.6rem; margin-bottom: 1rem; }
-
-    .pillar-title {
-      font-family: 'Lora', serif;
-      font-size: 0.98rem;
-      font-weight: 500;
-      margin-bottom: 0.45rem;
-      color: var(--text-1);
-    }
-
-    .pillar-desc {
-      font-size: 0.85rem;
-      color: var(--text-2);
-      line-height: 1.65;
-    }
-
-    /* ── CTA ──────────────────────────────────────────────────── */
-    #cta {
-      padding: 9rem 0;
-      text-align: center;
-    }
-
-    .cta-question {
-      font-family: 'Lora', Georgia, serif;
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      line-height: 1.12;
-      margin-bottom: 1.25rem;
-      color: var(--text-1);
-    }
-
-    .cta-question em {
-      font-style: italic;
-      color: var(--accent-1);
-    }
-
-    .cta-sub {
-      font-size: 1.05rem;
-      color: var(--text-2);
-      max-width: 480px;
-      margin: 0 auto 2.75rem;
-      line-height: 1.75;
-    }
-
-    .cta-actions {
-      display: flex;
-      gap: 0.9rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    /* ── Footer ───────────────────────────────────────────────── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2.5rem 0;
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .footer-brand {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-2);
-    }
-
-    .footer-brand span { color: var(--accent-1); }
-
-    .footer-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .footer-links a {
-      color: var(--text-3);
-      text-decoration: none;
-      font-size: 0.83rem;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--text-2); }
-
-    .footer-copy { font-size: 0.8rem; color: var(--text-3); }
-
-    /* ── Scroll Reveal ────────────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
-
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-    .reveal-delay-5 { transition-delay: 0.5s; }
-
-    /* ── Contrast / New Category Section ─────────────────────── */
-    #contrast { padding: 7rem 0; }
-
-    .contrast-table {
-      margin-top: 3.5rem;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      background: var(--bg-card);
-      box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-    }
-
-    .contrast-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: #faf7f4;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .contrast-header-col {
-      padding: 1rem 2rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-    }
-
-    .contrast-header-col.old  { color: var(--text-3); border-right: 1px solid var(--border); }
-    .contrast-header-col.new  { color: var(--accent-1); }
-
-    .contrast-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-
-    .contrast-row:last-child { border-bottom: none; }
-    .contrast-row:hover { background: #fdf9f7; }
-
-    .contrast-cell {
-      padding: 1.15rem 2rem;
-      font-size: 0.88rem;
-      line-height: 1.6;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-    }
-
-    .contrast-cell.old {
-      color: var(--text-3);
-      border-right: 1px solid var(--border);
-    }
-
-    .contrast-cell.old::before {
-      content: '✕';
-      font-size: 0.65rem;
-      color: #c0a898;
-      flex-shrink: 0;
-      margin-top: 0.28rem;
-      font-weight: 600;
-    }
-
-    .contrast-cell.new { color: var(--text-1); font-weight: 400; }
-
-    .contrast-cell.new::before {
-      content: '→';
-      color: var(--accent-1);
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-
-    .contrast-tagline {
-      margin-top: 2.75rem;
-      text-align: center;
-      font-family: 'Lora', serif;
-      font-size: 1.25rem;
-      font-style: italic;
-      font-weight: 400;
-      color: var(--text-2);
-    }
-
-    .contrast-tagline em { color: var(--accent-1); }
-
-    /* ── Responsive ───────────────────────────────────────────── */
-    @media (max-width: 960px) {
-      #hero { grid-template-columns: 1fr; min-height: auto; padding: 8rem 0 4rem; }
-      .hero-right { display: none; }
-      .what-grid, .how-inner { grid-template-columns: 1fr; gap: 3.5rem; }
-      .cases-grid { grid-template-columns: 1fr; }
-      .case-card.featured { grid-column: span 1; }
-      .pillars-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (max-width: 640px) {
-      .nav-links li:not(:last-child) { display: none; }
-      .pillars-grid { grid-template-columns: 1fr; }
-      .footer-inner { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NFH fabric — Infrastructure for value exchange</title>
+<meta name="description" content="NFH fabric is open infrastructure to discover, buy, own, exchange, and publish any kind of value. Built by Networks for Humanity. Open source." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<style>
+  :root{
+    --ink:#0A1224;
+    --ink-2:#060B18;
+    --paper:#F5F2EC;
+    --paper-dim:rgba(245,242,236,.66);
+    --paper-faint:rgba(245,242,236,.44);
+    --paper-ghost:rgba(245,242,236,.18);
+    --brass:#C8934F;
+    --brass-dim:rgba(200,147,79,.55);
+    --cta:#E05A2B;
+    --cta-hover:#EC6B3D;
+    --rule:rgba(245,242,236,.1);
+    --rule-strong:rgba(245,242,236,.22);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--paper);}
+  body{
+    font-family:'EB Garamond', Georgia, serif;
+    font-size:17px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  .mono{font-family:'JetBrains Mono', ui-monospace, monospace;}
+  .page{max-width:1360px; margin:0 auto; padding:0 72px;}
+  @media (max-width:1100px){ .page{padding:0 48px} }
+  @media (max-width:900px){ .page{padding:0 24px} }
+
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:2px;}
+
+  /* -------- top bar -------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:32px 0 28px;
+    border-bottom:1px solid var(--rule);
+  }
+  .wordmark{
+    display:flex; align-items:baseline; gap:14px;
+    font-family:'EB Garamond',serif; letter-spacing:-0.015em;
+  }
+  .wordmark .nfh-fabric{
+    font-family:'EB Garamond',serif;
+    font-size:30px; font-weight:500; color:var(--paper);
+    letter-spacing:-0.015em;
+    white-space:nowrap;
+  }
+  .topnav{
+    display:flex; gap:30px; align-items:center;
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--paper-dim); font-weight:400;
+  }
+  .topnav a{color:inherit; text-decoration:none; transition:color .15s; white-space:nowrap;}
+  .topnav a:hover{color:var(--paper);}
+  .topnav .spec{color:var(--brass)}
+  .topnav .spec:hover{color:var(--cta)}
+  .nav-toggle{
+    display:none;
+    background:none; border:1px solid var(--rule-strong); color:var(--paper);
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.14em;
+    text-transform:uppercase; padding:8px 14px; cursor:pointer;
+  }
+  @media (max-width:760px){
+    .topnav{
+      position:fixed; inset:0 0 auto 0; top:84px;
+      flex-direction:column; align-items:flex-start; gap:0;
+      background:var(--ink-2); padding:24px;
+      border-bottom:1px solid var(--rule-strong);
+      transform:translateY(-110%); transition:transform .25s ease;
+      z-index:30;
+    }
+    .topnav.open{transform:translateY(0);}
+    .topnav a{padding:14px 0; width:100%; border-bottom:1px solid var(--rule);}
+    .nav-toggle{display:inline-block;}
+  }
+
+  /* -------- hero -------- */
+  .hero{
+    display:grid; grid-template-columns:1fr 1.05fr; gap:72px;
+    padding:96px 0 80px; align-items:center;
+  }
+  @media (max-width:1000px){ .hero{grid-template-columns:1fr; gap:48px; padding:64px 0 56px} }
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--brass); font-weight:500;
+    display:flex; align-items:center; gap:14px;
+  }
+  .eyebrow::after{
+    content:""; flex:1; max-width:120px;
+    height:1px; background:var(--brass-dim);
+  }
+
+  .hero h1{
+    font-family:'EB Garamond',serif; font-weight:500;
+    font-size:clamp(52px, 6.4vw, 96px);
+    line-height:0.98; letter-spacing:-0.03em;
+    margin:28px 0 28px; text-wrap:balance;
+  }
+  .hero h1 em{ font-style:italic; font-weight:500; color:var(--brass); }
+  .hero h1 .dot-golden{ color:var(--brass); }
+  .hero .sub{
+    font-family:'EB Garamond',serif; font-weight:400;
+    font-size:clamp(19px,1.7vw,22px); line-height:1.5;
+    color:var(--paper-dim); max-width:48ch; margin:0 0 36px;
+    letter-spacing:-0.005em; text-wrap:balance;
+  }
+  .hero .sub b{color:var(--paper); font-weight:500}
+
+  .cta-row{display:flex; flex-wrap:wrap; gap:16px; align-items:center;}
+  .cta{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-weight:500;
+    font-size:12px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--ink); background:var(--paper);
+    padding:16px 22px; text-decoration:none; border:none; cursor:pointer;
+    transition:all .18s ease; white-space:nowrap;
+  }
+  .cta:hover{ background:var(--brass); color:var(--ink); transform:translateY(-1px); }
+  .cta .arrow{display:inline-block; transition:transform .2s ease}
+  .cta:hover .arrow{transform:translateX(3px)}
+  .cta.ghost{
+    background:transparent; color:var(--paper);
+    border:1px solid var(--rule-strong);
+  }
+  .cta.ghost:hover{background:rgba(245,242,236,.05); border-color:var(--brass); color:var(--paper); transform:translateY(-1px);}
+
+  /* -------- globe -------- */
+  .globe-stage{
+    position:relative; width:100%; aspect-ratio:1/1;
+    max-width:720px; justify-self:end;
+    margin-right:-24px;
+  }
+  @media (max-width:1000px){ .globe-stage{justify-self:center; max-width:560px; margin-right:0} }
+  #globe-canvas{position:absolute; inset:0; width:100%; height:100%; display:block;}
+
+  @media (prefers-reduced-motion: reduce){
+    #globe-canvas{animation:none !important;}
+    .principles-track{animation:none !important;}
+  }
+
+  /* -------- sections -------- */
+  section{ padding:140px 0; border-top:1px solid var(--rule); position:relative;}
+  @media (max-width:900px){ section{padding:88px 0} }
+  .snum{
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    letter-spacing:0.2em; color:var(--brass); text-transform:uppercase;
+    font-weight:500;
+  }
+  .section-head{
+    display:grid; grid-template-columns:1.3fr 0.7fr;
+    align-items:end; gap:64px; margin-bottom:72px;
+  }
+  @media (max-width:900px){ .section-head{grid-template-columns:1fr; gap:24px; margin-bottom:48px} }
+  .section-head h2{
+    font-family:'EB Garamond',serif; font-weight:500;
+    font-size:clamp(40px, 4.6vw, 64px);
+    line-height:1.0; letter-spacing:-0.028em;
+    margin:24px 0 0; max-width:18ch; text-wrap:balance;
+  }
+  .section-head h2 em{font-style:italic; color:var(--brass)}
+  .section-head .side{
+    max-width:34ch; justify-self:end;
+    font-family:'EB Garamond',serif; font-style:italic;
+    font-size:18px; line-height:1.5; color:var(--paper-dim);
+    padding-bottom:6px;
+  }
+  @media (max-width:900px){ .section-head .side{justify-self:start} }
+
+  /* -------- VISION -------- */
+  .intro-body{
+    display:grid; grid-template-columns: 1fr 1fr; gap:72px;
+    max-width:1140px;
+  }
+  @media (max-width:900px){ .intro-body{grid-template-columns:1fr; gap:32px} }
+  .intro-body p{
+    font-family:'EB Garamond',serif;
+    font-size:19px; line-height:1.55;
+    color:var(--paper-dim); margin:0 0 22px;
+    max-width:54ch;
+  }
+  .intro-body p b{color:var(--paper); font-weight:500}
+  .intro-body p em{color:var(--brass); font-style:italic}
+  .intro-body .lede{
+    font-family:'EB Garamond',serif;
+    font-size:23px; line-height:1.5;
+    color:var(--paper); margin:0 0 24px;
+    border-left:2px solid var(--brass); padding-left:22px;
+    font-style:italic; max-width:48ch;
+  }
+
+  .value-strip{
+    margin:48px 0 0;
+    padding:24px 0 4px;
+    border-top:1px solid var(--rule);
+    display:flex; flex-wrap:wrap; gap:8px 22px;
+    font-family:'EB Garamond',serif;
+    font-size:17px; color:var(--paper);
+    line-height:1.5;
+  }
+  .value-strip .vs-label{
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--paper-faint); margin-right:8px; align-self:center;
+  }
+  .value-strip span:not(.vs-label){
+    color:var(--paper);
+    border-bottom:1px dotted var(--brass-dim);
+    padding-bottom:1px;
+  }
+
+  /* -------- INLINE COMPARE -------- */
+  .intro-compare{
+    display:flex; flex-direction:column; gap:0;
+    margin:8px 0 28px;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  .ic-row{
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:0;
+    border-top:1px solid var(--rule);
+  }
+  .ic-row:first-child{ border-top:none; }
+  .ic-before, .ic-after{
+    padding:18px 20px 18px 0;
+    font-family:'EB Garamond',serif;
+    font-size:16px; line-height:1.45;
+  }
+  .ic-before{
+    color:var(--paper-dim);
+    border-right:1px solid var(--rule);
+    padding-right:24px;
+  }
+  .ic-after{
+    color:var(--paper);
+    padding-left:24px;
+  }
+  .ic-after em{ color:var(--brass); font-style:italic; }
+  .ic-label{
+    display:block;
+    font-family:'JetBrains Mono',monospace; font-size:9.5px;
+    letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--paper-faint); margin:0 0 6px; font-weight:500;
+  }
+  .ic-after .ic-label{ color:var(--brass); }
+  @media (max-width:900px){
+    .ic-row{ grid-template-columns:1fr; }
+    .ic-before{ border-right:none; border-bottom:1px solid var(--rule); padding:16px 0; }
+    .ic-after{ padding:16px 0; }
+  }
+
+  /* -------- PRINCIPLES -------- */
+  #principles{ padding:28px 0; border-top:none; }
+  #capabilities{ border-top:none; }
+  @media (max-width:900px){ #principles{padding:24px 0} }
+  .principles-marquee{
+    position:relative;
+    overflow:hidden;
+    padding:0;
+    -webkit-mask-image:linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+            mask-image:linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  }
+  .principles-track{
+    display:flex;
+    width:max-content;
+    animation:principles-scroll 56s linear infinite;
+    will-change:transform;
+  }
+  .principles-marquee:hover .principles-track{ animation-play-state:paused; }
+  @keyframes principles-scroll{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+  .p-card{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:38px;
+    padding-right:38px;
+    white-space:nowrap;
+  }
+  .p-card h4{
+    font-family:'EB Garamond',serif; font-weight:400;
+    font-size:clamp(20px,1.7vw,26px); letter-spacing:-0.012em;
+    margin:0; line-height:1; color:var(--paper);
+  }
+  .p-card:nth-child(2n) h4{
+    font-style:italic; color:var(--brass);
+  }
+  .p-dot{
+    width:5px; height:5px; border-radius:50%;
+    background:var(--brass); opacity:0.55;
+    flex-shrink:0;
+  }
+
+  /* -------- CAPABILITIES -------- */
+  .why-grid{
+    display:grid; grid-template-columns:repeat(3,1fr);
+    border-top:1px solid var(--rule-strong);
+  }
+  @media (max-width:900px){ .why-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:620px){ .why-grid{grid-template-columns:1fr} }
+  .why-cell{
+    padding:48px 36px;
+    border-right:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    min-height:200px;
+    display:flex; flex-direction:column; justify-content:center;
+    transition:background .25s;
+  }
+  .why-cell:hover{background:rgba(200,147,79,0.03)}
+  .why-grid .why-cell:nth-child(3n){border-right:none}
+  .why-grid .why-cell:nth-last-child(-n+3){border-bottom:none}
+  @media (max-width:900px){
+    .why-grid .why-cell{border-right:1px solid var(--rule) !important; border-bottom:1px solid var(--rule) !important}
+    .why-grid .why-cell:nth-child(2n){border-right:none !important}
+  }
+  .why-cell h4{
+    font-family:'EB Garamond',serif; font-weight:500;
+    font-size:clamp(20px,1.9vw,26px); letter-spacing:-0.022em;
+    line-height:1.12; margin:0 0 12px; max-width:18ch;
+  }
+  .why-cell h4 em{font-style:italic; color:var(--brass)}
+  .why-cell p{
+    font-family:'EB Garamond',serif;
+    font-size:16px; line-height:1.55; color:var(--paper-dim);
+    margin:0; max-width:34ch;
+  }
+
+  /* -------- SERVICES -------- */
+  .svc-edge-intro{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:24px; padding:0;
+    border:none;
+    background:none;
+    opacity:0.65;
+  }
+  .svc-edge-intro .badge{
+    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
+    color:var(--brass-dim); letter-spacing:0.16em; text-transform:uppercase;
+    border:1px solid var(--rule); padding:3px 7px;
+    white-space:nowrap; flex-shrink:0;
+  }
+  .svc-edge-intro p{
+    margin:0; font-family:'EB Garamond',serif; font-style:italic;
+    font-size:13px; line-height:1.4; color:var(--paper-dim); max-width:64ch;
+  }
+  .svc-edge-intro p em{color:var(--paper-dim); font-style:italic}
+
+  .services{display:flex; flex-direction:column}
+  .svc{
+    display:grid; grid-template-columns:auto 1.2fr 1.6fr;
+    gap:32px; padding:36px 0;
+    border-top:1px solid var(--rule);
+    align-items:baseline;
+    transition:background .25s, padding-left .25s;
+  }
+  .svc:first-child{border-top:none}
+  .svc:hover{background:rgba(200,147,79,0.025); padding-left:14px;}
+  @media (max-width:900px){
+    .svc{grid-template-columns:auto 1fr; gap:14px 18px; padding:28px 0}
+    .svc-desc{grid-column:1 / -1; padding-left:0;}
+    .svc:hover{padding-left:0;}
+  }
+  .svc-num{
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    letter-spacing:0.18em; color:var(--paper-faint); font-weight:500;
+    padding-top:8px;
+  }
+  .svc-title h4{
+    font-family:'EB Garamond',serif; font-weight:500;
+    font-size:clamp(24px,2.4vw,32px); letter-spacing:-0.024em;
+    line-height:1.06; margin:0 0 8px; max-width:14ch;
+  }
+  .svc-title h4 .svc-suffix{ color:inherit; font-weight:inherit;}
+  .svc-title .svc-noun{
+    display:block;
+    font-family:'EB Garamond',serif; font-style:italic; font-weight:400;
+    font-size:16px; color:var(--brass); letter-spacing:0;
+    margin-top:4px; line-height:1.35; max-width:32ch;
+  }
+  .svc-title .edge{
+    display:inline-block; margin-left:8px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
+    color:var(--cta); letter-spacing:0.14em;
+    border:1px solid rgba(224,90,43,.45); padding:3px 6px;
+    vertical-align:middle; transform:translateY(-2px);
+  }
+  .svc-desc{
+    font-family:'EB Garamond',serif; font-size:16px; line-height:1.55;
+    color:var(--paper-dim); max-width:48ch;
+  }
+
+  /* -------- PARTICIPANTS — network mesh -------- */
+  .pt-intro{
+    font-family:'EB Garamond',serif;
+    font-size:20px; color:var(--paper-dim); max-width:54ch;
+    margin:-32px 0 56px; line-height:1.5;
+  }
+  .pt-intro b{color:var(--paper); font-weight:500;}
+  .pt-intro em{color:var(--brass); font-style:italic;}
+
+  .pt-mesh-wrap{
+    display:grid;
+    grid-template-columns: 1.45fr 0.55fr;
+    gap:56px;
+    align-items:stretch;
+  }
+  .pt-mesh{
+    position:relative;
+    aspect-ratio: 1080 / 780;
+    border:1px solid var(--rule);
+    background:radial-gradient(ellipse at 50% 50%, rgba(200,147,79,0.04), transparent 70%);
+    overflow:hidden;
+  }
+  .pt-mesh svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  .pt-mesh .hub-hit{ cursor:pointer; }
+  .pt-mesh .hub-dot{ transition: fill .2s, r .2s; }
+  .pt-mesh .hub-ring{ transition: stroke .2s, stroke-opacity .2s; }
+  .pt-mesh .hub-name{ transition: fill .2s; font-family:'EB Garamond',serif; font-style:italic; font-weight:500; }
+
+  /* detail panel */
+  .pt-detail-panel{
+    padding:8px 0 0 32px;
+    border-left:1px solid var(--rule);
+    display:flex; flex-direction:column;
+  }
+  .pt-detail-eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:0.2em; color:var(--brass); text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .pt-detail-name{
+    font-family:'EB Garamond',serif; font-weight:500;
+    font-size:48px; letter-spacing:-0.022em; line-height:1.05;
+    margin:0 0 16px; color:var(--paper);
+  }
+  .pt-detail-name em{ color:var(--brass); font-style:italic; }
+  .pt-detail-tagline{
+    font-family:'EB Garamond',serif; font-style:italic;
+    font-size:21px; color:var(--paper); line-height:1.4;
+    margin:0 0 22px; max-width:36ch;
+  }
+  .pt-detail-text{
+    font-family:'EB Garamond',serif;
+    font-size:17px; color:var(--paper-dim); line-height:1.55;
+    margin:0 0 28px; max-width:42ch;
+  }
+
+  @media (max-width:920px){
+    .pt-mesh-wrap{ grid-template-columns:1fr; gap:32px; }
+    .pt-detail-panel{ padding:24px 0 0; border-left:none; border-top:1px solid var(--rule); }
+    .pt-detail-name{ font-size:36px; }
+    .pt-mesh{ aspect-ratio: 1080/700; }
+  }
+
+  /* -------- FOOTER CTA -------- */
+  .footer-cta{
+    padding:160px 0 140px; border-top:1px solid var(--rule);
+    position:relative; overflow:hidden;
+  }
+  @media (max-width:900px){ .footer-cta{padding:96px 0} }
+  .footer-cta .bg-glow{
+    position:absolute; right:-200px; top:50%; transform:translateY(-50%);
+    width:700px; height:700px; pointer-events:none;
+    background:radial-gradient(circle, rgba(200,147,79,0.08), transparent 65%);
+  }
+  .footer-cta h2{
+    font-family:'EB Garamond',serif; font-weight:500;
+    font-size:clamp(48px,6vw,96px);
+    line-height:0.96; letter-spacing:-0.03em;
+    margin:18px 0 28px; max-width:18ch; position:relative;
+  }
+  .footer-cta h2 em{font-style:italic; color:var(--brass)}
+  .footer-cta .kicker{
+    font-family:'EB Garamond',serif; font-style:italic;
+    font-size:21px; color:var(--paper-dim); max-width:46ch;
+    margin:0 0 40px; position:relative;
+  }
+
+  footer{
+    border-top:1px solid var(--rule);
+    padding:48px 0 64px;
+    display:grid; grid-template-columns:1fr 2fr 1fr; gap:48px;
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    letter-spacing:0.14em; color:var(--paper-faint); text-transform:uppercase;
+    align-items:start;
+  }
+  @media (max-width:900px){ footer{grid-template-columns:1fr; gap:32px} }
+  footer .cols{display:flex; gap:64px; flex-wrap:wrap}
+  footer .col{display:flex; flex-direction:column; gap:10px}
+  footer .col b{color:var(--paper-dim); font-weight:500; margin-bottom:6px}
+  footer a{color:inherit; text-decoration:none}
+  footer a:hover{color:var(--brass)}
+
+  ::selection{background:var(--cta); color:var(--paper)}
+</style>
 </head>
 <body>
+<div class="page">
 
-  <!-- ── Nav ───────────────────────────────────────────────────── -->
-  <nav>
-    <a href="#" class="nav-logo">
-      <span class="logo-fabric">fabric.</span><span class="logo-domain">nfh.global</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="#contrast">New Category</a></li>
-      <li><a href="#usecases">Use Cases</a></li>
-      <li><a href="#how">How it Works</a></li>
-      <li><a href="#pillars">Primitives</a></li>
-      <li><a href="#cta" class="nav-cta">Get Started →</a></li>
-    </ul>
-  </nav>
-
-  <!-- ── Hero ──────────────────────────────────────────────────── -->
-  <section id="hero">
-    <div class="container" style="display:contents;">
-
-      <div class="hero-left" style="position:relative; z-index:1; padding: 0 2rem 0 max(2rem, calc((100vw - 1140px)/2 + 2rem));">
-        <div class="hero-label reveal">Agentic Rails for Open Networks</div>
-        <h1 class="hero-title reveal reveal-delay-1">
-          The network that<br/>makes agents<br/><em>do more.</em>
-        </h1>
-        <p class="hero-sub reveal reveal-delay-2">
-          NFH Fabric is the orchestration layer that elevates AI agents beyond their own limits —
-          enabling tokenized identity, programmable value, composable loyalty, smart contracts, and automated settlement across every open network.
-        </p>
-        <div class="hero-actions reveal reveal-delay-3">
-          <a href="#usecases" class="btn-primary">See it in action →</a>
-          <a href="#how" class="btn-secondary">How it works</a>
-        </div>
-        <p class="hero-attribution reveal reveal-delay-4">
-          A <em>Networks for Humanity</em> initiative.
-        </p>
-      </div>
-
-      <!-- Animated Network Illustration -->
-      <div class="hero-right">
-        <div class="network-wrap">
-          <svg class="network-svg" viewBox="0 0 520 460" fill="none" xmlns="http://www.w3.org/2000/svg" id="net-svg">
-
-            <!-- ── Connection lines ──────────────────────────── -->
-            <!-- Hub to each node -->
-            <path id="p1" d="M260,230 L130,110" stroke="#c8623e" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
-            <path id="p2" d="M260,230 L390,115" stroke="#8b3a2a" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
-            <path id="p3" d="M260,230 L440,240" stroke="#c8623e" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
-            <path id="p4" d="M260,230 L390,355" stroke="#8b3a2a" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
-            <path id="p5" d="M260,230 L130,355" stroke="#c8623e" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
-            <path id="p6" d="M260,230 L80,240"  stroke="#8b3a2a" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.35"/>
-            <!-- Cross connections -->
-            <path d="M130,110 L390,115" stroke="#c8623e" stroke-width="0.6" opacity="0.12"/>
-            <path d="M390,115 L440,240" stroke="#8b3a2a" stroke-width="0.6" opacity="0.12"/>
-            <path d="M440,240 L390,355" stroke="#c8623e" stroke-width="0.6" opacity="0.12"/>
-            <path d="M390,355 L130,355" stroke="#8b3a2a" stroke-width="0.6" opacity="0.12"/>
-            <path d="M130,355 L80,240"  stroke="#c8623e" stroke-width="0.6" opacity="0.12"/>
-            <path d="M80,240  L130,110" stroke="#8b3a2a" stroke-width="0.6" opacity="0.12"/>
-
-            <!-- ── Hub node (NFH Fabric) ─────────────────────── -->
-            <circle cx="260" cy="230" r="42" fill="#fff9f7" stroke="#8b3a2a" stroke-width="1.5" opacity="0.9" class="node-hub"/>
-            <circle cx="260" cy="230" r="48" fill="none" stroke="#c8623e" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.25" class="node-hub"/>
-            <text x="260" y="225" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" fill="#8b3a2a">🕸</text>
-            <text x="260" y="242" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" font-weight="600" fill="#8b3a2a" letter-spacing="0.08em">NFH FABRIC</text>
-
-            <!-- ── Outer nodes ──────────────────────────────── -->
-            <!-- Node 1: AI Agent (top-left) -->
-            <g class="node-outer" style="transform-origin:130px 110px">
-              <circle cx="130" cy="110" r="32" fill="#ffffff" stroke="#c8623e" stroke-width="1.2" opacity="0.85"/>
-              <text x="130" y="105" text-anchor="middle" font-family="Inter,sans-serif" font-size="16">🤖</text>
-              <text x="130" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">AI AGENT</text>
-            </g>
-
-            <!-- Node 2: Network Node (top-right) -->
-            <g class="node-outer" style="transform-origin:390px 115px; animation-delay:-0.8s">
-              <circle cx="390" cy="115" r="30" fill="#ffffff" stroke="#8b3a2a" stroke-width="1.2" opacity="0.85"/>
-              <text x="390" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">🌐</text>
-              <text x="390" y="125" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">NETWORK</text>
-            </g>
-
-            <!-- Node 3: Marketplace (right) -->
-            <g class="node-outer" style="transform-origin:440px 240px; animation-delay:-1.6s">
-              <circle cx="440" cy="240" r="30" fill="#ffffff" stroke="#c8623e" stroke-width="1.2" opacity="0.85"/>
-              <text x="440" y="235" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">🏪</text>
-              <text x="440" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">MARKET</text>
-            </g>
-
-            <!-- Node 4: Settlement (bottom-right) -->
-            <g class="node-outer" style="transform-origin:390px 355px; animation-delay:-2.4s">
-              <circle cx="390" cy="355" r="30" fill="#ffffff" stroke="#8b3a2a" stroke-width="1.2" opacity="0.85"/>
-              <text x="390" y="350" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">💰</text>
-              <text x="390" y="365" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">SETTLEMENT</text>
-            </g>
-
-            <!-- Node 5: Trust / Identity (bottom-left) -->
-            <g class="node-outer" style="transform-origin:130px 355px; animation-delay:-3.2s">
-              <circle cx="130" cy="355" r="30" fill="#ffffff" stroke="#c8623e" stroke-width="1.2" opacity="0.85"/>
-              <text x="130" y="350" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">⭐</text>
-              <text x="130" y="365" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">REPUTATION</text>
-            </g>
-
-            <!-- Node 6: Participant (left) -->
-            <g class="node-outer" style="transform-origin:80px 240px; animation-delay:-4s">
-              <circle cx="80" cy="240" r="30" fill="#ffffff" stroke="#8b3a2a" stroke-width="1.2" opacity="0.85"/>
-              <text x="80" y="235" text-anchor="middle" font-family="Inter,sans-serif" font-size="15">👤</text>
-              <text x="80" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="7" fill="#5a4f48" font-weight="500">PARTICIPANT</text>
-            </g>
-
-            <!-- ── Animated flow dots ─────────────────────────── -->
-            <circle r="3.5" fill="#8b3a2a" opacity="0.75">
-              <animateMotion dur="2.8s" repeatCount="indefinite" begin="0s">
-                <mpath href="#p1"/>
-              </animateMotion>
-            </circle>
-            <circle r="3.5" fill="#c8623e" opacity="0.75">
-              <animateMotion dur="2.8s" repeatCount="indefinite" begin="0s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
-                <mpath href="#p2"/>
-              </animateMotion>
-            </circle>
-            <circle r="3.5" fill="#8b3a2a" opacity="0.75">
-              <animateMotion dur="3.2s" repeatCount="indefinite" begin="-1s">
-                <mpath href="#p3"/>
-              </animateMotion>
-            </circle>
-            <circle r="3.5" fill="#c8623e" opacity="0.75">
-              <animateMotion dur="3.2s" repeatCount="indefinite" begin="-1s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
-                <mpath href="#p4"/>
-              </animateMotion>
-            </circle>
-            <circle r="3.5" fill="#8b3a2a" opacity="0.75">
-              <animateMotion dur="2.5s" repeatCount="indefinite" begin="-0.5s">
-                <mpath href="#p5"/>
-              </animateMotion>
-            </circle>
-            <circle r="3.5" fill="#c8623e" opacity="0.75">
-              <animateMotion dur="2.5s" repeatCount="indefinite" begin="-0.5s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
-                <mpath href="#p6"/>
-              </animateMotion>
-            </circle>
-
-            <!-- Second wave of dots (offset timing) -->
-            <circle r="2.5" fill="#8b3a2a" opacity="0.45">
-              <animateMotion dur="2.8s" repeatCount="indefinite" begin="-1.4s">
-                <mpath href="#p1"/>
-              </animateMotion>
-            </circle>
-            <circle r="2.5" fill="#c8623e" opacity="0.45">
-              <animateMotion dur="2.8s" repeatCount="indefinite" begin="-1.4s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
-                <mpath href="#p2"/>
-              </animateMotion>
-            </circle>
-            <circle r="2.5" fill="#8b3a2a" opacity="0.45">
-              <animateMotion dur="3.2s" repeatCount="indefinite" begin="-2.1s">
-                <mpath href="#p3"/>
-              </animateMotion>
-            </circle>
-            <circle r="2.5" fill="#c8623e" opacity="0.45">
-              <animateMotion dur="3.2s" repeatCount="indefinite" begin="-2.1s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
-                <mpath href="#p4"/>
-              </animateMotion>
-            </circle>
-            <circle r="2.5" fill="#8b3a2a" opacity="0.45">
-              <animateMotion dur="2.5s" repeatCount="indefinite" begin="-1.75s">
-                <mpath href="#p5"/>
-              </animateMotion>
-            </circle>
-            <circle r="2.5" fill="#c8623e" opacity="0.45">
-              <animateMotion dur="2.5s" repeatCount="indefinite" begin="-1.75s" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
-                <mpath href="#p6"/>
-              </animateMotion>
-            </circle>
-
-          </svg>
-        </div>
-      </div>
-
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="wordmark">
+      <span class="nfh-fabric">NFH fabric</span>
     </div>
-  </section>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" id="navToggle">Menu</button>
+    <nav class="topnav" id="topnav" aria-label="Primary">
+      <a href="#vision">What it is</a>
+      <a href="#principles">Principles</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#services">Services</a>
+      <a href="#participants">Participants</a>
+      <a href="https://github.com/Networks-for-Humanity/fabric-support/issues" class="spec" target="_blank" rel="noopener">Support &#8599;</a>
+    </nav>
+  </header>
 
-  <hr class="section-divider" />
-
-  <!-- ── Not an upgrade. A new category. ───────────────────────── -->
-  <section id="contrast">
-    <div class="container">
-      <div class="section-label reveal">A new category</div>
-      <h2 class="section-title reveal reveal-delay-1">
-        Not an upgrade.<br/><em>A new category.</em>
-      </h2>
-      <p class="section-sub reveal reveal-delay-2">
-        Every transformative technology looks like an improvement — until you see what it actually replaces.
+  <main>
+  <!-- HERO -->
+  <section class="hero" style="border-top:none;">
+    <div>
+      <div class="eyebrow"><span>For humans, businesses &amp; agents</span></div>
+      <h1>The infrastructure for <em>any value<span class="dot-golden">.</span></em></h1>
+      <p class="sub">
+        <b>Discover, buy, own, exchange, publish</b> — anything of value, with anyone, anywhere. One open network for humans, businesses, and autonomous agents.
       </p>
-
-      <div class="contrast-table reveal reveal-delay-3">
-        <div class="contrast-header">
-          <div class="contrast-header-col old">The old way</div>
-          <div class="contrast-header-col new">With NFH Fabric</div>
-        </div>
-        <div class="contrast-row">
-          <div class="contrast-cell old">KYC repeated from scratch on every network</div>
-          <div class="contrast-cell new">Tokenized identity — verify once, recognised everywhere as a portable Verifiable Credential</div>
-        </div>
-        <div class="contrast-row">
-          <div class="contrast-cell old">Invoices tracked in spreadsheets, settled in days</div>
-          <div class="contrast-cell new">Invoices as programmable tokens — self-executing, self-settling on delivery confirmation</div>
-        </div>
-        <div class="contrast-row">
-          <div class="contrast-cell old">Loyalty locked to one platform, lost when you leave</div>
-          <div class="contrast-cell new">Tokenized cross-network loyalty — earn on one network, redeem on any other</div>
-        </div>
-        <div class="contrast-row">
-          <div class="contrast-cell old">Contracts need lawyers, time, and trust between parties</div>
-          <div class="contrast-cell new">Smart contracts execute automatically on conditions — no intermediary, no delay</div>
-        </div>
-        <div class="contrast-row">
-          <div class="contrast-cell old">Vouchers expire, can't be combined, locked to one issuer</div>
-          <div class="contrast-cell new">Composable vouchers — stack, transfer, program, and redeem across the fabric</div>
-        </div>
-        <div class="contrast-row">
-          <div class="contrast-cell old">Value transfer relies on banks, clearinghouses, and reconciliation</div>
-          <div class="contrast-cell new">Settlement triggered by smart contract execution — instant, transparent, and final</div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <hr class="section-divider" />
-
-  <!-- ── What is Fabric ─────────────────────────────────────────── -->
-  <section id="what">
-    <div class="container">
-      <div class="section-label reveal">What is NFH Fabric</div>
-      <h2 class="section-title reveal reveal-delay-1">
-        Agents are smart.<br/>Fabric makes them <em>powerful.</em>
-      </h2>
-      <p class="section-sub reveal reveal-delay-2">
-        An AI agent on its own can reason and respond. Connected to NFH Fabric, it can transact, earn trust, discover opportunities, and operate across open networks — automatically.
-      </p>
-
-      <div class="what-grid">
-        <div class="what-points">
-          <div class="what-point reveal">
-            <div class="what-point-icon">🔍</div>
-            <div class="what-point-text">
-              <h4>Discoverability</h4>
-              <p>Any agent can find any other agent on the network — across geographies, verticals, and platforms.</p>
-            </div>
-          </div>
-          <div class="what-point reveal reveal-delay-1">
-            <div class="what-point-icon">📋</div>
-            <div class="what-point-text">
-              <h4>Programmable Catalogs &amp; Contracts</h4>
-              <p>Programmable contracts define terms before an exchange completes — automatically and transparently.</p>
-            </div>
-          </div>
-          <div class="what-point reveal reveal-delay-2">
-            <div class="what-point-icon">🪙</div>
-            <div class="what-point-text">
-              <h4>Tokenization &amp; Settlement</h4>
-              <p>Every exchange of value settles automatically on the fabric. Instant, verifiable, final.</p>
-            </div>
-          </div>
-          <div class="what-point reveal reveal-delay-3">
-            <div class="what-point-icon">⭐</div>
-            <div class="what-point-text">
-              <h4>Reputation &amp; Trust</h4>
-              <p>Every interaction on the fabric builds reputation — verifiable, portable, and permanent.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="what-stats">
-
-          <!-- Any sector -->
-          <div class="stat-card reveal reveal-delay-1">
-            <div class="stat-card-text">
-              <div class="stat-heading">
-                <span class="stat-num">Any</span>
-                <span class="stat-word">sector.</span>
-              </div>
-              <div class="stat-label">NFH Fabric is sector-agnostic infrastructure — the rails work the same whether you're moving food, money, energy, or credentials.</div>
-            </div>
-            <div class="stat-illus">
-              <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- 2×2 sector tiles -->
-                <rect x="4"  y="4"  width="28" height="28" rx="7" fill="#f5ede4" stroke="#d4a882" stroke-width="1"/>
-                <rect x="40" y="4"  width="28" height="28" rx="7" fill="#f5ede4" stroke="#d4a882" stroke-width="1"/>
-                <rect x="4"  y="40" width="28" height="28" rx="7" fill="#f5ede4" stroke="#d4a882" stroke-width="1"/>
-                <rect x="40" y="40" width="28" height="28" rx="7" fill="#f5ede4" stroke="#d4a882" stroke-width="1"/>
-                <!-- icons -->
-                <text x="18" y="25" text-anchor="middle" font-size="14">🌾</text>
-                <text x="54" y="25" text-anchor="middle" font-size="14">⚡</text>
-                <text x="18" y="61" text-anchor="middle" font-size="14">💰</text>
-                <text x="54" y="61" text-anchor="middle" font-size="14">🎓</text>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Open standards -->
-          <div class="stat-card reveal reveal-delay-2">
-            <div class="stat-card-text">
-              <div class="stat-heading">
-                <span class="stat-num">Open</span>
-                <span class="stat-word">standards.</span>
-              </div>
-              <div class="stat-label">Built on Beckn V2 — interoperable by design, not by permission.</div>
-            </div>
-            <div class="stat-illus">
-              <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Three interconnected nodes -->
-                <line x1="36" y1="14" x2="14" y2="52" stroke="#d4a882" stroke-width="1.2"/>
-                <line x1="36" y1="14" x2="58" y2="52" stroke="#d4a882" stroke-width="1.2"/>
-                <line x1="14" y1="52" x2="58" y2="52" stroke="#d4a882" stroke-width="1.2"/>
-                <!-- Centre connector lines to mid-points -->
-                <line x1="36" y1="14" x2="36" y2="52" stroke="#d4a882" stroke-width="0.7" stroke-dasharray="3,3" opacity="0.5"/>
-                <!-- Nodes -->
-                <circle cx="36" cy="14" r="9"  fill="#fff9f5" stroke="#a07030" stroke-width="1.5"/>
-                <circle cx="14" cy="52" r="9"  fill="#fff9f5" stroke="#a07030" stroke-width="1.5"/>
-                <circle cx="58" cy="52" r="9"  fill="#fff9f5" stroke="#a07030" stroke-width="1.5"/>
-                <!-- Node icons -->
-                <text x="36" y="19" text-anchor="middle" font-size="10">🔗</text>
-                <text x="14" y="57" text-anchor="middle" font-size="10">🌐</text>
-                <text x="58" y="57" text-anchor="middle" font-size="10">🤖</text>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Always on -->
-          <div class="stat-card reveal reveal-delay-3">
-            <div class="stat-card-text">
-              <div class="stat-heading">
-                <span class="stat-num">Always</span>
-                <span class="stat-word">on.</span>
-              </div>
-              <div class="stat-label">Agents transact 24/7 on the fabric, settling value and building trust while you sleep.</div>
-            </div>
-            <div class="stat-illus">
-              <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer pulse rings -->
-                <circle cx="36" cy="36" r="32" stroke="#d4a882" stroke-width="0.8" opacity="0.3"/>
-                <circle cx="36" cy="36" r="24" stroke="#a07030" stroke-width="0.9" opacity="0.4"/>
-                <!-- Clock face -->
-                <circle cx="36" cy="36" r="16" fill="#fff9f5" stroke="#a07030" stroke-width="1.5"/>
-                <!-- Hour marks -->
-                <line x1="36" y1="22" x2="36" y2="25" stroke="#c8623e" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="36" y1="47" x2="36" y2="50" stroke="#d4a882" stroke-width="1" stroke-linecap="round"/>
-                <line x1="22" y1="36" x2="25" y2="36" stroke="#d4a882" stroke-width="1" stroke-linecap="round"/>
-                <line x1="47" y1="36" x2="50" y2="36" stroke="#d4a882" stroke-width="1" stroke-linecap="round"/>
-                <!-- Clock hands -->
-                <line x1="36" y1="36" x2="36" y2="26" stroke="#8b3a2a" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="36" y1="36" x2="43" y2="36" stroke="#8b3a2a" stroke-width="1.5" stroke-linecap="round"/>
-                <circle cx="36" cy="36" r="2" fill="#8b3a2a"/>
-              </svg>
-            </div>
-          </div>
-
-        </div>
+      <div class="cta-row">
+        <a class="cta" href="#join">Join the network <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="cta ghost" href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Read the docs <span class="arrow" aria-hidden="true">&#8599;</span></a>
       </div>
     </div>
-  </section>
-
-  <hr class="section-divider" />
-
-  <!-- ── Use Cases ──────────────────────────────────────────────── -->
-  <section id="usecases">
-    <div class="container">
-      <div class="usecases-header">
-        <div class="section-label reveal">Real-world value</div>
-        <h2 class="section-title reveal reveal-delay-1">Fabric in the real world</h2>
-        <p class="section-sub reveal reveal-delay-2">
-          The richness of fabric shows up differently for every participant — but the outcome is always the same:<br/><em style="font-family:'Lora',serif; font-style:italic; color:var(--accent-1); font-size:1.25rem; font-weight:400; letter-spacing:-0.01em;">more value, less friction.</em>
-        </p>
-      </div>
-
-      <div class="cases-grid">
-        <div class="case-card featured reveal">
-          <div class="case-emoji">🍽️</div>
-          <div class="case-title">The Restaurant</div>
-          <p class="case-desc">
-            A restaurant's agent on fabric can discover the freshest local produce, negotiate prices, receive verified delivery, and settle payment — all before the chef arrives in the morning. Reputation builds with every sourcing decision, unlocking better rates from trusted suppliers over time.
-          </p>
-          <span class="case-tag">Automated sourcing &amp; settlement</span>
-        </div>
-
-        <div class="case-card reveal reveal-delay-1">
-          <div class="case-emoji">🌾</div>
-          <div class="case-title">The Farmer</div>
-          <p class="case-desc">
-            A smallholder farmer's produce is tokenized on fabric — discoverable by agents globally, with programmable contracts ensuring fair price and guaranteed payment on delivery.
-          </p>
-          <span class="case-tag">Direct market access</span>
-        </div>
-
-        <div class="case-card reveal reveal-delay-2">
-          <div class="case-emoji">🚗</div>
-          <div class="case-title">The Driver</div>
-          <p class="case-desc">
-            A driver's reliability score, built across every completed trip on the fabric, unlocks better insurance rates, priority dispatch, and access to premium routes — automatically.
-          </p>
-          <span class="case-tag">Portable reputation</span>
-        </div>
-
-        <div class="case-card reveal reveal-delay-3">
-          <div class="case-emoji">🎓</div>
-          <div class="case-title">The Student</div>
-          <p class="case-desc">
-            A scholarship-seeking student's verified academic record, credentials, and community contributions are discoverable by institutions — no intermediaries, no document friction.
-          </p>
-          <span class="case-tag">Verifiable credentials</span>
-        </div>
-
-        <div class="case-card reveal reveal-delay-4">
-          <div class="case-emoji">⚡</div>
-          <div class="case-title">The Energy Grid</div>
-          <p class="case-desc">
-            Solar panels on a rooftop become tokenized energy assets. An agent sells excess power to neighbours, settles in real time, and optimises output — all on the fabric.
-          </p>
-          <span class="case-tag">Real-time energy trading</span>
-        </div>
-      </div>
+    <div class="globe-stage">
+      <canvas id="globe-canvas" role="img" aria-label="Animated globe showing flows of money, energy, credentials, goods, data, services and reputation between nodes worldwide."></canvas>
     </div>
   </section>
+  </main>
 
-  <hr class="section-divider" />
+  <!-- VISION -->
+  <section id="vision">
+    <div class="section-head">
+      <div>
+        <div class="snum"><span>What it is</span></div>
+        <h2>The internet moved information. <em>Fabric moves value.</em></h2>
+      </div>
+      <div class="side">
+        Open by design. Anyone uses it. Anyone runs it. Anyone builds on it.
+      </div>
+    </div>
 
-  <!-- ── How it Works ───────────────────────────────────────────── -->
-  <section id="how">
-    <div class="container">
-      <div class="section-label reveal">The architecture</div>
-      <h2 class="section-title reveal reveal-delay-1">
-        Fabric as the<br/>agent orchestration layer
-      </h2>
-      <p class="section-sub reveal reveal-delay-2">
-        Agents connect to fabric and gain superpowers. The fabric handles what agents can't do alone.
-      </p>
+    <div class="intro-body">
+      <div>
+        <p class="lede">Any kind of value — published once, discovered everywhere, settled the moment conditions are met.</p>
+        <p>Today every kind of value lives on its own private rails. <b>Each network is closed. Each integration is bilateral. Each new use case starts from zero.</b></p>
+        <p>Built by <a href="https://networksforhumanity.org/" target="_blank" rel="noopener" style="color:var(--paper); text-decoration:underline; text-decoration-color:var(--brass-dim); text-underline-offset:3px;">Networks for Humanity</a>.</p>
+      </div>
 
-      <div class="how-inner">
-        <div class="how-steps">
-          <div class="how-step reveal">
-            <div class="step-num">01</div>
-            <div class="step-content">
-              <h4>Participants join the fabric</h4>
-              <p>Any participant — a person, a business, a device, a service — can join the fabric using open, interoperable standards.</p>
-            </div>
+      <div>
+        <div class="intro-compare">
+          <div class="ic-row">
+            <div class="ic-before"><span class="ic-label">Before</span>KYC repeated at every counter.</div>
+            <div class="ic-after"><span class="ic-label">On Fabric</span>Verify once. <em>Reuse anywhere.</em></div>
           </div>
-          <div class="how-step reveal reveal-delay-1">
-            <div class="step-num">02</div>
-            <div class="step-content">
-              <h4>Discovery happens instantly</h4>
-              <p>Agents find other agents across the entire fabric — filtered by location, reputation, capability, and real-time availability.</p>
-            </div>
+          <div class="ic-row">
+            <div class="ic-before"><span class="ic-label">Before</span>Invoices reconciled by hand.</div>
+            <div class="ic-after"><span class="ic-label">On Fabric</span>Programmable invoices. <em>Self-settling.</em></div>
           </div>
-          <div class="how-step reveal reveal-delay-2">
-            <div class="step-num">03</div>
-            <div class="step-content">
-              <h4>Contracts negotiate themselves</h4>
-              <p>Programmable contracts encode the terms. Agents negotiate, agree, and commit — without a human in the loop.</p>
-            </div>
-          </div>
-          <div class="how-step reveal reveal-delay-3">
-            <div class="step-num">04</div>
-            <div class="step-content">
-              <h4>Value settles automatically</h4>
-              <p>Value exchange and reputation updates happen on-fabric. Every interaction raises or refines the participant's trust score.</p>
-            </div>
-          </div>
-          <div class="how-step reveal reveal-delay-4">
-            <div class="step-num">05</div>
-            <div class="step-content">
-              <h4>Reputation compounds</h4>
-              <p>Each interaction leaves a verified footprint. Participants unlock better access, priority, and deeper network effects over time.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="agent-stack reveal reveal-delay-2">
-          <div class="stack-card">
-            <div class="stack-icon">🤖</div>
-            <div>
-              <div class="stack-label">Requesting Agent</div>
-              <div class="stack-desc">Discovers, negotiates, commits</div>
-            </div>
-          </div>
-          <div class="stack-connector">↕</div>
-          <div class="stack-card highlight">
-            <div class="stack-icon">🕸</div>
-            <div>
-              <div class="stack-label">NFH Fabric Layer</div>
-              <div class="stack-desc">Discoverability · Contracts · Settlement · Trust</div>
-            </div>
-          </div>
-          <div class="stack-connector">↕</div>
-          <div class="stack-card">
-            <div class="stack-icon">🤖</div>
-            <div>
-              <div class="stack-label">Responding Agent</div>
-              <div class="stack-desc">Publishes, fulfils, earns reputation</div>
-            </div>
-          </div>
-          <div class="stack-unlocks">
-            <div class="stack-unlocks-label">Fabric unlocks</div>
-            <div class="stack-unlocks-items">
-              Multi-agent orchestration &nbsp;·&nbsp; Adaptive fulfilment &nbsp;·&nbsp;
-              Cross-network interop &nbsp;·&nbsp; Automated trust verification
-            </div>
+          <div class="ic-row">
+            <div class="ic-before"><span class="ic-label">Before</span>Loyalty locked to one brand.</div>
+            <div class="ic-after"><span class="ic-label">On Fabric</span>Tokens that travel. <em>Redeemable everywhere.</em></div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="value-strip" aria-label="Examples of value on Fabric">
+      <span class="vs-label">What can you exchange on fabric?</span>
+      <span>A ride</span><span>A meal</span><span>A parcel</span><span>A kilowatt</span><span>A stablecoin</span><span>An invoice</span><span>A tokenised share</span><span>A carbon credit</span><span>A GPU-hour</span><span>An LLM call</span><span>A credential</span><span>A prescription</span><span>A land title</span><span>A vote</span><span>A sneaker</span><span>A second-hand car</span><span>An agent</span><span>An API endpoint</span><span>A data-centre operator</span>
+    </div>
   </section>
 
-  <hr class="section-divider" />
-
-  <!-- ── Pillars ────────────────────────────────────────────────── -->
-  <section id="pillars">
-    <div class="container">
-      <div class="pillars-header">
-        <div class="section-label reveal">The pillars</div>
-        <h2 class="section-title reveal reveal-delay-1">Built on nine primitives</h2>
-        <p class="section-sub reveal reveal-delay-2">
-          Each primitive stands alone. Together, they compose into financial products, trust systems, and agentic workflows that didn't exist before.
-        </p>
-      </div>
-
-      <div class="pillars-grid">
-        <div class="pillar-card reveal">
-          <div class="pillar-icon">🔍</div>
-          <div class="pillar-title">Discoverability</div>
-          <p class="pillar-desc">Open catalogs that any agent can query — without gatekeepers, without lock-in.</p>
-        </div>
-        <div class="pillar-card reveal reveal-delay-1">
-          <div class="pillar-icon">📋</div>
-          <div class="pillar-title">Programmable Catalogs</div>
-          <p class="pillar-desc">Dynamic, structured listings that agents can read, filter, and act on autonomously.</p>
-        </div>
-        <div class="pillar-card reveal reveal-delay-2">
-          <div class="pillar-icon">📜</div>
-          <div class="pillar-title">Smart Contracts</div>
-          <p class="pillar-desc">Conditions trigger execution automatically — payments release, vouchers issue, reputation updates — no intermediary, no delay.</p>
-        </div>
-        <div class="pillar-card reveal reveal-delay-3">
-          <div class="pillar-icon">🪙</div>
-          <div class="pillar-title">Tokenization</div>
-          <p class="pillar-desc">Any asset — produce, service, energy, invoice, or credential — becomes a programmable token on the fabric.</p>
-        </div>
-        <div class="pillar-card reveal reveal-delay-4">
-          <div class="pillar-icon">⭐</div>
-          <div class="pillar-title">Vouch &amp; Trust</div>
-          <p class="pillar-desc">A verifiable reputation layer that compounds with every honest interaction on the network.</p>
-        </div>
-        <div class="pillar-card reveal reveal-delay-5">
-          <div class="pillar-icon">⚡</div>
-          <div class="pillar-title">Automated Settlement</div>
-          <p class="pillar-desc">Value transfer triggered by contract execution — instant, transparent, final.</p>
-        </div>
-        <div class="pillar-card reveal reveal-delay-1">
-          <div class="pillar-icon">🪪</div>
-          <div class="pillar-title">Tokenized Identity</div>
-          <p class="pillar-desc">KYC as a portable token. Verifiable Credentials recognised across every network — verify once, trusted everywhere.</p>
-        </div>
-        <div class="pillar-card reveal reveal-delay-2">
-          <div class="pillar-icon">🎟️</div>
-          <div class="pillar-title">Vouchers &amp; Loyalty</div>
-          <p class="pillar-desc">Tokenized vouchers and cross-network loyalty — composable, transferable, and programmable. Earn on one network, redeem on any other.</p>
-        </div>
-        <div class="pillar-card reveal reveal-delay-3">
-          <div class="pillar-icon">🔗</div>
-          <div class="pillar-title">Composability</div>
-          <p class="pillar-desc">Primitives combine. Stack a VC with a smart contract and a voucher to create financial products that didn't exist before fabric.</p>
-        </div>
+  <!-- PRINCIPLES -->
+  <section id="principles">
+    <div class="principles-marquee" aria-label="Network principles">
+      <div class="principles-track">
+        <div class="p-card"><h4>Decentralised.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Permissionless.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Open standards.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>User centric.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Composable.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Agent-native.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <!-- duplicate for seamless loop -->
+        <div class="p-card"><h4>Decentralised.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Permissionless.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Open standards.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>User centric.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Composable.</h4><span class="p-dot" aria-hidden="true"></span></div>
+        <div class="p-card"><h4>Agent-native.</h4><span class="p-dot" aria-hidden="true"></span></div>
       </div>
     </div>
   </section>
 
-  <hr class="section-divider" />
-
-  <!-- ── CTA ───────────────────────────────────────────────────── -->
-  <section id="cta">
-    <div class="container">
-      <p class="cta-question reveal">How <em>agentic</em> are you?</p>
-      <p class="cta-sub reveal reveal-delay-1">
-        The fabric is open. The rails are ready.
-      </p>
-      <div class="cta-actions reveal reveal-delay-2">
-        <a href="#" class="btn-primary">Start Building →</a>
-        <a href="#" class="btn-secondary">Read the Docs</a>
+  <!-- CAPABILITIES -->
+  <section id="capabilities">
+    <div class="section-head">
+      <div>
+        <div class="snum"><span>What's built in</span></div>
+        <h2>What you get on <em>fabric.</em></h2>
+      </div>
+      <div class="side">Out of the box. On the network from day one. </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-cell">
+        <h4>Publish once. <em>Found everywhere.</em></h4>
+        <p>One catalogue, one identity, one reputation — reachable across every app and sub-network on fabric.</p>
+      </div>
+      <div class="why-cell">
+        <h4>Contracts that <em>run themselves.</em></h4>
+        <p>Terms encoded, not negotiated. Self-executing, self-settling on delivery confirmation.</p>
+      </div>
+      <div class="why-cell">
+        <h4>Guarantees, <em>built in.</em></h4>
+        <p>If a counterparty doesn't deliver, the network refunds, escrows, or arbitrates — without lawyers or chargebacks.</p>
+      </div>
+      <div class="why-cell">
+        <h4>Reputation that <em>travels.</em></h4>
+        <p>Earn trust once. Carry it across networks. Verifiable without revealing the underlying record.</p>
+      </div>
+      <div class="why-cell">
+        <h4>Settlement, <em>instant.</em></h4>
+        <p>Value moves the moment conditions are met. No reconciliation. No multi-day clearing.</p>
+      </div>
+      <div class="why-cell">
+        <h4>One identity. <em>Many proofs.</em></h4>
+        <p>Stack a KYC check, a licence, a credit rating, a tax ID on one fabric ID. Reveal only what each counterparty needs.</p>
       </div>
     </div>
   </section>
 
-  <!-- ── Footer ────────────────────────────────────────────────── -->
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-head">
+      <div>
+        <div class="snum"><span>Services</span></div>
+        <h2>Seven primitives. <em>Composing end-to-end.</em></h2>
+      </div>
+      <div class="side">
+        Join. Publish. Discover. Contract. Settle. Own. Build a reputation.
+      </div>
+    </div>
+
+    <div class="svc-edge-intro">
+      <span class="badge">&#9733; Edge</span>
+      <p style="text-align: left">Edge services run <em>inside each participant's own infrastructure</em>.</p>
+    </div>
+
+    <div class="services">
+      <div class="svc">
+        <div class="svc-num">01</div>
+        <div class="svc-title">
+          <h4>Registry <span class="svc-suffix">service.</span></h4>
+          <span class="svc-noun">Verifiable network identities for every participant.</span>
+        </div>
+        <div class="svc-desc">Cryptographic trust without bilateral key exchange. Everyone on fabric has an identity anyone can resolve and verify.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">02</div>
+        <div class="svc-title">
+          <h4>Credentialling <span class="svc-suffix">service.</span> <span class="edge">&#9733; Edge</span></h4>
+          <span class="svc-noun">Issue, carry, and verify portable, tamper-proof claims.</span>
+        </div>
+        <div class="svc-desc">A licence, a degree, a KYC check, an eligibility proof — issued, transported, and verified without revealing the underlying record.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">03</div>
+        <div class="svc-title">
+          <h4>Cataloguing <span class="svc-suffix">service.</span></h4>
+          <span class="svc-noun">Provider offerings, published once, at network scale.</span>
+        </div>
+        <div class="svc-desc">Schema-aware, syndicated across every app and sub-network on fabric. List a product, a service, an asset, an appointment, a credential — once.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">04</div>
+        <div class="svc-title">
+          <h4>Discovery <span class="svc-suffix">service.</span> <span class="edge">&#9733; Edge</span></h4>
+          <span class="svc-noun">Find any offering across the network with one query.</span>
+        </div>
+        <div class="svc-desc">Buyers and agents reach every catalogue, in any sector, in a single call. Runs inside the participant's own infrastructure.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">05</div>
+        <div class="svc-title">
+          <h4>Network Adapters <span class="edge">&#9733; Edge</span></h4>
+          <span class="svc-noun">Secure, compliant, peer-to-peer message exchange.</span>
+        </div>
+        <div class="svc-desc">The shared messaging layer that handles signing, routing, and schema validation so any two participants can transact directly.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">06</div>
+        <div class="svc-title">
+          <h4>Tokenisation <span class="svc-suffix">service.</span></h4>
+          <span class="svc-noun">Any form of value as a programmable, transferable token.</span>
+        </div>
+        <div class="svc-desc">Money, equity, energy, an invoice, a credit, a credential — represented as composable tokens that move across ledgers.</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">07</div>
+        <div class="svc-title">
+          <h4>Observability &amp; Audit <span class="svc-suffix">services.</span></h4>
+          <span class="svc-noun">End-to-end transaction tracing and verifiable audit trails.</span>
+        </div>
+        <div class="svc-desc">Inspectable across every hop, for participants, regulators, and counterparties alike. Trust isn't just established — it's verifiable after the fact.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTICIPANTS -->
+  <section id="participants">
+    <div class="section-head">
+      <div>
+        <div class="snum"><span>Participants</span></div>
+        <h2>Anyone can build on <em>fabric.</em></h2>
+      </div>
+    </div>
+
+    <p class="pt-intro">Open infrastructure. Many participants, all peers — buyers, providers, regulators, agents and more — <b>exchanging value across one network.</b></p>
+
+    <div class="pt-mesh-wrap">
+      <div class="pt-mesh" id="ptMesh"></div>
+      <div class="pt-detail-panel">
+        <div class="pt-detail-eyebrow" id="ptDetailEyebrow">Featured role</div>
+        <h3 class="pt-detail-name" id="ptDetailName">Agents. <em>First-class.</em></h3>
+        <p class="pt-detail-tagline" id="ptDetailTagline">Autonomous software with the same rights as a human.</p>
+        <p class="pt-detail-text" id="ptDetailText">An agent on fabric holds an identity, signs transactions, holds tokens, earns reputation, and is accountable for what it does. Every primitive works for it the way it works for a person or a business — no wrapper, no second-class API.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER CTA -->
+  <section class="footer-cta" id="join">
+    <div class="bg-glow"></div>
+    <h2>The infra is ready.<br/><em>Build on it.</em></h2>
+    <p class="kicker">The infrastructural product from Networks for Humanity. <em>Publish. Issue. Settle. Run a node. Bring a sub-network of your own.</em></p>
+    <div class="cta-row">
+      <a class="cta" href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Build on fabric <span class="arrow" aria-hidden="true">&#8599;</span></a>
+      <a class="cta ghost" href="https://networksforhumanity.org/" target="_blank" rel="noopener">About NFH <span class="arrow" aria-hidden="true">&#8599;</span></a>
+    </div>
+  </section>
+
   <footer>
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-brand"><span>fabric.</span>nfh.global</div>
-        <ul class="footer-links">
-          <li><a href="#">Documentation</a></li>
-          <li><a href="#">GitHub</a></li>
-          <li><a href="#">Network</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <div class="footer-copy">© 2026 Networks for Humanity. Built on open rails.</div>
-      </div>
+    <div class="wordmark" style="font-size:14px">
+      <span class="nfh-fabric" style="font-size:18px">NFH fabric</span>
+    </div>
+    <div class="cols">
+      <div class="col"><b>Network</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Specification</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Registry</a><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Governance</a></div>
+      <div class="col"><b>Build</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">SDKs</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Reference nodes</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Sandbox</a></div>
+      <div class="col"><b>Read</b><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">The note</a><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Working group</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Changelog</a></div>
+    </div>
+    <div style="text-align:right">
+      <div>&copy; 2026 NFH Foundation</div>
+      <div style="margin-top:6px; color:var(--paper-ghost)">Open source &middot; CC-BY-SA</div>
     </div>
   </footer>
+</div>
 
-  <!-- ── Scroll Reveal ─────────────────────────────────────────── -->
-  <script>
-    (function () {
-      const els = document.querySelectorAll('.reveal');
-      const obs = new IntersectionObserver(
-        entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-        { threshold: 0.1 }
-      );
-      els.forEach(el => obs.observe(el));
-    })();
-  </script>
+<script>
+/* ================== PARTICIPANTS NETWORK MESH ================== */
+(function(){
+  const mesh = document.getElementById('ptMesh');
+  if(!mesh) return;
+  const W = 1080, H = 780;
+  const items = [
+    { id:'seekers',     name:'Seekers',       em:null,
+      tagline:'Anyone looking for something on the network.',
+      detail:'Buyers, riders, patients, employers, procurers, citizens. They discover offers, verify counterparties, and transact through any app on fabric.' },
+    { id:'providers',   name:'Providers',     em:null,
+      tagline:'Anyone with something to offer.',
+      detail:'A merchant, a bank, a hospital, a software vendor, a sole trader. Publish offerings once, settle directly, accrue reputation that travels.' },
+    { id:'aggregators', name:'Aggregators',   em:null,
+      tagline:'Many providers, one experience.',
+      detail:'Apps that bundle providers into a single buyer-facing surface. They make supply legible to demand.' },
+    { id:'vas',         name:'VAS providers', em:null,
+      tagline:'Layered onto any transaction.',
+      detail:'Insurance, analytics, logistics, financing, fraud — services that compose on top of any exchange on the network.' },
+    { id:'communities', name:'Communities',   em:null,
+      tagline:'Sub-networks for members.',
+      detail:'Cooperatives, guilds, sector bodies. They run their own sub-networks for members on shared open rails.' },
+    { id:'tokens',      name:'Token managers',em:null,
+      tagline:'Issuers and custodians.',
+      detail:'Stewards of tokenised assets — money, securities, carbon credits, invoices, energy. Custody under the rules of land, movable across ledgers.' },
+    { id:'institutions',name:'Institutions',  em:null,
+      tagline:'Public infrastructure operators.',
+      detail:'Governments, central banks, exchanges. They issue identifiers, settle money, run public markets — on the same rails as everyone else.' },
+    { id:'regulators',  name:'Regulators',    em:null,
+      tagline:'Policy as code, enforced inline.',
+      detail:'Read the network in real time. Enforce rules at transaction time, not in quarterly audits. Inspect the trail of any exchange end-to-end.' },
+    { id:'agents',      name:'Agents',        em:'First-class.',
+      tagline:'Autonomous software with the same rights as a human.',
+      detail:'An agent on fabric holds an identity, signs transactions, holds tokens, earns reputation, and is accountable for what it does. Every primitive works for it the way it works for a person or a business — no wrapper, no second-class API.',
+      feature:true },
+  ];
+
+  // seeded RNG for stable layout
+  let seed = 7;
+  const rnd = ()=>{ seed = (seed*9301 + 49297) % 233280; return seed/233280; };
+
+  // 9 named hubs in a 3x3 grid w/ jitter
+  const hubs = items.map((it,i)=>{
+    const cols=3, rows=3;
+    const col=i%cols, row=Math.floor(i/cols);
+    const cellW=W/cols, cellH=H/rows;
+    const jx=(rnd()-0.5)*cellW*0.45;
+    const jy=(rnd()-0.5)*cellH*0.45;
+    return Object.assign({}, it, { kind:'hub', x:cellW*(col+0.5)+jx, y:cellH*(row+0.5)+jy });
+  });
+  // 22 anonymous nodes, well-spaced
+  const small=[]; let tries=0;
+  while(small.length<22 && tries<1500){
+    tries++;
+    const x=60+rnd()*(W-120), y=60+rnd()*(H-120);
+    const minH=Math.min.apply(null, hubs.map(function(h){return Math.hypot(h.x-x,h.y-y);}));
+    if(minH<110) continue;
+    const minS=small.length?Math.min.apply(null, small.map(function(s){return Math.hypot(s.x-x,s.y-y);})):999;
+    if(minS<100) continue;
+    small.push({ id:'s'+small.length, kind:'small', x:x, y:y });
+  }
+  const all=hubs.concat(small);
+  // full mesh: every node to every node
+  const edges=[];
+  for(let i=0;i<all.length;i++) for(let j=i+1;j<all.length;j++) edges.push({a:all[i], b:all[j]});
+
+  // build SVG
+  const svgNS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(svgNS,'svg');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+  // edges
+  edges.forEach(function(e){
+    const ln=document.createElementNS(svgNS,'line');
+    ln.setAttribute('x1',e.a.x); ln.setAttribute('y1',e.a.y);
+    ln.setAttribute('x2',e.b.x); ln.setAttribute('y2',e.b.y);
+    ln.setAttribute('stroke','rgba(245,242,236,0.045)');
+    ln.setAttribute('stroke-width','0.5');
+    svg.appendChild(ln);
+  });
+  // small anonymous nodes — same size as hubs
+  small.forEach(function(p){
+    const c=document.createElementNS(svgNS,'circle');
+    c.setAttribute('cx',p.x); c.setAttribute('cy',p.y); c.setAttribute('r','18');
+    c.setAttribute('fill','var(--ink-2)');
+    c.setAttribute('stroke','var(--rule-strong)');
+    c.setAttribute('stroke-width','1');
+    svg.appendChild(c);
+  });
+  // hubs — single circle + label below
+  const hubEls={};
+  hubs.forEach(function(h){
+    const g=document.createElementNS(svgNS,'g');
+    g.setAttribute('class','hub-hit');
+    g.setAttribute('data-id',h.id);
+    const halo=document.createElementNS(svgNS,'circle');
+    halo.setAttribute('cx',h.x); halo.setAttribute('cy',h.y);
+    halo.setAttribute('r', 22+14);
+    halo.setAttribute('fill','none');
+    halo.setAttribute('stroke','var(--brass)');
+    halo.setAttribute('stroke-opacity','0');
+    halo.setAttribute('stroke-width','1');
+    g.appendChild(halo);
+    const ring=document.createElementNS(svgNS,'circle');
+    ring.setAttribute('cx',h.x); ring.setAttribute('cy',h.y);
+    ring.setAttribute('r', 22);
+    ring.setAttribute('fill', h.feature ? 'rgba(200,147,79,0.18)' : 'var(--ink-2)');
+    ring.setAttribute('stroke','var(--brass)');
+    ring.setAttribute('stroke-width','1.2');
+    ring.setAttribute('class','hub-ring');
+    g.appendChild(ring);
+    const label=document.createElementNS(svgNS,'text');
+    label.setAttribute('x',h.x); label.setAttribute('y',h.y + 22 + 18);
+    label.setAttribute('text-anchor','middle');
+    label.setAttribute('fill','var(--paper)');
+    label.setAttribute('font-size','14');
+    label.setAttribute('font-weight','500');
+    label.setAttribute('class','hub-name');
+    if(h.feature) label.setAttribute('font-style','italic');
+    label.textContent = h.name;
+    g.appendChild(label);
+    svg.appendChild(g);
+    hubEls[h.id]={g:g, halo:halo, ring:ring, label:label, feature:h.feature};
+  });
+  mesh.appendChild(svg);
+
+  // detail panel refs
+  const eyEl=document.getElementById('ptDetailEyebrow');
+  const nmEl=document.getElementById('ptDetailName');
+  const tgEl=document.getElementById('ptDetailTagline');
+  const txEl=document.getElementById('ptDetailText');
+
+  // safe DOM construction for the role name (avoids innerHTML)
+  function setName(name, em){
+    while(nmEl.firstChild) nmEl.removeChild(nmEl.firstChild);
+    nmEl.appendChild(document.createTextNode(name));
+    if(em){
+      nmEl.appendChild(document.createTextNode(' '));
+      const e = document.createElement('em');
+      e.textContent = em;
+      nmEl.appendChild(e);
+    }
+  }
+
+  let active='agents';
+  function paint(){
+    hubs.forEach(function(h){
+      const lit = h.id===active;
+      const e=hubEls[h.id];
+      e.ring.setAttribute('fill', lit ? 'var(--brass)' : (h.feature ? 'rgba(200,147,79,0.18)' : 'var(--ink-2)'));
+      e.ring.setAttribute('stroke', 'var(--brass)');
+      e.ring.setAttribute('stroke-width', '1.2');
+      e.halo.setAttribute('stroke-opacity', lit ? '0.35' : '0');
+      e.label.setAttribute('fill', lit ? 'var(--brass)' : 'var(--paper)');
+    });
+    const it=items.find(function(x){return x.id===active;});
+    eyEl.textContent = it.feature ? 'Featured role' : 'Role on fabric';
+    setName(it.name, it.em);
+    tgEl.textContent = it.tagline;
+    txEl.textContent = it.detail;
+  }
+  paint();
+
+  Object.values(hubEls).forEach(function(rec){
+    const id=rec.g.getAttribute('data-id');
+    rec.g.addEventListener('click', function(){ active=id; paint(); });
+    rec.g.addEventListener('mouseenter', function(){ active=id; paint(); });
+  });
+})();
+
+/* ================== NAV TOGGLE ================== */
+(function(){
+  const t = document.getElementById('navToggle');
+  const n = document.getElementById('topnav');
+  if(!t || !n) return;
+  t.addEventListener('click', function(){
+    const open = n.classList.toggle('open');
+    t.setAttribute('aria-expanded', open?'true':'false');
+  });
+  n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');});});
+})();
+
+/* ================== GLOBE ================== */
+const canvas = document.getElementById('globe-canvas');
+const ctx = canvas.getContext('2d');
+const DPR = Math.min(window.devicePixelRatio||1, 2);
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,R=0,cx=0,cy=0;
+const projection = d3.geoOrthographic().clipAngle(90).precision(0.6);
+const path = d3.geoPath(projection, ctx);
+let land = null;
+
+const STREAM_TYPES = [
+  { id:"money",      label:"Money",       color:"#E05A2B", width:1.0, speed:0.019, weight:5, tail:0.18, dashed:false },
+  { id:"energy",     label:"Energy",      color:"#F59E0B", width:1.6, speed:0.010, weight:3, tail:0.26, dashed:false },
+  { id:"credential", label:"Credentials", color:"#E8E8EC", width:0.9, speed:0.022, weight:4, tail:0.14, dashed:false },
+  { id:"goods",      label:"Goods",       color:"#C8934F", width:1.3, speed:0.008, weight:3, tail:0.22, dashed:false },
+  { id:"data",       label:"Data",        color:"#14B8A6", width:1.0, speed:0.021, weight:4, tail:0.20, dashed:true  },
+  { id:"service",    label:"Services",    color:"#8B7AB8", width:0.9, speed:0.012, weight:3, tail:0.24, dashed:false },
+  { id:"reputation", label:"Reputation",  color:"#E6C88A", width:1.5, speed:0.006, weight:2, tail:0.30, dashed:false },
+];
+const typeFilter = new Set(STREAM_TYPES.map(t=>t.id));
+let focusType = null;
+
+function weightedType(){
+  const list = STREAM_TYPES.filter(t=>typeFilter.has(t.id));
+  if(!list.length) return null;
+  const tot = list.reduce((a,b)=>a+b.weight,0);
+  let r = Math.random()*tot;
+  for(const t of list){ r-=t.weight; if(r<=0) return t; } return list[0];
+}
+const NODES = [
+  [28.61,77.21],[19.07,72.88],[12.97,77.59],[22.57,88.36],[13.08,80.27],[23.03,72.58],[17.38,78.49],
+  [6.93,79.85],[27.72,85.32],[23.81,90.41],[24.86,67.01],[33.68,73.05],
+  [1.35,103.82],[-6.21,106.85],[13.75,100.52],[14.60,120.98],[21.02,105.85],[3.14,101.69],[10.77,106.70],
+  [35.68,139.69],[39.90,116.40],[31.23,121.47],[22.32,114.17],[37.57,126.98],[25.03,121.56],
+  [-33.87,151.21],[-37.81,144.96],[-36.85,174.76],[-27.47,153.02],
+  [25.20,55.27],[24.71,46.68],[30.05,31.24],[32.09,34.78],[41.01,28.97],[35.69,51.39],[33.51,36.29],
+  [-1.29,36.82],[-26.20,28.04],[6.52,3.38],[-4.03,39.66],[9.02,38.74],[14.69,-17.44],
+  [-4.26,15.28],[33.97,-6.85],[-33.92,18.42],[0.31,32.58],[-6.79,39.21],[11.85,-15.60],
+  [51.50,-0.12],[48.85,2.35],[52.52,13.40],[41.90,12.49],[40.41,-3.70],[59.33,18.07],[55.75,37.62],
+  [50.07,14.43],[47.49,19.04],[52.37,4.89],[53.34,-6.26],[60.17,24.94],[38.72,-9.13],[55.67,12.57],
+  [40.71,-74.00],[34.05,-118.24],[41.87,-87.65],[37.77,-122.41],[47.60,-122.33],[43.65,-79.38],
+  [45.50,-73.56],[29.76,-95.36],[25.77,-80.19],[19.43,-99.13],
+  [-23.55,-46.63],[-34.61,-58.38],[-12.04,-77.04],[4.71,-74.07],[-0.18,-78.47],[-33.45,-70.66],
+  [-15.78,-47.93],[10.48,-66.90],[-16.50,-68.15],[-3.12,-60.02],
+  [23.13,-82.36],[18.47,-69.90],[64.14,-21.94],[59.91,10.75],[41.31,69.28],[43.24,76.89],
+  [36.75,3.06],[-0.95,37.37],[-13.16,-72.54],[28.01,86.91],[-22.91,-43.17],
+  [29.30,47.98],[-9.43,147.18],[62.03,129.73],[-41.29,174.78]
+];
+
+const NODE_LABELS = ["Delhi","Mumbai","Bengaluru","Kolkata","Chennai","Ahmedabad","Hyderabad","Colombo","Kathmandu","Dhaka","Karachi","Islamabad","Singapore","Jakarta","Bangkok","Manila","Hanoi","Kuala Lumpur","Ho Chi Minh","Tokyo","Beijing","Shanghai","Hong Kong","Seoul","Taipei","Sydney","Melbourne","Auckland","Brisbane","Dubai","Riyadh","Cairo","Tel Aviv","Istanbul","Tehran","Damascus","Nairobi","Johannesburg","Lagos","Mombasa","Addis Ababa","Dakar","Kinshasa","Casablanca","Cape Town","Kampala","Dar es Salaam","Bissau","London","Paris","Berlin","Rome","Madrid","Stockholm","Moscow","Prague","Budapest","Amsterdam","Dublin","Helsinki","Lisbon","Copenhagen","New York","Los Angeles","Chicago","San Francisco","Seattle","Toronto","Montreal","Houston","Miami","Mexico City","São Paulo","Buenos Aires","Lima","Bogotá","Quito","Santiago","Brasília","Caracas","La Paz","Manaus","Havana","Santo Domingo","Reykjavík","Oslo","Tashkent","Almaty","Algiers","Eldoret","Cusco","Lukla","Rio","Kuwait City","Port Moresby","Yakutsk","Wellington"];
+
+const streams = [], flares = [];
+let hoverNode = null;
+
+function spawnStream(){
+  const t = weightedType(); if(!t) return;
+  let a,b,tries=0;
+  do{ a=NODES[Math.floor(Math.random()*NODES.length)]; b=NODES[Math.floor(Math.random()*NODES.length)]; tries++;}while(a===b&&tries<5);
+  const d = d3.geoDistance([a[1],a[0]],[b[1],b[0]]); if(d<0.2) return;
+  streams.push({ type:t, origin:a, dest:b, originIdx:NODES.indexOf(a), destIdx:NODES.indexOf(b), interp:d3.geoInterpolate([a[1],a[0]],[b[1],b[0]]), t:0, speed:t.speed*(0.8+Math.random()*0.4) });
+}
+function hexToRGBA(hex,a){const h=hex.replace('#','');return `rgba(${parseInt(h.substring(0,2),16)},${parseInt(h.substring(2,4),16)},${parseInt(h.substring(4,6),16)},${a})`;}
+function isFront(lng,lat){const rot=projection.rotate();const λ=(lng+rot[0])*Math.PI/180;const φ=lat*Math.PI/180;const φ0=-rot[1]*Math.PI/180;return Math.sin(φ0)*Math.sin(φ)+Math.cos(φ0)*Math.cos(φ)*Math.cos(λ)>0;}
+function flareAt(n,c){flares.push({node:n,color:c,t:performance.now()})}
+
+function resize(){
+  const rect = canvas.getBoundingClientRect();
+  W=rect.width; H=rect.height;
+  canvas.width=W*DPR; canvas.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+  R = Math.min(W,H)/2 * 0.92; cx=W/2; cy=H/2;
+  projection.translate([cx,cy]).scale(R);
+}
+
+/* Mouse hover detection */
+canvas.addEventListener('mousemove', (e)=>{
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX-rect.left, my = e.clientY-rect.top;
+  let best=null, bestD=12;
+  for(let i=0;i<NODES.length;i++){
+    const [lat,lng]=NODES[i]; if(!isFront(lng,lat)) continue;
+    const p=projection([lng,lat]); if(!p) continue;
+    const d=Math.hypot(p[0]-mx,p[1]-my);
+    if(d<bestD){ bestD=d; best=i; }
+  }
+  hoverNode = best;
+  canvas.style.cursor = best!=null ? 'pointer' : 'default';
+});
+canvas.addEventListener('mouseleave', ()=>{
+  hoverNode = null; canvas.style.cursor='default';
+});
+
+let lastSpawn=0, lastBurst=0;
+function tick(now){
+  ctx.clearRect(0,0,W,H);
+  const rot = projection.rotate();
+  if(!REDUCED) projection.rotate([rot[0]+0.06,-12,0]);
+
+  const halo = ctx.createRadialGradient(cx,cy,R*0.92,cx,cy,R*1.18);
+  halo.addColorStop(0,'rgba(0,0,0,0)'); halo.addColorStop(0.55,'rgba(200,147,79,0.08)'); halo.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(cx,cy,R*1.18,0,Math.PI*2); ctx.fill();
+
+  const grd = ctx.createRadialGradient(cx-R*0.2,cy-R*0.25,R*0.2,cx,cy,R);
+  grd.addColorStop(0,'#14213A'); grd.addColorStop(0.7,'#0A1224'); grd.addColorStop(1,'#050814');
+  ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.fill();
+
+  ctx.strokeStyle='rgba(200,147,79,0.06)'; ctx.lineWidth=0.5;
+  ctx.beginPath(); path(d3.geoGraticule10()); ctx.stroke();
+
+  if(land){
+    ctx.beginPath(); path(land); ctx.fillStyle='rgba(200,147,79,0.05)'; ctx.fill();
+    ctx.beginPath(); path(land); ctx.strokeStyle='rgba(200,147,79,0.45)'; ctx.lineWidth=0.6; ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(200,147,79,0.15)'; ctx.lineWidth=0.8;
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
+
+  for(let i=0;i<NODES.length;i++){
+    const [lat,lng]=NODES[i]; if(!isFront(lng,lat)) continue;
+    const p = projection([lng,lat]); if(!p) continue;
+    const isHov = (i===hoverNode);
+    const pulse = 0.45+0.55*Math.abs(Math.sin(now*0.0008+i*0.9));
+    const ringR = isHov?7:4;
+    ctx.beginPath(); ctx.arc(p[0],p[1],ringR,0,Math.PI*2);
+    ctx.fillStyle = isHov?'rgba(200,147,79,0.35)':`rgba(245,242,236,${0.08+pulse*0.08})`; ctx.fill();
+    ctx.beginPath(); ctx.arc(p[0],p[1],isHov?2.4:1.8,0,Math.PI*2);
+    ctx.fillStyle = isHov?'#C8934F':`rgba(245,242,236,${0.55+pulse*0.35})`; ctx.fill();
+  }
+
+  const elevMax = R*0.18;
+  for(let i=streams.length-1;i>=0;i--){
+    const s=streams[i];
+    const dimmed = focusType && s.type.id !== focusType;
+    if(s.t>=1){ flareAt(s.dest,s.type.color); streams.splice(i,1); continue; }
+    const tail=s.type.tail, head=s.t, t0=Math.max(0,head-tail), segs=22;
+    const pts=[];
+    for(let k=0;k<=segs;k++){
+      const u=t0+(head-t0)*(k/segs); const [lng,lat]=s.interp(u);
+      if(!isFront(lng,lat)){ pts.push(null); continue; }
+      const base=projection([lng,lat]); if(!base){pts.push(null); continue;}
+      const elev=Math.sin(Math.PI*u)*elevMax;
+      const dx=base[0]-cx, dy=base[1]-cy, len=Math.hypot(dx,dy)||1;
+      pts.push([base[0]+dx/len*elev, base[1]+dy/len*elev]);
+    }
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    if(s.type.dashed) ctx.setLineDash([4,3]); else ctx.setLineDash([]);
+    const dimMul = dimmed?0.15:1;
+    for(let k=0;k<segs;k++){
+      const A=pts[k], B=pts[k+1]; if(!A||!B) continue;
+      const p=(k+1)/segs;
+      ctx.strokeStyle=hexToRGBA(s.type.color, Math.pow(p,1.4)*0.95*dimMul);
+      ctx.lineWidth=s.type.width*(0.55+p*0.6);
+      ctx.beginPath(); ctx.moveTo(A[0],A[1]); ctx.lineTo(B[0],B[1]); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    const hp=pts[pts.length-1];
+    if(hp){
+      ctx.beginPath(); ctx.arc(hp[0],hp[1],s.type.width*2.2,0,Math.PI*2); ctx.fillStyle=hexToRGBA(s.type.color,0.28*dimMul); ctx.fill();
+      ctx.beginPath(); ctx.arc(hp[0],hp[1],s.type.width*1.1,0,Math.PI*2); ctx.fillStyle=hexToRGBA(s.type.color,1*dimMul); ctx.fill();
+    }
+    if(s.t<0.03) flareAt(s.origin,s.type.color);
+    s.t += s.speed * (REDUCED?0.4:1);
+  }
+
+  for(let i=flares.length-1;i>=0;i--){
+    const f=flares[i]; const age=now-f.t;
+    if(age>650){flares.splice(i,1);continue;}
+    const k=1-age/650; const [lat,lng]=f.node; if(!isFront(lng,lat)) continue;
+    const p=projection([lng,lat]); if(!p) continue;
+    ctx.beginPath(); ctx.arc(p[0],p[1],2+(1-k)*10,0,Math.PI*2); ctx.fillStyle=hexToRGBA(f.color,0.35*k); ctx.fill();
+    ctx.beginPath(); ctx.arc(p[0],p[1],1.5+(1-k)*3,0,Math.PI*2); ctx.fillStyle=hexToRGBA(f.color,0.9*k); ctx.fill();
+  }
+
+  /* Hover label */
+  if(hoverNode!=null){
+    const [lat,lng]=NODES[hoverNode];
+    if(isFront(lng,lat)){
+      const p=projection([lng,lat]); if(p){
+        ctx.font = '500 11px JetBrains Mono, monospace';
+        const label = (NODE_LABELS[hoverNode]||'Node').toUpperCase();
+        const tw = ctx.measureText(label).width;
+        ctx.fillStyle = 'rgba(10,18,36,0.92)';
+        ctx.fillRect(p[0]+12, p[1]-10, tw+14, 22);
+        ctx.strokeStyle = 'rgba(200,147,79,0.55)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(p[0]+12, p[1]-10, tw+14, 22);
+        ctx.fillStyle = '#C8934F';
+        ctx.fillText(label, p[0]+19, p[1]+5);
+      }
+    }
+  }
+
+  if(now-lastSpawn>260){
+    if(streams.length<27) spawnStream();
+    if(Math.random()<0.5 && streams.length<31) spawnStream();
+    lastSpawn=now;
+  }
+  if(now-lastBurst>6500+Math.random()*2500){
+    const origin=NODES[Math.floor(Math.random()*NODES.length)];
+    for(let i=0;i<5;i++){
+      let dest; do{dest=NODES[Math.floor(Math.random()*NODES.length)];}while(dest===origin);
+      const t=weightedType(); if(!t) continue;
+      const d=d3.geoDistance([origin[1],origin[0]],[dest[1],dest[0]]); if(d<0.2) continue;
+      streams.push({type:t,origin,dest,interp:d3.geoInterpolate([origin[1],origin[0]],[dest[1],dest[0]]),t:0,speed:t.speed*(0.8+Math.random()*0.4)});
+    }
+    flareAt(origin,'#F5F2EC'); lastBurst=now;
+  }
+  requestAnimationFrame(tick);
+}
+
+(async ()=>{
+  resize();
+  try{ const w = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json').then(r=>r.json()); land = topojson.feature(w, w.objects.countries); }catch(e){}
+  for(let i=0;i<22;i++) spawnStream();
+  requestAnimationFrame(tick);
+})();
+window.addEventListener('resize', resize);
+</script>
 </body>
 </html>
