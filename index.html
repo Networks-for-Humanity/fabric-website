@@ -7,7 +7,7 @@
 <meta name="description" content="NFH fabric is open infrastructure to discover, buy, own, exchange, and publish any kind of value. Built by Networks for Humanity. Open source." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Space+Mono:wght@400;700&family=Bricolage+Grotesque:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <style>
@@ -24,16 +24,608 @@
     --cta-hover:#EC6B3D;
     --rule:rgba(245,242,236,.1);
     --rule-strong:rgba(245,242,236,.22);
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+    --display: var(--serif);
+    --body: var(--serif);
+    --display-weight: 500;
+    --display-letter: -0.028em;
+    --display-italic-style: italic;
+    --rhythm: 0.7;
   }
+  /* Mood: ink (cool) */
+  body[data-mood="ink"]{
+    --brass:#7AA2D9;
+    --brass-dim:rgba(122,162,217,.55);
+    --cta:#7AA2D9;
+    --cta-hover:#94B5E5;
+  }
+  /* Mood: crimson (bold) */
+  body[data-mood="crimson"]{
+    --brass:#D9453A;
+    --brass-dim:rgba(217,69,58,.55);
+    --cta:#D9453A;
+    --cta-hover:#E8615A;
+  }
+  /* Mood: forest (deep green, organic) */
+  body[data-mood="forest"]{
+    --ink:#0C1A14;
+    --ink-2:#070F0B;
+    --brass:#7FB28A;
+    --brass-dim:rgba(127,178,138,.55);
+    --cta:#7FB28A;
+    --cta-hover:#9CC8A6;
+  }
+  /* Mood: plum (deep magenta) */
+  body[data-mood="plum"]{
+    --ink:#160A1F;
+    --ink-2:#0C0612;
+    --brass:#C77DD5;
+    --brass-dim:rgba(199,125,213,.55);
+    --cta:#C77DD5;
+    --cta-hover:#D596E2;
+  }
+  /* Mood: sage (muted olive) */
+  body[data-mood="sage"]{
+    --ink:#15170E;
+    --ink-2:#0A0B07;
+    --brass:#B8B07A;
+    --brass-dim:rgba(184,176,122,.55);
+    --cta:#D9A26B;
+    --cta-hover:#E5B582;
+  }
+  /* Mood: mono (pure greyscale) */
+  body[data-mood="mono"]{
+    --ink:#0E0E0E;
+    --ink-2:#050505;
+    --brass:#E8E8EC;
+    --brass-dim:rgba(232,232,236,.45);
+    --cta:#F5F2EC;
+    --cta-hover:#FFFFFF;
+  }
+  /* Mood: nfh (Networks for Humanity — institutional white + slate)
+     Modeled on networksforhumanity.org: pure white bg, near-black ink,
+     a single royal-blue accent reserved for links / interactive bits. */
+  body[data-mood="nfh"]{
+    --ink:#FFFFFF;
+    --ink-2:#F6F6F4;
+    --paper:#111316;
+    --paper-dim:rgba(17,19,22,.72);
+    --paper-faint:rgba(17,19,22,.5);
+    --paper-ghost:rgba(17,19,22,.14);
+    --brass:#1F4FA6;
+    --brass-dim:rgba(31,79,166,.5);
+    --cta:#111316;
+    --cta-hover:#1F4FA6;
+    --rule:rgba(17,19,22,.10);
+    --rule-strong:rgba(17,19,22,.22);
+  }
+  /* Mood: bone (light / warm cream + sienna) */
+  body[data-mood="bone"]{
+    --ink:#F2EEE5;
+    --ink-2:#E8E2D4;
+    --paper:#1A1814;
+    --paper-dim:rgba(26,24,20,.7);
+    --paper-faint:rgba(26,24,20,.45);
+    --paper-ghost:rgba(26,24,20,.18);
+    --brass:#8B5E2B;
+    --brass-dim:rgba(139,94,43,.55);
+    --cta:#B8451E;
+    --cta-hover:#C95A33;
+    --rule:rgba(26,24,20,.12);
+    --rule-strong:rgba(26,24,20,.24);
+  }
+  /* Mood: linen (cool off-white + navy) */
+  body[data-mood="linen"]{
+    --ink:#EFEEEA;
+    --ink-2:#E2E0D8;
+    --paper:#0F1A2E;
+    --paper-dim:rgba(15,26,46,.72);
+    --paper-faint:rgba(15,26,46,.45);
+    --paper-ghost:rgba(15,26,46,.18);
+    --brass:#1E3A6B;
+    --brass-dim:rgba(30,58,107,.55);
+    --cta:#1E3A6B;
+    --cta-hover:#2C4F87;
+    --rule:rgba(15,26,46,.1);
+    --rule-strong:rgba(15,26,46,.22);
+  }
+  /* Mood: porcelain (pure white + deep crimson) */
+  body[data-mood="porcelain"]{
+    --ink:#FBFAF7;
+    --ink-2:#F2F0EA;
+    --paper:#1C1310;
+    --paper-dim:rgba(28,19,16,.72);
+    --paper-faint:rgba(28,19,16,.45);
+    --paper-ghost:rgba(28,19,16,.16);
+    --brass:#A8231C;
+    --brass-dim:rgba(168,35,28,.55);
+    --cta:#A8231C;
+    --cta-hover:#C03830;
+    --rule:rgba(28,19,16,.1);
+    --rule-strong:rgba(28,19,16,.22);
+  }
+  /* Mood: sand (warm peach paper + terracotta) */
+  body[data-mood="sand"]{
+    --ink:#F4E8D8;
+    --ink-2:#EBDBC4;
+    --paper:#2A1810;
+    --paper-dim:rgba(42,24,16,.72);
+    --paper-faint:rgba(42,24,16,.45);
+    --paper-ghost:rgba(42,24,16,.16);
+    --brass:#C25419;
+    --brass-dim:rgba(194,84,25,.55);
+    --cta:#C25419;
+    --cta-hover:#D86B30;
+    --rule:rgba(42,24,16,.12);
+    --rule-strong:rgba(42,24,16,.24);
+  }
+  /* Mood: mist (pale sage + forest accent) */
+  body[data-mood="mist"]{
+    --ink:#E8EDE5;
+    --ink-2:#D8DFD2;
+    --paper:#142018;
+    --paper-dim:rgba(20,32,24,.72);
+    --paper-faint:rgba(20,32,24,.45);
+    --paper-ghost:rgba(20,32,24,.16);
+    --brass:#2D5A3D;
+    --brass-dim:rgba(45,90,61,.55);
+    --cta:#2D5A3D;
+    --cta-hover:#3F7253;
+    --rule:rgba(20,32,24,.1);
+    --rule-strong:rgba(20,32,24,.22);
+  }
+  /* Mood: lavender (pale lilac + deep plum) */
+  body[data-mood="lavender"]{
+    --ink:#EEEAF0;
+    --ink-2:#DFD8E3;
+    --paper:#1F1428;
+    --paper-dim:rgba(31,20,40,.72);
+    --paper-faint:rgba(31,20,40,.45);
+    --paper-ghost:rgba(31,20,40,.16);
+    --brass:#5C2D6E;
+    --brass-dim:rgba(92,45,110,.55);
+    --cta:#5C2D6E;
+    --cta-hover:#7A3F90;
+    --rule:rgba(31,20,40,.1);
+    --rule-strong:rgba(31,20,40,.22);
+  }
+  /* Mood: arctic (icy blue, pale) */
+  body[data-mood="arctic"]{
+    --ink:#0A1620;
+    --ink-2:#040A12;
+    --brass:#9FD8E8;
+    --brass-dim:rgba(159,216,232,.55);
+    --cta:#9FD8E8;
+    --cta-hover:#BCE5F0;
+  }
+  /* Voice: industrial — mono headlines, tighter */
+  body[data-voice="industrial"]{
+    --display: var(--mono);
+    --display-weight: 500;
+    --display-letter: -0.02em;
+    --display-italic-style: normal;
+  }
+  body[data-voice="industrial"] h1,
+  body[data-voice="industrial"] h2,
+  body[data-voice="industrial"] h3,
+  body[data-voice="industrial"] h4{
+    text-transform:uppercase;
+    font-size:0.78em;
+  }
+  body[data-voice="industrial"] .hero h1{
+    font-size:clamp(40px, 4.8vw, 72px);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  body[data-voice="industrial"] em{ font-style:normal !important; }
+  /* Voice: modern — sans serif throughout, geometric */
+  body[data-voice="modern"]{
+    --display: var(--sans);
+    --body: var(--sans);
+    --display-weight: 600;
+    --display-letter: -0.03em;
+  }
+  body[data-voice="modern"] em{ font-style:normal; font-weight:600; }
+
+  /* Voice: manuscript — high-contrast classical serif */
+  body[data-voice="manuscript"]{
+    --display: 'Cormorant Garamond', 'EB Garamond', serif;
+    --body: 'Cormorant Garamond', 'EB Garamond', serif;
+    --display-weight: 500;
+    --display-letter: -0.025em;
+  }
+  body[data-voice="manuscript"] h1,
+  body[data-voice="manuscript"] h2{ font-weight:500; font-style:italic; }
+  body[data-voice="manuscript"] em{ font-style:italic; font-weight:600; }
+
+  /* Voice: postmodern — display italic + mono body */
+  body[data-voice="postmodern"]{
+    --display: 'Instrument Serif', 'EB Garamond', serif;
+    --body: 'Space Mono', 'JetBrains Mono', monospace;
+    --display-weight: 400;
+    --display-letter: -0.015em;
+  }
+  body[data-voice="postmodern"] h1,
+  body[data-voice="postmodern"] h2,
+  body[data-voice="postmodern"] h3{ font-style:italic; }
+  body[data-voice="postmodern"]{ font-size:14.5px; line-height:1.55; }
+
+  /* Voice: technical — IBM Plex pair */
+  body[data-voice="technical"]{
+    --display: 'IBM Plex Serif', 'EB Garamond', serif;
+    --body: 'IBM Plex Serif', 'EB Garamond', serif;
+    --display-weight: 500;
+    --display-letter: -0.02em;
+  }
+  body[data-voice="technical"] em{ font-style:italic; }
+
+  /* Voice: stark — Space Grotesk geometric */
+  body[data-voice="stark"]{
+    --display: 'Space Grotesk', system-ui, sans-serif;
+    --body: 'Space Grotesk', system-ui, sans-serif;
+    --display-weight: 700;
+    --display-letter: -0.035em;
+  }
+  body[data-voice="stark"] em{ font-style:normal; font-weight:700; }
+
+  /* Voice: expressive — Fraunces variable, soft */
+  body[data-voice="expressive"]{
+    --display: 'Fraunces', 'EB Garamond', serif;
+    --body: 'Fraunces', 'EB Garamond', serif;
+    --display-weight: 500;
+    --display-letter: -0.025em;
+    font-variation-settings: "SOFT" 50, "WONK" 1;
+  }
+  body[data-voice="expressive"] em{ font-style:italic; font-weight:500; }
+
+  /* Voice: brut — Bricolage geometric */
+  body[data-voice="brut"]{
+    --display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --body: 'Bricolage Grotesque', system-ui, sans-serif;
+    --display-weight: 700;
+    --display-letter: -0.04em;
+  }
+  body[data-voice="brut"] em{ font-style:normal; font-weight:800; }
+
+  /* Voice: institutional — DM Sans, modeled on networksforhumanity.org */
+  body[data-voice="institutional"]{
+    --display: 'DM Sans', system-ui, sans-serif;
+    --body:    'DM Sans', system-ui, sans-serif;
+    --sans:    'DM Sans', system-ui, sans-serif;
+    --mono:    'DM Mono', ui-monospace, monospace;
+    --display-weight: 500;
+    --display-letter: -0.02em;
+    --display-italic-style: normal;
+    font-feature-settings: "ss01" on;
+  }
+  body[data-voice="institutional"] em{ font-style:normal; font-weight:600; color:inherit; }
+  body[data-voice="institutional"] h1,
+  body[data-voice="institutional"] h2,
+  body[data-voice="institutional"] h3,
+  body[data-voice="institutional"] h4{ font-weight:500; letter-spacing:-0.025em; }
+
+  /* Voice: news — Newsreader optical-size serif */
+  body[data-voice="news"]{
+    --display: 'Newsreader', 'EB Garamond', serif;
+    --body: 'Newsreader', 'EB Garamond', serif;
+    --display-weight: 500;
+    --display-letter: -0.022em;
+  }
+  body[data-voice="news"] em{ font-style:italic; }
+
+  /* ============ Per-voice prose + UI font overrides ============
+     Most CSS hard-codes 'EB Garamond' for prose and 'JetBrains Mono' for
+     eyebrows/labels. Each voice rule below remaps those two families so
+     that switching voice updates ALL text, not just headlines. */
+  /* --- selector groups --- */
+  /* prose: large body copy, sub heads, card titles, italic ledes */
+  /* ui:    eyebrows, labels, nav, buttons, monospaced micro-copy   */
+
+  /* MANUSCRIPT — Cormorant for prose, keep mono UI */
+  body[data-voice="manuscript"] .hero .sub,
+  body[data-voice="manuscript"] .vision-lede .lede,
+  body[data-voice="manuscript"] .vc-text,
+  body[data-voice="manuscript"] .exchange-cloud-head .ec-q,
+  body[data-voice="manuscript"] .exchange-cloud-list span,
+  body[data-voice="manuscript"] .p-card h4,
+  body[data-voice="manuscript"] .why-cell h4,
+  body[data-voice="manuscript"] .why-cell p,
+  body[data-voice="manuscript"] .svc-row h4,
+  body[data-voice="manuscript"] .svc-row .svc-noun,
+  body[data-voice="manuscript"] .svc-row .svc-arrow,
+  body[data-voice="manuscript"] .uc-card h3,
+  body[data-voice="manuscript"] .pt-intro,
+  body[data-voice="manuscript"] .pt-mesh .hub-name,
+  body[data-voice="manuscript"] .pt-detail-name,
+  body[data-voice="manuscript"] .pt-detail-tagline,
+  body[data-voice="manuscript"] .pt-detail-text,
+  body[data-voice="manuscript"] .footer-cta h2,
+  body[data-voice="manuscript"] .footer-cta .kicker,
+  body[data-voice="manuscript"] .wordmark,
+  body[data-voice="manuscript"] .wordmark .nfh-fabric,
+  body[data-voice="manuscript"] .section-head .side{
+    font-family: 'Cormorant Garamond', 'EB Garamond', serif !important;
+  }
+
+  /* POSTMODERN — Instrument display + Space Mono everywhere else */
+  body[data-voice="postmodern"] .hero .sub,
+  body[data-voice="postmodern"] .vision-lede .lede,
+  body[data-voice="postmodern"] .vc-text,
+  body[data-voice="postmodern"] .exchange-cloud-head .ec-q,
+  body[data-voice="postmodern"] .exchange-cloud-list span,
+  body[data-voice="postmodern"] .p-card h4,
+  body[data-voice="postmodern"] .why-cell h4,
+  body[data-voice="postmodern"] .why-cell p,
+  body[data-voice="postmodern"] .svc-row h4,
+  body[data-voice="postmodern"] .svc-row .svc-noun,
+  body[data-voice="postmodern"] .svc-row .svc-arrow,
+  body[data-voice="postmodern"] .uc-card h3,
+  body[data-voice="postmodern"] .pt-intro,
+  body[data-voice="postmodern"] .pt-mesh .hub-name,
+  body[data-voice="postmodern"] .pt-detail-name,
+  body[data-voice="postmodern"] .pt-detail-tagline,
+  body[data-voice="postmodern"] .pt-detail-text,
+  body[data-voice="postmodern"] .footer-cta h2,
+  body[data-voice="postmodern"] .footer-cta .kicker,
+  body[data-voice="postmodern"] .section-head .side{
+    font-family: 'Space Mono', 'JetBrains Mono', monospace !important;
+    letter-spacing: -0.01em;
+  }
+  body[data-voice="postmodern"] .wordmark,
+  body[data-voice="postmodern"] .wordmark .nfh-fabric{
+    font-family: 'Instrument Serif', serif !important; font-style:italic;
+  }
+
+  /* TECHNICAL — IBM Plex Serif for prose, IBM Plex Mono for UI */
+  body[data-voice="technical"] .hero .sub,
+  body[data-voice="technical"] .vision-lede .lede,
+  body[data-voice="technical"] .vc-text,
+  body[data-voice="technical"] .exchange-cloud-head .ec-q,
+  body[data-voice="technical"] .exchange-cloud-list span,
+  body[data-voice="technical"] .p-card h4,
+  body[data-voice="technical"] .why-cell h4,
+  body[data-voice="technical"] .why-cell p,
+  body[data-voice="technical"] .svc-row h4,
+  body[data-voice="technical"] .svc-row .svc-noun,
+  body[data-voice="technical"] .svc-row .svc-arrow,
+  body[data-voice="technical"] .uc-card h3,
+  body[data-voice="technical"] .pt-intro,
+  body[data-voice="technical"] .pt-mesh .hub-name,
+  body[data-voice="technical"] .pt-detail-name,
+  body[data-voice="technical"] .pt-detail-tagline,
+  body[data-voice="technical"] .pt-detail-text,
+  body[data-voice="technical"] .footer-cta h2,
+  body[data-voice="technical"] .footer-cta .kicker,
+  body[data-voice="technical"] .wordmark,
+  body[data-voice="technical"] .wordmark .nfh-fabric,
+  body[data-voice="technical"] .section-head .side{
+    font-family: 'IBM Plex Serif', 'EB Garamond', serif !important;
+  }
+  body[data-voice="technical"] .topnav,
+  body[data-voice="technical"] .nav-toggle,
+  body[data-voice="technical"] .eyebrow,
+  body[data-voice="technical"] .cta,
+  body[data-voice="technical"] .snum,
+  body[data-voice="technical"] .vision-lede .built,
+  body[data-voice="technical"] .vc-label,
+  body[data-voice="technical"] .exchange-cloud-head .ec-label,
+  body[data-voice="technical"] .svc-row .svc-num,
+  body[data-voice="technical"] .svc-row h4 .edge,
+  body[data-voice="technical"] .uc-card .uc-num,
+  body[data-voice="technical"] .uc-eyebrow,
+  body[data-voice="technical"] .uc-rail-hint,
+  body[data-voice="technical"] .pt-detail-eyebrow,
+  body[data-voice="technical"] .footer-meta,
+  body[data-voice="technical"] .mono{
+    font-family: 'IBM Plex Mono', ui-monospace, monospace !important;
+  }
+
+  /* STARK — Space Grotesk everywhere; mono UI stays mono */
+  body[data-voice="stark"] .hero .sub,
+  body[data-voice="stark"] .vision-lede .lede,
+  body[data-voice="stark"] .vc-text,
+  body[data-voice="stark"] .exchange-cloud-head .ec-q,
+  body[data-voice="stark"] .exchange-cloud-list span,
+  body[data-voice="stark"] .p-card h4,
+  body[data-voice="stark"] .why-cell h4,
+  body[data-voice="stark"] .why-cell p,
+  body[data-voice="stark"] .svc-row h4,
+  body[data-voice="stark"] .svc-row .svc-noun,
+  body[data-voice="stark"] .svc-row .svc-arrow,
+  body[data-voice="stark"] .uc-card h3,
+  body[data-voice="stark"] .pt-intro,
+  body[data-voice="stark"] .pt-mesh .hub-name,
+  body[data-voice="stark"] .pt-detail-name,
+  body[data-voice="stark"] .pt-detail-tagline,
+  body[data-voice="stark"] .pt-detail-text,
+  body[data-voice="stark"] .footer-cta h2,
+  body[data-voice="stark"] .footer-cta .kicker,
+  body[data-voice="stark"] .wordmark,
+  body[data-voice="stark"] .wordmark .nfh-fabric,
+  body[data-voice="stark"] .section-head .side{
+    font-family: 'Space Grotesk', system-ui, sans-serif !important;
+    font-style: normal !important;
+  }
+
+  /* EXPRESSIVE — Fraunces for prose, Space Grotesk UI */
+  body[data-voice="expressive"] .hero .sub,
+  body[data-voice="expressive"] .vision-lede .lede,
+  body[data-voice="expressive"] .vc-text,
+  body[data-voice="expressive"] .exchange-cloud-head .ec-q,
+  body[data-voice="expressive"] .exchange-cloud-list span,
+  body[data-voice="expressive"] .p-card h4,
+  body[data-voice="expressive"] .why-cell h4,
+  body[data-voice="expressive"] .why-cell p,
+  body[data-voice="expressive"] .svc-row h4,
+  body[data-voice="expressive"] .svc-row .svc-noun,
+  body[data-voice="expressive"] .svc-row .svc-arrow,
+  body[data-voice="expressive"] .uc-card h3,
+  body[data-voice="expressive"] .pt-intro,
+  body[data-voice="expressive"] .pt-mesh .hub-name,
+  body[data-voice="expressive"] .pt-detail-name,
+  body[data-voice="expressive"] .pt-detail-tagline,
+  body[data-voice="expressive"] .pt-detail-text,
+  body[data-voice="expressive"] .footer-cta h2,
+  body[data-voice="expressive"] .footer-cta .kicker,
+  body[data-voice="expressive"] .wordmark,
+  body[data-voice="expressive"] .wordmark .nfh-fabric,
+  body[data-voice="expressive"] .section-head .side{
+    font-family: 'Fraunces', 'EB Garamond', serif !important;
+    font-variation-settings: "SOFT" 50;
+  }
+
+  /* BRUT — Bricolage everywhere */
+  body[data-voice="brut"] .hero .sub,
+  body[data-voice="brut"] .vision-lede .lede,
+  body[data-voice="brut"] .vc-text,
+  body[data-voice="brut"] .exchange-cloud-head .ec-q,
+  body[data-voice="brut"] .exchange-cloud-list span,
+  body[data-voice="brut"] .p-card h4,
+  body[data-voice="brut"] .why-cell h4,
+  body[data-voice="brut"] .why-cell p,
+  body[data-voice="brut"] .svc-row h4,
+  body[data-voice="brut"] .svc-row .svc-noun,
+  body[data-voice="brut"] .svc-row .svc-arrow,
+  body[data-voice="brut"] .uc-card h3,
+  body[data-voice="brut"] .pt-intro,
+  body[data-voice="brut"] .pt-mesh .hub-name,
+  body[data-voice="brut"] .pt-detail-name,
+  body[data-voice="brut"] .pt-detail-tagline,
+  body[data-voice="brut"] .pt-detail-text,
+  body[data-voice="brut"] .footer-cta h2,
+  body[data-voice="brut"] .footer-cta .kicker,
+  body[data-voice="brut"] .wordmark,
+  body[data-voice="brut"] .wordmark .nfh-fabric,
+  body[data-voice="brut"] .section-head .side{
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif !important;
+    font-style: normal !important;
+  }
+
+  /* NEWS — Newsreader for prose */
+  body[data-voice="news"] .hero .sub,
+  body[data-voice="news"] .vision-lede .lede,
+  body[data-voice="news"] .vc-text,
+  body[data-voice="news"] .exchange-cloud-head .ec-q,
+  body[data-voice="news"] .exchange-cloud-list span,
+  body[data-voice="news"] .p-card h4,
+  body[data-voice="news"] .why-cell h4,
+  body[data-voice="news"] .why-cell p,
+  body[data-voice="news"] .svc-row h4,
+  body[data-voice="news"] .svc-row .svc-noun,
+  body[data-voice="news"] .svc-row .svc-arrow,
+  body[data-voice="news"] .uc-card h3,
+  body[data-voice="news"] .pt-intro,
+  body[data-voice="news"] .pt-mesh .hub-name,
+  body[data-voice="news"] .pt-detail-name,
+  body[data-voice="news"] .pt-detail-tagline,
+  body[data-voice="news"] .pt-detail-text,
+  body[data-voice="news"] .footer-cta h2,
+  body[data-voice="news"] .footer-cta .kicker,
+  body[data-voice="news"] .wordmark,
+  body[data-voice="news"] .wordmark .nfh-fabric,
+  body[data-voice="news"] .section-head .side{
+    font-family: 'Newsreader', 'EB Garamond', serif !important;
+  }
+
+  /* INSTITUTIONAL — DM Sans for prose AND UI; DM Mono for eyebrows */
+  body[data-voice="institutional"] .hero .sub,
+  body[data-voice="institutional"] .vision-lede .lede,
+  body[data-voice="institutional"] .vc-text,
+  body[data-voice="institutional"] .exchange-cloud-head .ec-q,
+  body[data-voice="institutional"] .exchange-cloud-list span,
+  body[data-voice="institutional"] .p-card h4,
+  body[data-voice="institutional"] .why-cell h4,
+  body[data-voice="institutional"] .why-cell p,
+  body[data-voice="institutional"] .svc-row h4,
+  body[data-voice="institutional"] .svc-row .svc-noun,
+  body[data-voice="institutional"] .svc-row .svc-arrow,
+  body[data-voice="institutional"] .uc-card h3,
+  body[data-voice="institutional"] .pt-intro,
+  body[data-voice="institutional"] .pt-mesh .hub-name,
+  body[data-voice="institutional"] .pt-detail-name,
+  body[data-voice="institutional"] .pt-detail-tagline,
+  body[data-voice="institutional"] .pt-detail-text,
+  body[data-voice="institutional"] .footer-cta h2,
+  body[data-voice="institutional"] .footer-cta .kicker,
+  body[data-voice="institutional"] .wordmark,
+  body[data-voice="institutional"] .wordmark .nfh-fabric,
+  body[data-voice="institutional"] .section-head .side{
+    font-family: 'DM Sans', system-ui, sans-serif !important;
+    font-style: normal !important;
+  }
+  body[data-voice="institutional"] .topnav,
+  body[data-voice="institutional"] .nav-toggle,
+  body[data-voice="institutional"] .eyebrow,
+  body[data-voice="institutional"] .cta,
+  body[data-voice="institutional"] .snum,
+  body[data-voice="institutional"] .vision-lede .built,
+  body[data-voice="institutional"] .vc-label,
+  body[data-voice="institutional"] .exchange-cloud-head .ec-label,
+  body[data-voice="institutional"] .svc-row .svc-num,
+  body[data-voice="institutional"] .svc-row h4 .edge,
+  body[data-voice="institutional"] .uc-card .uc-num,
+  body[data-voice="institutional"] .uc-eyebrow,
+  body[data-voice="institutional"] .uc-rail-hint,
+  body[data-voice="institutional"] .pt-detail-eyebrow,
+  body[data-voice="institutional"] .footer-meta,
+  body[data-voice="institutional"] .mono{
+    font-family: 'DM Mono', ui-monospace, monospace !important;
+    font-weight: 400;
+  }
+
+  /* MODERN — Inter for prose AND UI */
+  body[data-voice="modern"] .hero .sub,
+  body[data-voice="modern"] .vision-lede .lede,
+  body[data-voice="modern"] .vc-text,
+  body[data-voice="modern"] .exchange-cloud-head .ec-q,
+  body[data-voice="modern"] .exchange-cloud-list span,
+  body[data-voice="modern"] .p-card h4,
+  body[data-voice="modern"] .why-cell h4,
+  body[data-voice="modern"] .why-cell p,
+  body[data-voice="modern"] .svc-row h4,
+  body[data-voice="modern"] .svc-row .svc-noun,
+  body[data-voice="modern"] .svc-row .svc-arrow,
+  body[data-voice="modern"] .uc-card h3,
+  body[data-voice="modern"] .pt-intro,
+  body[data-voice="modern"] .pt-mesh .hub-name,
+  body[data-voice="modern"] .pt-detail-name,
+  body[data-voice="modern"] .pt-detail-tagline,
+  body[data-voice="modern"] .pt-detail-text,
+  body[data-voice="modern"] .footer-cta h2,
+  body[data-voice="modern"] .footer-cta .kicker,
+  body[data-voice="modern"] .wordmark,
+  body[data-voice="modern"] .wordmark .nfh-fabric,
+  body[data-voice="modern"] .section-head .side{
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-style: normal !important;
+  }
+
+  /* INDUSTRIAL — JetBrains Mono prose too (extreme mono look) */
+  body[data-voice="industrial"] .hero .sub,
+  body[data-voice="industrial"] .vc-text,
+  body[data-voice="industrial"] .why-cell p,
+  body[data-voice="industrial"] .uc-card h3,
+  body[data-voice="industrial"] .pt-intro,
+  body[data-voice="industrial"] .pt-detail-text{
+    font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+    letter-spacing: -0.01em;
+  }
+  /* Density */
+  body[data-density="calm"]{ --rhythm: 1.25; }
+  body[data-density="compact"]{ --rhythm: 0.72; }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--ink);color:var(--paper);}
+  html:has(body[data-mood="nfh"]){background:#FFFFFF;}
   html{scroll-behavior:smooth;}
   :target{scroll-margin-top:96px;}
   body{
-    font-family:'EB Garamond', Georgia, serif;
+    font-family: var(--body), Georgia, serif;
     font-size:17px; line-height:1.6;
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
     position:relative;
+    transition: background .3s ease;
   }
   /* Fine film grain — adds atmosphere without colour */
   body::before{
@@ -104,10 +696,10 @@
 
   /* -------- hero -------- */
   .hero{
-    display:grid; grid-template-columns:1fr 1.05fr; gap:72px;
-    padding:96px 0 80px; align-items:center;
+    display:grid; grid-template-columns:1fr 1.05fr; gap:56px;
+    padding:56px 0 48px; align-items:center;
   }
-  @media (max-width:1000px){ .hero{grid-template-columns:1fr; gap:48px; padding:64px 0 56px} }
+  @media (max-width:1000px){ .hero{grid-template-columns:1fr; gap:36px; padding:40px 0 32px} }
 
   /* Page-load reveal — staggered, subtle */
   @keyframes hero-reveal{
@@ -150,17 +742,18 @@
   }
 
   .hero h1{
-    font-family:'EB Garamond',serif; font-weight:500;
+    font-family: var(--display);
+    font-weight: var(--display-weight);
     font-size:clamp(52px, 6.4vw, 96px);
-    line-height:0.98; letter-spacing:-0.03em;
-    margin:28px 0 28px; text-wrap:balance;
+    line-height:0.98; letter-spacing: var(--display-letter);
+    margin:18px 0 18px; text-wrap:balance;
   }
-  .hero h1 em{ font-style:italic; font-weight:500; color:var(--brass); }
+  .hero h1 em{ font-style: var(--display-italic-style); font-weight:inherit; color:var(--brass); }
   .hero h1 .dot-golden{ color:var(--brass); }
   .hero .sub{
     font-family:'EB Garamond',serif; font-weight:400;
     font-size:clamp(19px,1.7vw,22px); line-height:1.5;
-    color:var(--paper-dim); max-width:48ch; margin:0 0 36px;
+    color:var(--paper-dim); max-width:48ch; margin:0 0 24px;
     letter-spacing:-0.005em; text-wrap:balance;
   }
   .hero .sub b{color:var(--paper); font-weight:500}
@@ -198,134 +791,229 @@
   }
 
   /* -------- sections -------- */
-  section{ padding:140px 0; border-top:1px solid var(--rule); position:relative;}
-  @media (max-width:900px){ section{padding:88px 0} }
+  section{ padding:calc(140px * var(--rhythm)) 0; border-top:1px solid var(--rule); position:relative;}
+  @media (max-width:900px){ section{padding:calc(88px * var(--rhythm)) 0} }
   .snum{
-    font-family:'JetBrains Mono',monospace; font-size:11px;
+    font-family: var(--mono); font-size:11px;
     letter-spacing:0.2em; color:var(--brass); text-transform:uppercase;
     font-weight:500;
   }
   .section-head{
     display:grid; grid-template-columns:1.3fr 0.7fr;
-    align-items:end; gap:64px; margin-bottom:72px;
+    align-items:end; gap:40px; margin-bottom:calc(56px * var(--rhythm));
   }
-  @media (max-width:900px){ .section-head{grid-template-columns:1fr; gap:24px; margin-bottom:48px} }
+  @media (max-width:900px){ .section-head{grid-template-columns:1fr; gap:18px; margin-bottom:32px} }
   .section-head h2{
-    font-family:'EB Garamond',serif; font-weight:500;
+    font-family: var(--display);
+    font-weight: var(--display-weight);
     font-size:clamp(40px, 4.6vw, 64px);
-    line-height:1.0; letter-spacing:-0.028em;
+    line-height:1.0; letter-spacing: var(--display-letter);
     margin:24px 0 0; max-width:18ch; text-wrap:balance;
   }
-  .section-head h2 em{font-style:italic; color:var(--brass)}
+  .section-head h2 em{ font-style: var(--display-italic-style); color:var(--brass)}
   .section-head .side{
     max-width:34ch; justify-self:end;
-    font-family:'EB Garamond',serif; font-style:italic;
+    font-family: var(--serif); font-style:italic;
     font-size:18px; line-height:1.5; color:var(--paper-dim);
     padding-bottom:6px;
   }
   @media (max-width:900px){ .section-head .side{justify-self:start} }
 
-  /* -------- VISION -------- */
-  .intro-body{
-    display:grid; grid-template-columns: 1fr 1fr;
-    gap:72px;
-    align-items:start;
+  /* -------- VISION (redesigned) -------- */
+  .vision-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap:0;
+    border-top:1px solid var(--rule-strong);
+    border-bottom:1px solid var(--rule-strong);
   }
-  @media (max-width:900px){ .intro-body{grid-template-columns:1fr; gap:32px} }
-  .intro-body p{
-    font-family:'EB Garamond',serif;
-    font-size:19px; line-height:1.6;
-    color:var(--paper-dim); margin:0 0 22px;
-    max-width:54ch;
+  @media (max-width:900px){ .vision-grid{ grid-template-columns:1fr; } }
+
+  .vision-lede{
+    padding:36px 40px 36px 0;
+    border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; justify-content:space-between;
+    gap:32px;
   }
-  .intro-body p b{color:var(--paper); font-weight:500}
-  .intro-body p em{color:var(--brass); font-style:italic}
-  .intro-body .lede{
+  @media (max-width:900px){
+    .vision-lede{ padding:28px 0; border-right:none; border-bottom:1px solid var(--rule); }
+  }
+  .vision-lede .lede{
     font-family:'EB Garamond',serif;
-    font-size:clamp(26px, 2.6vw, 36px); line-height:1.3;
+    font-size:clamp(28px, 2.8vw, 40px); line-height:1.22;
     color:var(--paper); margin:0;
-    border-left:2px solid var(--brass); padding-left:28px;
-    font-style:italic; font-weight:400;
-    max-width:22ch;
-    letter-spacing:-0.01em;
+    font-weight:400;
+    letter-spacing:-0.018em;
+    text-wrap:balance;
   }
-  .intro-prose{
-    padding-top:8px;
-  }
-  .intro-prose .intro-built{
-    margin-top:32px;
-    font-size:15px;
+  .vision-lede .lede em{ color:var(--brass); font-style:italic; }
+  .vision-lede .built{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:0.18em; text-transform:uppercase;
     color:var(--paper-faint);
   }
-  .intro-prose .intro-built a{
+  .vision-lede .built a{
     color:var(--paper-dim);
-    text-decoration:underline;
-    text-decoration-color:var(--brass-dim);
-    text-underline-offset:3px;
-    transition:color .15s;
+    text-decoration:none;
+    border-bottom:1px solid var(--brass-dim);
+    padding-bottom:2px;
+    transition:color .15s, border-color .15s;
   }
-  .intro-prose .intro-built a:hover{ color:var(--paper); }
+  .vision-lede .built a:hover{ color:var(--brass); border-color:var(--brass); }
 
-  .value-strip{
-    margin:48px 0 0;
-    padding:24px 0 4px;
-    border-top:1px solid var(--rule);
-    display:flex; flex-wrap:wrap; gap:8px 22px;
-    font-family:'EB Garamond',serif;
-    font-size:17px; color:var(--paper);
-    line-height:1.5;
+  .vision-compare{
+    padding:36px 0 36px 40px;
+    display:flex; flex-direction:column; gap:0;
   }
-  .value-strip .vs-label{
+  @media (max-width:900px){
+    .vision-compare{ padding:28px 0; }
+  }
+  .vc-row{
+    display:grid;
+    grid-template-columns: 88px 1fr;
+    gap:24px;
+    padding:22px 0;
+    border-top:1px solid var(--rule);
+    align-items:baseline;
+  }
+  .vc-row:first-child{ border-top:none; padding-top:0; }
+  .vc-row:last-child{ padding-bottom:0; }
+  .vc-label{
     font-family:'JetBrains Mono',monospace; font-size:10px;
     letter-spacing:0.2em; text-transform:uppercase;
-    color:var(--paper-faint); margin-right:8px; align-self:center;
+    font-weight:500;
   }
-  .value-strip span:not(.vs-label){
-    color:var(--paper);
-    border-bottom:1px dotted var(--brass-dim);
-    padding-bottom:1px;
+  .vc-row.before .vc-label{ color:var(--paper-faint); }
+  .vc-row.after .vc-label{ color:var(--brass); }
+  .vc-text{
+    font-family:'EB Garamond',serif;
+    font-size:clamp(18px,1.5vw,21px); line-height:1.4;
+    letter-spacing:-0.005em;
+    text-wrap:balance;
   }
+  .vc-row.before .vc-text{ color:var(--paper-dim); }
+  .vc-row.after .vc-text{ color:var(--paper); }
+  .vc-row.after .vc-text em{ color:var(--brass); font-style:italic; }
 
-  /* -------- INLINE COMPARE -------- */
-  .intro-compare{
-    display:flex; flex-direction:column; gap:0;
-    margin:8px 0 28px;
-    border-top:1px solid var(--rule);
+  /* What moves on fabric — flowing typographic run */
+  .exchange-cloud{
+    margin-top:72px;
+    padding-top:40px;
+    border-top:1px solid var(--rule-strong);
+  }
+  .exchange-cloud-head{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:end;
+    gap:32px;
+    margin-bottom:44px;
+    padding-bottom:18px;
     border-bottom:1px solid var(--rule);
   }
-  .ic-row{
-    display:grid; grid-template-columns:1fr 1fr;
-    gap:0;
-    border-top:1px solid var(--rule);
+  .exchange-cloud-head .ec-label{
+    font-family: var(--mono),'JetBrains Mono',monospace;
+    font-size:10.5px; letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--brass); font-weight:500;
+    display:block; margin-bottom:14px;
   }
-  .ic-row:first-child{ border-top:none; }
-  .ic-before, .ic-after{
-    padding:18px 20px 18px 0;
-    font-family:'EB Garamond',serif;
-    font-size:16px; line-height:1.45;
-  }
-  .ic-before{
-    color:var(--paper-dim);
-    border-right:1px solid var(--rule);
-    padding-right:24px;
-  }
-  .ic-after{
+  .exchange-cloud-head .ec-q{
+    font-family: var(--display);
+    font-weight: var(--display-weight);
+    font-size:clamp(32px, 3.4vw, 48px);
+    line-height:1.05; letter-spacing: var(--display-letter);
     color:var(--paper);
-    padding-left:24px;
+    margin:0;
+    text-wrap:balance;
   }
-  .ic-after em{ color:var(--brass); font-style:italic; }
-  .ic-label{
-    display:block;
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
-    letter-spacing:0.2em; text-transform:uppercase;
-    color:var(--paper-faint); margin:0 0 6px; font-weight:500;
+  .exchange-cloud-head .ec-q em{
+    font-style: var(--display-italic-style);
+    color:var(--brass);
   }
-  .ic-after .ic-label{ color:var(--brass); }
-  @media (max-width:900px){
-    .ic-row{ grid-template-columns:1fr; }
-    .ic-before{ border-right:none; border-bottom:1px solid var(--rule); padding:16px 0; }
-    .ic-after{ padding:16px 0; }
+  .exchange-cloud-head .ec-meta{
+    font-family: var(--mono),'JetBrains Mono',monospace;
+    font-size:10.5px; letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--paper-faint); font-weight:500;
+    white-space:nowrap;
+    align-self:end;
+    padding-bottom:6px;
   }
+
+  /* The flowing run — display-size text, items separated by hairline middots */
+  .ex-run{
+    font-family: var(--display);
+    font-weight: var(--display-weight);
+    font-size:clamp(28px, 3.6vw, 54px);
+    line-height:1.18;
+    letter-spacing: var(--display-letter);
+    color:var(--paper);
+    margin:0;
+    max-width: 22ch;
+    text-wrap:balance;
+  }
+  .ex-run .ex-item{
+    position:relative;
+    display:inline;
+    cursor:default;
+    transition:color .2s ease;
+  }
+  .ex-run .ex-item::before{
+    content: attr(data-i);
+    position:absolute;
+    top:-0.7em; left:-0.1em;
+    font-family: var(--mono),'JetBrains Mono',monospace;
+    font-size:9px; font-weight:500;
+    letter-spacing:0.18em;
+    color:var(--paper-faint);
+    opacity:0;
+    transition:opacity .2s ease, color .2s ease;
+    pointer-events:none;
+  }
+  .ex-run .ex-item:hover{ color:var(--brass); }
+  .ex-run .ex-item:hover::before{ opacity:1; color:var(--brass); }
+  .ex-run .ex-sep{
+    color:var(--brass);
+    opacity:0.55;
+    font-style:normal;
+    margin:0 0.18em;
+    user-select:none;
+  }
+  .ex-run .ex-star{
+    font-style: var(--display-italic-style);
+    color:var(--brass);
+    white-space:nowrap;
+  }
+  .ex-run .ex-star::after{
+    content:"";
+    display:inline-block;
+    width:0.42em; height:0.42em; border-radius:50%;
+    background:var(--brass);
+    margin-left:0.32em;
+    vertical-align:0.16em;
+  }
+  .ex-foot{
+    margin-top:36px;
+    padding-top:18px;
+    border-top:1px solid var(--rule);
+    display:flex; align-items:baseline; gap:18px;
+    flex-wrap:wrap;
+    font-family: var(--display);
+    font-size:17px; line-height:1.5;
+    color:var(--paper-dim);
+    font-style: var(--display-italic-style);
+    text-wrap:balance;
+    max-width:60ch;
+  }
+  .ex-foot .ex-foot-tag{
+    font-family: var(--mono),'JetBrains Mono',monospace;
+    font-size:10.5px; letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--brass); font-style:normal;
+    font-weight:500;
+    white-space:nowrap;
+  }
+  .ex-foot strong{ color:var(--paper); font-weight:500; font-style:normal; }
 
   /* -------- PRINCIPLES -------- */
   #principles{ padding:28px 0; border-top:none; }
@@ -376,10 +1064,10 @@
   @media (max-width:900px){ .why-grid{grid-template-columns:repeat(2,1fr)} }
   @media (max-width:620px){ .why-grid{grid-template-columns:1fr} }
   .why-cell{
-    padding:48px 36px;
+    padding:32px 28px;
     border-right:1px solid var(--rule);
     border-bottom:1px solid var(--rule);
-    min-height:200px;
+    min-height:160px;
     display:flex; flex-direction:column; justify-content:center;
     position:relative;
     transition:background .3s ease;
@@ -411,68 +1099,78 @@
     margin:0; max-width:34ch;
   }
 
-  /* -------- SERVICES — compact index list -------- */
+  /* -------- SERVICES — compact one-line index -------- */
   .svc-list{
-    border-top:1px solid var(--rule);
+    border-top:1px solid var(--rule-strong);
+    border-bottom:1px solid var(--rule-strong);
   }
   .svc-row{
     display:grid;
-    grid-template-columns: 48px minmax(0, 1.05fr) minmax(0, 1.55fr);
-    gap:28px;
-    padding:22px 24px 22px 0;
+    grid-template-columns: 56px minmax(0, 0.95fr) minmax(0, 1.7fr) auto;
+    gap:32px;
+    padding:18px 4px;
     border-bottom:1px solid var(--rule);
     align-items:baseline;
     position:relative;
-    transition:background .25s ease;
+    transition:background .2s ease, padding .2s ease;
   }
-  .svc-row::after{
-    content:"\2192";
-    position:absolute; right:0; top:50%;
-    color:var(--brass);
-    font-family:'EB Garamond',serif; font-style:italic;
-    font-size:22px; line-height:1;
-    transform:translate(-12px, -50%);
-    opacity:0;
-    transition:opacity .3s ease, transform .3s ease;
+  .svc-row:last-child{ border-bottom:none; }
+  .svc-row:hover{
+    background:rgba(200,147,79,0.03);
+    padding-left:14px;
+    padding-right:14px;
   }
-  .svc-row:hover{ background:rgba(200,147,79,0.025); }
-  .svc-row:hover::after{ opacity:1; transform:translate(0, -50%); }
   .svc-row .svc-num{
     font-family:'JetBrains Mono',monospace;
-    font-size:10.5px; letter-spacing:0.2em;
+    font-size:11px; letter-spacing:0.2em;
     color:var(--paper-faint); font-weight:500;
-    padding-top:3px;
   }
+  .svc-row:hover .svc-num{ color:var(--brass); }
   .svc-row h4{
     font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(20px,1.5vw,24px); letter-spacing:-0.018em;
+    font-size:clamp(19px,1.45vw,23px); letter-spacing:-0.018em;
     margin:0; color:var(--paper);
-    line-height:1.15;
+    line-height:1.2;
+    display:flex; align-items:center; gap:10px;
   }
   .svc-row h4 .edge{
-    display:inline-block; margin-left:10px;
+    display:inline-flex; align-items:center; gap:5px;
     font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
-    color:var(--cta); letter-spacing:0.14em;
-    border:1px solid rgba(224,90,43,.45); padding:2px 6px;
-    vertical-align:3px;
+    color:var(--brass); letter-spacing:0.14em;
+    padding:3px 7px;
     text-transform:uppercase;
+    background:rgba(200,147,79,0.1);
+    line-height:1;
+  }
+  .svc-row h4 .edge::before{
+    content:""; width:4px; height:4px; border-radius:50%;
+    background:var(--brass);
   }
   .svc-row .svc-noun{
     font-family:'EB Garamond',serif; font-style:italic;
-    font-size:16px; color:var(--paper-dim);
-    line-height:1.45;
+    font-size:15.5px; color:var(--paper-dim);
+    line-height:1.4;
   }
+  .svc-row .svc-arrow{
+    font-family:'EB Garamond',serif; font-style:italic;
+    color:var(--brass); font-size:20px; line-height:1;
+    opacity:0;
+    transform:translateX(-8px);
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  .svc-row:hover .svc-arrow{ opacity:1; transform:translateX(0); }
   @media (max-width:800px){
     .svc-row{
-      grid-template-columns: 32px 1fr;
-      gap:6px 16px;
-      padding:20px 0;
+      grid-template-columns: 36px 1fr;
+      gap:4px 14px;
+      padding:18px 0;
     }
+    .svc-row:hover{ padding-left:0; padding-right:0; }
     .svc-row .svc-noun{
       grid-column: 2 / -1;
       margin-top:4px;
     }
-    .svc-row::after{ display:none; }
+    .svc-row .svc-arrow{ display:none; }
   }
 
   /* -------- USE CASES — duotone swipe rail -------- */
@@ -537,7 +1235,7 @@
   }
   .uc-card .uc-overlay{
     position:absolute; inset:auto 0 0 0;
-    padding: 56px 30px 28px;
+    padding: 40px 24px 22px;
   }
   .uc-eyebrow{
     display:block;
@@ -577,14 +1275,17 @@
   .pt-mesh-wrap{
     display:grid;
     grid-template-columns: 1.45fr 0.55fr;
-    gap:56px;
+    gap:36px;
     align-items:stretch;
   }
   .pt-mesh{
     position:relative;
     aspect-ratio: 1080 / 780;
     border:1px solid var(--rule);
-    background:radial-gradient(ellipse at 50% 50%, rgba(200,147,79,0.04), transparent 70%);
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(200,147,79,0.05), transparent 70%),
+      linear-gradient(to right, var(--rule) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px) 0 0 / 48px 48px;
     overflow:hidden;
   }
   .pt-mesh svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
@@ -631,10 +1332,10 @@
 
   /* -------- FOOTER CTA -------- */
   .footer-cta{
-    padding:160px 0 140px; border-top:1px solid var(--rule);
+    padding:96px 0 80px; border-top:1px solid var(--rule);
     position:relative; overflow:hidden;
   }
-  @media (max-width:900px){ .footer-cta{padding:96px 0} }
+  @media (max-width:900px){ .footer-cta{padding:64px 0} }
   .footer-cta .bg-glow{
     position:absolute; right:-200px; top:50%; transform:translateY(-50%);
     width:700px; height:700px; pointer-events:none;
@@ -655,8 +1356,8 @@
 
   footer{
     border-top:1px solid var(--rule);
-    padding:48px 0 64px;
-    display:grid; grid-template-columns:1fr 2fr 1fr; gap:48px;
+    padding:32px 0 40px;
+    display:grid; grid-template-columns:1fr 2fr 1fr; gap:36px;
     font-family:'JetBrains Mono',monospace; font-size:11px;
     letter-spacing:0.14em; color:var(--paper-faint); text-transform:uppercase;
     align-items:start;
@@ -669,9 +1370,72 @@
   footer a:hover{color:var(--brass)}
 
   ::selection{background:var(--cta); color:var(--paper)}
+
+  /* ================================================================
+     LIGHT-MOOD CORRECTIONS — for nfh and other paper-on-ink moods.
+     Several treatments were tuned for a dark canvas; they need different
+     opacities / blends to read cleanly on a white background.
+     ================================================================ */
+
+  /* Hide the white-grain film on light backgrounds — looks like haze */
+  body[data-mood="nfh"]::before,
+  body[data-mood="bone"]::before,
+  body[data-mood="linen"]::before,
+  body[data-mood="porcelain"]::before,
+  body[data-mood="sand"]::before,
+  body[data-mood="mist"]::before,
+  body[data-mood="lavender"]::before{ display:none; }
+
+  /* Use-case cards: invert dark-fade → soft white-fade; drop duotone */
+  body[data-mood="nfh"] .uc-card{ background:#FFFFFF; border-color:rgba(17,19,22,.14); }
+  body[data-mood="nfh"] .uc-card .uc-shade{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.80) 76%, rgba(255,255,255,0.97) 100%),
+      radial-gradient(ellipse at 30% 25%, rgba(31,79,166,0.05), transparent 55%);
+  }
+  body[data-mood="nfh"] .uc-card:hover{ border-color:rgba(31,79,166,.35); }
+  body[data-mood="nfh"] .uc-card .uc-img{
+    filter: contrast(1.02) saturate(0.95);
+  }
+  body[data-mood="nfh"] .uc-card .uc-num{ color:rgba(17,19,22,.55); }
+
+  /* Hover/atmosphere tints — invert paper→ink rgbas */
+  body[data-mood="nfh"] .why-cell:hover{ background:rgba(31,79,166,0.04); }
+  body[data-mood="nfh"] .svc-row:hover{ background:rgba(31,79,166,0.04); }
+  body[data-mood="nfh"] .exchange-cloud-list span:hover{
+    background:rgba(31,79,166,0.05);
+  }
+  body[data-mood="nfh"] .svc-row h4 .edge{ background:rgba(31,79,166,0.10); }
+  body[data-mood="nfh"] .footer-cta .bg-glow{
+    background:radial-gradient(circle, rgba(31,79,166,0.07), transparent 65%);
+  }
+  body[data-mood="nfh"] .pt-mesh{
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(31,79,166,0.05), transparent 70%),
+      linear-gradient(to right, rgba(17,19,22,0.06) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(to bottom, rgba(17,19,22,0.06) 1px, transparent 1px) 0 0 / 48px 48px;
+  }
+  body[data-mood="nfh"] .topnav.open{ background:#FFFFFF; }
+
+  /* CTAs — black/white default, blue on hover (matches NFH site) */
+  body[data-mood="nfh"] .cta{ background:#111316; color:#FFFFFF; }
+  body[data-mood="nfh"] .cta:hover{ background:#1F4FA6; color:#FFFFFF; }
+  body[data-mood="nfh"] .cta.ghost{
+    background:transparent; color:#111316;
+    border:1px solid rgba(17,19,22,.22);
+  }
+  body[data-mood="nfh"] .cta.ghost:hover{
+    background:rgba(31,79,166,0.06);
+    border-color:#1F4FA6;
+    color:#1F4FA6;
+  }
+
+  /* Selection on light bg */
+  body[data-mood="nfh"] ::selection{ background:#1F4FA6; color:#FFFFFF; }
 </style>
 </head>
-<body>
+<body data-mood="nfh" data-voice="institutional" data-density="standard">
+<script>window.__fabricGlobeMotion = true;</script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <filter id="duotone-brass" color-interpolation-filters="sRGB">
@@ -798,19 +1562,37 @@
       </div>
     </div>
 
-    <div class="intro-body">
-      <div>
-        <p class="lede">Any kind of value — published once, discovered everywhere, settled the moment conditions are met.</p>
+    <div class="vision-grid">
+      <div class="vision-lede">
+        <p class="lede">Any kind of value — published once, discovered everywhere, <em>settled the moment conditions are met.</em></p>
+        <p class="built">Built by <a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Networks for Humanity</a></p>
       </div>
-      <div class="intro-prose">
-        <p>Today every kind of value lives on its own private rails. <b>Each network is closed. Each integration is bilateral. Each new use case starts from zero.</b></p>
-        <p class="intro-built">Built by <a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Networks for Humanity</a>.</p>
+      <div class="vision-compare">
+        <div class="vc-row before">
+          <span class="vc-label">Today</span>
+          <p class="vc-text">Every kind of value lives on its own private rails. Each network is closed. Each integration is bilateral. Each new use case starts from zero.</p>
+        </div>
+        <div class="vc-row after">
+          <span class="vc-label">On fabric</span>
+          <p class="vc-text">One open network. <em>Publish once.</em> Discoverable everywhere. Settled the moment terms are met — across humans, businesses, and agents.</p>
+        </div>
       </div>
     </div>
 
-    <div class="value-strip" aria-label="Examples of value on Fabric">
-      <span class="vs-label">What can you exchange on fabric?</span>
-      <span>A ride</span><span>A meal</span><span>A parcel</span><span>A kilowatt</span><span>A stablecoin</span><span>An invoice</span><span>A tokenised share</span><span>A carbon credit</span><span>A GPU-hour</span><span>An LLM call</span><span>A credential</span><span>A prescription</span><span>A land title</span><span>A vote</span><span>A sneaker</span><span>A second-hand car</span><span>An agent</span><span>An API endpoint</span><span>A data-centre operator</span>
+    <div class="exchange-cloud" aria-label="Examples of value on Fabric" style="opacity: 0; border-width: 0px">
+      <div class="exchange-cloud-head">
+        <div>
+          <span class="ec-label">Exchange</span>
+          <h3 class="ec-q">What moves on <em>fabric.</em></h3>
+        </div>
+
+      </div>
+
+      <p class="ex-run">
+        <span class="ex-item" data-i="01">A ride</span><span class="ex-sep"> · </span><span class="ex-item" data-i="02">a meal</span><span class="ex-sep"> · </span><span class="ex-item" data-i="03">a parcel</span><span class="ex-sep"> · </span><span class="ex-item" data-i="04">a kilowatt</span><span class="ex-sep"> · </span><span class="ex-item" data-i="05">a stablecoin</span><span class="ex-sep"> · </span><span class="ex-item" data-i="06">an invoice</span><span class="ex-sep"> · </span><span class="ex-item" data-i="07">a tokenised share</span><span class="ex-sep"> · </span><span class="ex-item" data-i="08">a carbon credit</span><span class="ex-sep"> · </span><span class="ex-item" data-i="09">a GPU-hour</span><span class="ex-sep"> · </span><span class="ex-item" data-i="10">an LLM call</span><span class="ex-sep"> · </span><span class="ex-item" data-i="11">an API endpoint</span><span class="ex-sep"> · </span><span class="ex-item" data-i="12">a credential</span><span class="ex-sep"> · </span><span class="ex-item" data-i="13">a prescription</span><span class="ex-sep"> · </span><span class="ex-item" data-i="14">a land title</span><span class="ex-sep"> · </span><span class="ex-item" data-i="15">a vote</span><span class="ex-sep"> · </span><span class="ex-item" data-i="16">a sneaker</span><span class="ex-sep"> · </span><span class="ex-item" data-i="17">a second-hand car</span><span class="ex-sep"> · </span><span class="ex-item" data-i="18">a data-centre operator</span><span class="ex-sep"> · </span><span class="ex-item ex-star" data-i="19">an agent</span>
+      </p>
+
+
     </div>
   </section>
 
@@ -889,36 +1671,43 @@
         <span class="svc-num">01</span>
         <h4>Registry</h4>
         <span class="svc-noun">Verifiable network identities for every participant.</span>
+        <span class="svc-arrow" aria-hidden="true">&rarr;</span>
       </div>
       <div class="svc-row">
         <span class="svc-num">02</span>
-        <h4>Credentialling <span class="edge">&#9733; Edge</span></h4>
+        <h4>Credentialling <span class="edge">Edge</span></h4>
         <span class="svc-noun">Issue, carry, and verify portable, tamper-proof claims.</span>
+        <span class="svc-arrow" aria-hidden="true">&rarr;</span>
       </div>
       <div class="svc-row">
         <span class="svc-num">03</span>
         <h4>Cataloguing</h4>
         <span class="svc-noun">Provider offerings, published once, at network scale.</span>
+        <span class="svc-arrow" aria-hidden="true">&rarr;</span>
       </div>
       <div class="svc-row">
         <span class="svc-num">04</span>
-        <h4>Discovery <span class="edge">&#9733; Edge</span></h4>
+        <h4>Discovery <span class="edge">Edge</span></h4>
         <span class="svc-noun">Find any offering across the network with one query.</span>
+        <span class="svc-arrow" aria-hidden="true">&rarr;</span>
       </div>
       <div class="svc-row">
         <span class="svc-num">05</span>
-        <h4>Network Adapters <span class="edge">&#9733; Edge</span></h4>
+        <h4>Network Adapters <span class="edge">Edge</span></h4>
         <span class="svc-noun">Secure, compliant, peer-to-peer message exchange.</span>
+        <span class="svc-arrow" aria-hidden="true">&rarr;</span>
       </div>
       <div class="svc-row">
         <span class="svc-num">06</span>
         <h4>Tokenisation</h4>
         <span class="svc-noun">Any form of value as a programmable, transferable token.</span>
+        <span class="svc-arrow" aria-hidden="true">&rarr;</span>
       </div>
       <div class="svc-row">
         <span class="svc-num">07</span>
         <h4>Observability &amp; Audit</h4>
         <span class="svc-noun">End-to-end transaction tracing and verifiable audit trails.</span>
+        <span class="svc-arrow" aria-hidden="true">&rarr;</span>
       </div>
     </div>
   </section>
@@ -1034,9 +1823,25 @@
     small.push({ id:'s'+small.length, kind:'small', x:x, y:y });
   }
   const all=hubs.concat(small);
-  // full mesh: every node to every node
+  // sparse mesh: each node connects to its k nearest neighbours
   const edges=[];
-  for(let i=0;i<all.length;i++) for(let j=i+1;j<all.length;j++) edges.push({a:all[i], b:all[j]});
+  const seen=new Set();
+  const K=2;
+  for(let i=0;i<all.length;i++){
+    const dists=[];
+    for(let j=0;j<all.length;j++){
+      if(i===j) continue;
+      dists.push({j:j, d:Math.hypot(all[i].x-all[j].x, all[i].y-all[j].y)});
+    }
+    dists.sort(function(a,b){return a.d-b.d;});
+    for(let n=0;n<Math.min(K,dists.length);n++){
+      const j=dists[n].j;
+      const key=i<j?(i+'-'+j):(j+'-'+i);
+      if(seen.has(key)) continue;
+      seen.add(key);
+      edges.push({a:all[i], b:all[j]});
+    }
+  }
 
   // build SVG
   const svgNS='http://www.w3.org/2000/svg';
@@ -1048,8 +1853,10 @@
     const ln=document.createElementNS(svgNS,'line');
     ln.setAttribute('x1',e.a.x); ln.setAttribute('y1',e.a.y);
     ln.setAttribute('x2',e.b.x); ln.setAttribute('y2',e.b.y);
-    ln.setAttribute('stroke','rgba(245,242,236,0.045)');
+    ln.setAttribute('stroke','var(--brass)');
+    ln.setAttribute('stroke-opacity','0.16');
     ln.setAttribute('stroke-width','0.5');
+    ln.setAttribute('class','mesh-edge');
     svg.appendChild(ln);
   });
   // small anonymous nodes — same size as hubs
@@ -1164,6 +1971,113 @@ const projection = d3.geoOrthographic().clipAngle(90).precision(0.6);
 const path = d3.geoPath(projection, ctx);
 let land = null;
 
+/* ---- palette helpers ---- */
+function hexToRgb(hex){
+  const h = hex.replace('#','').trim();
+  const f = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
+  return [parseInt(f.substring(0,2),16), parseInt(f.substring(2,4),16), parseInt(f.substring(4,6),16)];
+}
+function rgbToHex(r,g,b){
+  const c = n => Math.max(0,Math.min(255,Math.round(n))).toString(16).padStart(2,'0');
+  return '#'+c(r)+c(g)+c(b);
+}
+function rgbToHsl(r,g,b){
+  r/=255;g/=255;b/=255;
+  const max=Math.max(r,g,b),min=Math.min(r,g,b);
+  let h=0,s=0,l=(max+min)/2;
+  if(max!==min){
+    const d=max-min;
+    s = l>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: h=(g-b)/d+(g<b?6:0); break;
+      case g: h=(b-r)/d+2; break;
+      case b: h=(r-g)/d+4; break;
+    }
+    h/=6;
+  }
+  return [h*360,s,l];
+}
+function hslToRgb(h,s,l){
+  h/=360;
+  if(s===0) return [l*255,l*255,l*255];
+  const hue2rgb=(p,q,t)=>{
+    if(t<0)t+=1; if(t>1)t-=1;
+    if(t<1/6) return p+(q-p)*6*t;
+    if(t<1/2) return q;
+    if(t<2/3) return p+(q-p)*(2/3-t)*6;
+    return p;
+  };
+  const q=l<0.5?l*(1+s):l+s-l*s;
+  const p=2*l-q;
+  return [hue2rgb(p,q,h+1/3)*255, hue2rgb(p,q,h)*255, hue2rgb(p,q,h-1/3)*255];
+}
+function shiftHue(hex, deltaH, satMul=1, lightDelta=0){
+  const [r,g,b]=hexToRgb(hex);
+  let [h,s,l]=rgbToHsl(r,g,b);
+  h=(h+deltaH+360)%360;
+  s=Math.max(0,Math.min(1,s*satMul));
+  l=Math.max(0.15,Math.min(0.85,l+lightDelta));
+  const [r2,g2,b2]=hslToRgb(h,s,l);
+  return rgbToHex(r2,g2,b2);
+}
+
+let PALETTE = null;
+function readPalette(){
+  const cs = getComputedStyle(document.body);
+  const accent = (cs.getPropertyValue('--brass').trim() || '#C8934F');
+  const cta = (cs.getPropertyValue('--cta').trim() || '#E05A2B');
+  const ink = (cs.getPropertyValue('--ink').trim() || '#0A1224');
+  const ink2 = (cs.getPropertyValue('--ink-2').trim() || '#060B18');
+  const paper = (cs.getPropertyValue('--paper').trim() || '#F5F2EC');
+  // Derive a 7-hue stream palette anchored on the accent
+  const streamColors = {
+    money:      cta,
+    energy:     shiftHue(accent,  20, 1.1, 0.05),
+    credential: paper,
+    goods:      accent,
+    data:       shiftHue(accent,  140, 0.85, 0.0),
+    service:    shiftHue(accent, -90, 0.7,  0.05),
+    reputation: shiftHue(accent,  -25, 0.85, 0.1),
+  };
+  const [r,g,b] = hexToRgb(accent);
+  const [pr,pg,pb] = hexToRgb(paper);
+  const [ir,ig,ib] = hexToRgb(ink);
+  return {
+    accent, cta, ink, ink2, paper, streamColors,
+    accentRGB: `${r},${g},${b}`,
+    paperRGB: `${pr},${pg},${pb}`,
+    inkRGB: `${ir},${ig},${ib}`,
+  };
+}
+function refreshPalette(){
+  PALETTE = readPalette();
+  // refresh stream type colors in-place
+  if(typeof STREAM_TYPES !== 'undefined'){
+    STREAM_TYPES.forEach(t => { t.color = PALETTE.streamColors[t.id] || t.color; });
+  }
+  // refresh duotone SVG filter to match accent
+  updateDuotoneFilter(PALETTE.accent, PALETTE.ink);
+}
+function updateDuotoneFilter(highlightHex, shadowHex){
+  const f = document.getElementById('duotone-brass');
+  if(!f) return;
+  const [hr,hg,hb] = hexToRgb(highlightHex);
+  const [sr,sg,sb] = hexToRgb(shadowHex);
+  const trans = f.querySelector('feComponentTransfer');
+  if(!trans) return;
+  trans.innerHTML =
+    `<feFuncR type="table" tableValues="${(sr/255).toFixed(3)} ${(hr/255).toFixed(3)}"/>`+
+    `<feFuncG type="table" tableValues="${(sg/255).toFixed(3)} ${(hg/255).toFixed(3)}"/>`+
+    `<feFuncB type="table" tableValues="${(sb/255).toFixed(3)} ${(hb/255).toFixed(3)}"/>`;
+  // bump the filter's id by toggling a no-op so SVG re-evaluates referenced filter
+  document.querySelectorAll('.uc-img').forEach(img => {
+    img.style.filter = 'none';
+    // reflow
+    void img.offsetWidth;
+    img.style.filter = '';
+  });
+}
+
 const STREAM_TYPES = [
   { id:"money",      label:"Money",       color:"#E05A2B", width:1.0, speed:0.019, weight:5, tail:0.18, dashed:false },
   { id:"energy",     label:"Energy",      color:"#F59E0B", width:1.6, speed:0.010, weight:3, tail:0.26, dashed:false },
@@ -1223,7 +2137,7 @@ function resize(){
   const rect = canvas.getBoundingClientRect();
   W=rect.width; H=rect.height;
   canvas.width=W*DPR; canvas.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
-  R = Math.min(W,H)/2 * 0.92; cx=W/2; cy=H/2;
+  R = Math.min(W,H)/2 * 0.78; cx=W/2; cy=H/2;
   projection.translate([cx,cy]).scale(R);
 }
 
@@ -1247,26 +2161,28 @@ canvas.addEventListener('mouseleave', ()=>{
 
 let lastSpawn=0, lastBurst=0;
 function tick(now){
+  if(!PALETTE) PALETTE = readPalette();
   ctx.clearRect(0,0,W,H);
   const rot = projection.rotate();
-  if(!REDUCED) projection.rotate([rot[0]+0.06,-12,0]);
+  const motionOn = (window.__fabricGlobeMotion !== false);
+  if(!REDUCED && motionOn) projection.rotate([rot[0]+0.06,-12,0]);
 
   const halo = ctx.createRadialGradient(cx,cy,R*0.92,cx,cy,R*1.18);
-  halo.addColorStop(0,'rgba(0,0,0,0)'); halo.addColorStop(0.55,'rgba(200,147,79,0.08)'); halo.addColorStop(1,'rgba(0,0,0,0)');
+  halo.addColorStop(0,'rgba(0,0,0,0)'); halo.addColorStop(0.55,`rgba(${PALETTE.accentRGB},0.10)`); halo.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(cx,cy,R*1.18,0,Math.PI*2); ctx.fill();
 
   const grd = ctx.createRadialGradient(cx-R*0.2,cy-R*0.25,R*0.2,cx,cy,R);
-  grd.addColorStop(0,'#14213A'); grd.addColorStop(0.7,'#0A1224'); grd.addColorStop(1,'#050814');
+  grd.addColorStop(0, PALETTE.ink); grd.addColorStop(0.7, PALETTE.ink); grd.addColorStop(1, PALETTE.ink2);
   ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.fill();
 
-  ctx.strokeStyle='rgba(200,147,79,0.06)'; ctx.lineWidth=0.5;
+  ctx.strokeStyle=`rgba(${PALETTE.accentRGB},0.07)`; ctx.lineWidth=0.5;
   ctx.beginPath(); path(d3.geoGraticule10()); ctx.stroke();
 
   if(land){
-    ctx.beginPath(); path(land); ctx.fillStyle='rgba(200,147,79,0.05)'; ctx.fill();
-    ctx.beginPath(); path(land); ctx.strokeStyle='rgba(200,147,79,0.45)'; ctx.lineWidth=0.6; ctx.stroke();
+    ctx.beginPath(); path(land); ctx.fillStyle=`rgba(${PALETTE.accentRGB},0.06)`; ctx.fill();
+    ctx.beginPath(); path(land); ctx.strokeStyle=`rgba(${PALETTE.accentRGB},0.5)`; ctx.lineWidth=0.6; ctx.stroke();
   }
-  ctx.strokeStyle='rgba(200,147,79,0.15)'; ctx.lineWidth=0.8;
+  ctx.strokeStyle=`rgba(${PALETTE.accentRGB},0.18)`; ctx.lineWidth=0.8;
   ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
 
   for(let i=0;i<NODES.length;i++){
@@ -1276,9 +2192,9 @@ function tick(now){
     const pulse = 0.45+0.55*Math.abs(Math.sin(now*0.0008+i*0.9));
     const ringR = isHov?7:4;
     ctx.beginPath(); ctx.arc(p[0],p[1],ringR,0,Math.PI*2);
-    ctx.fillStyle = isHov?'rgba(200,147,79,0.35)':`rgba(245,242,236,${0.08+pulse*0.08})`; ctx.fill();
+    ctx.fillStyle = isHov?`rgba(${PALETTE.accentRGB},0.4)`:`rgba(${PALETTE.paperRGB},${0.08+pulse*0.08})`; ctx.fill();
     ctx.beginPath(); ctx.arc(p[0],p[1],isHov?2.4:1.8,0,Math.PI*2);
-    ctx.fillStyle = isHov?'#C8934F':`rgba(245,242,236,${0.55+pulse*0.35})`; ctx.fill();
+    ctx.fillStyle = isHov?PALETTE.accent:`rgba(${PALETTE.paperRGB},${0.55+pulse*0.35})`; ctx.fill();
   }
 
   const elevMax = R*0.18;
@@ -1333,12 +2249,12 @@ function tick(now){
         ctx.font = '500 11px JetBrains Mono, monospace';
         const label = (NODE_LABELS[hoverNode]||'Node').toUpperCase();
         const tw = ctx.measureText(label).width;
-        ctx.fillStyle = 'rgba(10,18,36,0.92)';
+        ctx.fillStyle = `rgba(${PALETTE.inkRGB},0.92)`;
         ctx.fillRect(p[0]+12, p[1]-10, tw+14, 22);
-        ctx.strokeStyle = 'rgba(200,147,79,0.55)';
+        ctx.strokeStyle = `rgba(${PALETTE.accentRGB},0.6)`;
         ctx.lineWidth = 1;
         ctx.strokeRect(p[0]+12, p[1]-10, tw+14, 22);
-        ctx.fillStyle = '#C8934F';
+        ctx.fillStyle = PALETTE.accent;
         ctx.fillText(label, p[0]+19, p[1]+5);
       }
     }
@@ -1357,18 +2273,29 @@ function tick(now){
       const d=d3.geoDistance([origin[1],origin[0]],[dest[1],dest[0]]); if(d<0.2) continue;
       streams.push({type:t,origin,dest,interp:d3.geoInterpolate([origin[1],origin[0]],[dest[1],dest[0]]),t:0,speed:t.speed*(0.8+Math.random()*0.4)});
     }
-    flareAt(origin,'#F5F2EC'); lastBurst=now;
+    flareAt(origin, PALETTE.paper); lastBurst=now;
   }
   requestAnimationFrame(tick);
 }
 
 (async ()=>{
   resize();
+  refreshPalette();
   try{ const w = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json').then(r=>r.json()); land = topojson.feature(w, w.objects.countries); }catch(e){}
   for(let i=0;i<22;i++) spawnStream();
   requestAnimationFrame(tick);
 })();
 window.addEventListener('resize', resize);
+
+/* Watch body data-mood attribute and refresh globe + duotone */
+(function(){
+  const obs = new MutationObserver((muts)=>{
+    for(const m of muts){
+      if(m.attributeName==='data-mood'){ refreshPalette(); break; }
+    }
+  });
+  obs.observe(document.body, {attributes:true});
+})();
 </script>
 </body>
 </html>
