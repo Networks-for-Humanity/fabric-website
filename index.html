@@ -979,8 +979,9 @@
   .ex-run .ex-item:hover::before{ opacity:1; color:var(--brass); }
   .ex-run .ex-sep{
     color:var(--brass);
-    opacity:0.45;
+    opacity:0.9;
     font-style:normal;
+    font-weight:600;
     margin:0 0.22em;
     user-select:none;
   }
@@ -988,16 +989,18 @@
   /* When the run lives in the vision-lede column, render as Garamond editorial body */
   .vision-lede .ex-run{
     font-family:'EB Garamond', serif !important;
-    font-style:italic;
     font-weight:400;
     font-size:clamp(24px, 2.4vw, 32px);
     line-height:1.42;
     letter-spacing:-0.012em;
     color:var(--paper);
   }
+  /* All italic; alternate blue / dark for two-tone rhythm */
   .vision-lede .ex-run .ex-item{
     font-style:italic;
   }
+  .vision-lede .ex-run .ex-item:nth-child(4n+1){ color:var(--brass); }
+  .vision-lede .ex-run .ex-item:nth-child(4n+3){ color:var(--paper); }
   .vision-lede .ex-eyebrow{
     display:block;
     font-family:'JetBrains Mono', monospace;
@@ -1011,14 +1014,7 @@
     color:var(--brass);
     white-space:nowrap;
   }
-  .ex-run .ex-star::after{
-    content:"";
-    display:inline-block;
-    width:0.42em; height:0.42em; border-radius:50%;
-    background:var(--brass);
-    margin-left:0.32em;
-    vertical-align:0.16em;
-  }
+  .ex-run .ex-star::after{ content:none; }
   .ex-foot{
     margin-top:36px;
     padding-top:18px;
@@ -1610,9 +1606,6 @@
         <div class="snum"><span>What it is</span></div>
         <h2>The internet moved information. <em>Fabric moves value.</em></h2>
       </div>
-      <div class="side">
-        Open by design. Anyone uses it. Anyone runs it. Anyone builds on it.
-      </div>
     </div>
 
     <div class="vision-grid">
@@ -1866,10 +1859,10 @@
     small.push({ id:'s'+small.length, kind:'small', x:x, y:y });
   }
   const all=hubs.concat(small);
-  // sparse mesh: each node connects to its k nearest neighbours
+  // dense mesh: each node connects to its k nearest neighbours so every node has multiple edges
   const edges=[];
   const seen=new Set();
-  const K=2;
+  const K=5;
   for(let i=0;i<all.length;i++){
     const dists=[];
     for(let j=0;j<all.length;j++){
@@ -1897,8 +1890,9 @@
     ln.setAttribute('x1',e.a.x); ln.setAttribute('y1',e.a.y);
     ln.setAttribute('x2',e.b.x); ln.setAttribute('y2',e.b.y);
     ln.setAttribute('stroke','var(--brass)');
-    ln.setAttribute('stroke-opacity','0.16');
-    ln.setAttribute('stroke-width','0.5');
+    ln.setAttribute('stroke-opacity','0.55');
+    ln.setAttribute('stroke-width','1');
+    ln.setAttribute('stroke-dasharray','4 4');
     ln.setAttribute('class','mesh-edge');
     svg.appendChild(ln);
   });
