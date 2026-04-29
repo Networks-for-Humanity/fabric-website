@@ -404,6 +404,96 @@
     color:var(--paper-dim); max-width:48ch;
   }
 
+  /* -------- USE CASES — duotone swipe rail -------- */
+  .uc-section .section-head{ margin-bottom:56px; }
+  .uc-rail-wrap{
+    position:relative;
+    margin: 0 -72px;
+  }
+  @media (max-width:1100px){ .uc-rail-wrap{margin:0 -48px;} }
+  @media (max-width:900px){ .uc-rail-wrap{margin:0 -24px;} }
+  .uc-rail{
+    display:flex; gap:20px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    padding: 4px 72px 28px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+    scrollbar-color: var(--brass-dim) transparent;
+  }
+  @media (max-width:1100px){ .uc-rail{padding:4px 48px 28px;} }
+  @media (max-width:900px){ .uc-rail{padding:4px 24px 24px;} }
+  .uc-rail::-webkit-scrollbar{height:4px;}
+  .uc-rail::-webkit-scrollbar-track{background:transparent;}
+  .uc-rail::-webkit-scrollbar-thumb{background:var(--brass-dim); border-radius:2px;}
+  .uc-card{
+    flex: 0 0 460px;
+    aspect-ratio: 4/5;
+    scroll-snap-align: start;
+    position:relative;
+    border:1px solid var(--rule-strong);
+    overflow:hidden;
+    background:var(--ink-2);
+    text-decoration:none;
+    color:var(--paper);
+    transition: transform .35s ease, border-color .35s ease;
+  }
+  .uc-card:hover{
+    transform: translateY(-4px);
+    border-color: var(--brass-dim);
+  }
+  .uc-card .uc-img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover; display:block;
+    filter: url(#duotone-brass) contrast(1.05) brightness(0.92);
+    transition: transform .9s cubic-bezier(.2,.7,.2,1), opacity .25s;
+    opacity:0;
+  }
+  .uc-card .uc-img.loaded{ opacity:1; }
+  .uc-card:hover .uc-img{ transform:scale(1.05); }
+  .uc-card .uc-shade{
+    position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(10,18,36,0) 35%, rgba(6,11,24,0.78) 78%, rgba(6,11,24,0.95) 100%),
+      radial-gradient(ellipse at 30% 25%, rgba(200,147,79,0.08), transparent 55%);
+    pointer-events:none;
+  }
+  .uc-card .uc-num{
+    position:absolute; top:24px; left:24px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500;
+    letter-spacing:0.2em; color:var(--paper-faint); text-transform:uppercase;
+  }
+  .uc-card .uc-overlay{
+    position:absolute; inset:auto 0 0 0;
+    padding: 56px 30px 28px;
+  }
+  .uc-eyebrow{
+    display:block;
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:0.2em; color:var(--brass); text-transform:uppercase;
+    font-weight:500; margin:0 0 14px;
+  }
+  .uc-card h3{
+    font-family:'EB Garamond',serif; font-weight:500;
+    font-size:clamp(22px, 1.7vw, 28px); letter-spacing:-0.022em;
+    line-height:1.18; margin:0; color:var(--paper);
+    max-width:18ch;
+    text-wrap:balance;
+  }
+  .uc-card h3 em{ font-style:italic; color:var(--brass); }
+  .uc-rail-hint{
+    position:absolute; right:72px; top:-44px;
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:0.2em; color:var(--paper-faint); text-transform:uppercase;
+    pointer-events:none;
+  }
+  @media (max-width:1100px){ .uc-rail-hint{right:48px;} }
+  @media (max-width:900px){
+    .uc-rail-hint{display:none;}
+    .uc-card{ flex-basis: 78vw; max-width:380px; }
+  }
+
   /* -------- PARTICIPANTS — network mesh -------- */
   .pt-intro{
     font-family:'EB Garamond',serif;
@@ -511,6 +601,18 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="duotone-brass" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.039 0.784"/>
+        <feFuncG type="table" tableValues="0.071 0.576"/>
+        <feFuncB type="table" tableValues="0.141 0.310"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+</svg>
 <div class="page">
 
   <!-- TOPBAR -->
@@ -524,6 +626,7 @@
       <a href="#principles">Principles</a>
       <a href="#capabilities">Capabilities</a>
       <a href="#services">Services</a>
+      <a href="#use-cases">Use cases</a>
       <a href="#participants">Participants</a>
       <a href="https://github.com/Networks-for-Humanity/fabric-support/issues" class="spec" target="_blank" rel="noopener">Support &#8599;</a>
     </nav>
@@ -723,6 +826,84 @@
           <span class="svc-noun">End-to-end transaction tracing and verifiable audit trails.</span>
         </div>
         <div class="svc-desc">Inspectable across every hop, for participants, regulators, and counterparties alike. Trust isn't just established — it's verifiable after the fact.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section id="use-cases" class="uc-section">
+    <div class="section-head">
+      <div>
+        <div class="snum"><span>Use cases</span></div>
+        <h2>What fabric <em>unlocks.</em></h2>
+      </div>
+      <div class="side">
+        Six concrete things, made tractable on one open network.
+      </div>
+    </div>
+
+    <div class="uc-rail-wrap">
+      <div class="uc-rail-hint" aria-hidden="true">Swipe &rarr;</div>
+      <div class="uc-rail" role="list">
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Server racks lit blue inside a data centre" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">01 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Energy</span>
+            <h3>The cheapest kilowatt-hour for your <em>data centre.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Stacked shipping containers at port" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">02 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Cross-border</span>
+            <h3>Cross-border commerce, <em>in seconds.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1601598851547-4302969d0614?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Long warehouse aisle filled with stacked goods" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">03 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Catalogue</span>
+            <h3>Every product, <em>on one network.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Sweeping facade of a contemporary building" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">04 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Securitisation</span>
+            <h3>Securitise any illiquid asset. <em>Make it transactable.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Macro view of a circuit board with intricate traces" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">05 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Data</span>
+            <h3>The data marketplace for <em>autonomous agents.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="People collaborating around a table" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">06 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Hybrid teams</span>
+            <h3>Spin up a hybrid team in seconds. <em>Humans and agents.</em></h3>
+          </div>
+        </article>
       </div>
     </div>
   </section>
