@@ -1440,7 +1440,9 @@
 
   /* Hover/atmosphere tints — invert paper→ink rgbas */
   body[data-mood="nfh"] .why-cell:hover{ background:rgba(31,79,166,0.04); }
-  body[data-mood="nfh"] .svc-row:hover{ background:rgba(31,79,166,0.04); }
+  body[data-mood="nfh"] .svc-row:nth-child(even){ background:rgba(31,79,166,0.04); }
+  body[data-mood="nfh"] .svc-row:hover{ background:rgba(31,79,166,0.08); }
+  body[data-mood="nfh"] .svc-row:nth-child(even):hover{ background:rgba(31,79,166,0.10); }
   body[data-mood="nfh"] .exchange-cloud-list span:hover{
     background:rgba(31,79,166,0.05);
   }
