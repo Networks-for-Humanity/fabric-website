@@ -411,80 +411,68 @@
     margin:0; max-width:34ch;
   }
 
-  /* -------- SERVICES -------- */
-  .svc-edge-intro{
-    display:flex; align-items:center; gap:12px;
-    margin-bottom:24px; padding:0;
-    border:none;
-    background:none;
-    opacity:0.65;
-  }
-  .svc-edge-intro .badge{
-    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
-    color:var(--brass-dim); letter-spacing:0.16em; text-transform:uppercase;
-    border:1px solid var(--rule); padding:3px 7px;
-    white-space:nowrap; flex-shrink:0;
-  }
-  .svc-edge-intro p{
-    margin:0; font-family:'EB Garamond',serif; font-style:italic;
-    font-size:13px; line-height:1.4; color:var(--paper-dim); max-width:64ch;
-  }
-  .svc-edge-intro p em{color:var(--paper-dim); font-style:italic}
-
-  .services{display:flex; flex-direction:column}
-  .svc{
-    display:grid; grid-template-columns:auto 1.2fr 1.6fr;
-    gap:32px; padding:36px 16px 36px 0;
+  /* -------- SERVICES — compact index list -------- */
+  .svc-list{
     border-top:1px solid var(--rule);
+  }
+  .svc-row{
+    display:grid;
+    grid-template-columns: 48px minmax(0, 1.05fr) minmax(0, 1.55fr);
+    gap:28px;
+    padding:22px 24px 22px 0;
+    border-bottom:1px solid var(--rule);
     align-items:baseline;
     position:relative;
-    transition:background .3s ease;
+    transition:background .25s ease;
   }
-  .svc:first-child{border-top:none}
-  .svc::after{
-    content:"\2192"; /* → */
-    position:absolute; right:0; top:42px;
+  .svc-row::after{
+    content:"\2192";
+    position:absolute; right:0; top:50%;
     color:var(--brass);
     font-family:'EB Garamond',serif; font-style:italic;
-    font-size:24px; line-height:1;
+    font-size:22px; line-height:1;
+    transform:translate(-12px, -50%);
     opacity:0;
-    transform:translateX(-10px);
     transition:opacity .3s ease, transform .3s ease;
   }
-  .svc:hover{background:rgba(200,147,79,0.025);}
-  .svc:hover::after{ opacity:1; transform:translateX(0); }
-  @media (max-width:900px){
-    .svc{grid-template-columns:auto 1fr; gap:14px 18px; padding:28px 0}
-    .svc-desc{grid-column:1 / -1; padding-left:0;}
-    .svc::after{display:none;}
+  .svc-row:hover{ background:rgba(200,147,79,0.025); }
+  .svc-row:hover::after{ opacity:1; transform:translate(0, -50%); }
+  .svc-row .svc-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px; letter-spacing:0.2em;
+    color:var(--paper-faint); font-weight:500;
+    padding-top:3px;
   }
-  .svc-num{
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    letter-spacing:0.18em; color:var(--paper-faint); font-weight:500;
-    padding-top:8px;
-  }
-  .svc-title h4{
+  .svc-row h4{
     font-family:'EB Garamond',serif; font-weight:500;
-    font-size:clamp(24px,2.4vw,32px); letter-spacing:-0.024em;
-    line-height:1.06; margin:0 0 8px; max-width:14ch;
+    font-size:clamp(20px,1.5vw,24px); letter-spacing:-0.018em;
+    margin:0; color:var(--paper);
+    line-height:1.15;
   }
-  .svc-title h4 .svc-suffix{ color:inherit; font-weight:inherit;}
-  .svc-title .svc-noun{
-    display:block;
-    font-family:'EB Garamond',serif; font-style:italic; font-weight:400;
-    font-size:16px; color:var(--brass); letter-spacing:0;
-    margin-top:4px; line-height:1.35; max-width:32ch;
-  }
-  .svc-title .edge{
-    display:inline-block; margin-left:8px;
+  .svc-row h4 .edge{
+    display:inline-block; margin-left:10px;
     font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
     color:var(--cta); letter-spacing:0.14em;
-    border:1px solid rgba(224,90,43,.45); padding:3px 6px;
-    vertical-align:middle; transform:translateY(-2px);
+    border:1px solid rgba(224,90,43,.45); padding:2px 6px;
+    vertical-align:3px;
+    text-transform:uppercase;
   }
-  .svc-desc{
-    font-family:'EB Garamond',serif; font-size:16px; line-height:1.55;
-    color:var(--paper-dim); max-width:48ch;
+  .svc-row .svc-noun{
+    font-family:'EB Garamond',serif; font-style:italic;
+    font-size:16px; color:var(--paper-dim);
+    line-height:1.45;
+  }
+  @media (max-width:800px){
+    .svc-row{
+      grid-template-columns: 32px 1fr;
+      gap:6px 16px;
+      padding:20px 0;
+    }
+    .svc-row .svc-noun{
+      grid-column: 2 / -1;
+      margin-top:4px;
+    }
+    .svc-row::after{ display:none; }
   }
 
   /* -------- USE CASES — duotone swipe rail -------- */
@@ -896,67 +884,41 @@
       </div>
     </div>
 
-    <div class="svc-edge-intro">
-      <span class="badge">&#9733; Edge</span>
-      <p style="text-align: left">Edge services run <em>inside each participant's own infrastructure</em>.</p>
-    </div>
-
-    <div class="services">
-      <div class="svc">
-        <div class="svc-num">01</div>
-        <div class="svc-title">
-          <h4>Registry <span class="svc-suffix">service.</span></h4>
-          <span class="svc-noun">Verifiable network identities for every participant.</span>
-        </div>
-        <div class="svc-desc">Cryptographic trust without bilateral key exchange. Everyone on fabric has an identity anyone can resolve and verify.</div>
+    <div class="svc-list">
+      <div class="svc-row">
+        <span class="svc-num">01</span>
+        <h4>Registry</h4>
+        <span class="svc-noun">Verifiable network identities for every participant.</span>
       </div>
-      <div class="svc">
-        <div class="svc-num">02</div>
-        <div class="svc-title">
-          <h4>Credentialling <span class="svc-suffix">service.</span> <span class="edge">&#9733; Edge</span></h4>
-          <span class="svc-noun">Issue, carry, and verify portable, tamper-proof claims.</span>
-        </div>
-        <div class="svc-desc">A licence, a degree, a KYC check, an eligibility proof — issued, transported, and verified without revealing the underlying record.</div>
+      <div class="svc-row">
+        <span class="svc-num">02</span>
+        <h4>Credentialling <span class="edge">&#9733; Edge</span></h4>
+        <span class="svc-noun">Issue, carry, and verify portable, tamper-proof claims.</span>
       </div>
-      <div class="svc">
-        <div class="svc-num">03</div>
-        <div class="svc-title">
-          <h4>Cataloguing <span class="svc-suffix">service.</span></h4>
-          <span class="svc-noun">Provider offerings, published once, at network scale.</span>
-        </div>
-        <div class="svc-desc">Schema-aware, syndicated across every app and sub-network on fabric. List a product, a service, an asset, an appointment, a credential — once.</div>
+      <div class="svc-row">
+        <span class="svc-num">03</span>
+        <h4>Cataloguing</h4>
+        <span class="svc-noun">Provider offerings, published once, at network scale.</span>
       </div>
-      <div class="svc">
-        <div class="svc-num">04</div>
-        <div class="svc-title">
-          <h4>Discovery <span class="svc-suffix">service.</span> <span class="edge">&#9733; Edge</span></h4>
-          <span class="svc-noun">Find any offering across the network with one query.</span>
-        </div>
-        <div class="svc-desc">Buyers and agents reach every catalogue, in any sector, in a single call. Runs inside the participant's own infrastructure.</div>
+      <div class="svc-row">
+        <span class="svc-num">04</span>
+        <h4>Discovery <span class="edge">&#9733; Edge</span></h4>
+        <span class="svc-noun">Find any offering across the network with one query.</span>
       </div>
-      <div class="svc">
-        <div class="svc-num">05</div>
-        <div class="svc-title">
-          <h4>Network Adapters <span class="edge">&#9733; Edge</span></h4>
-          <span class="svc-noun">Secure, compliant, peer-to-peer message exchange.</span>
-        </div>
-        <div class="svc-desc">The shared messaging layer that handles signing, routing, and schema validation so any two participants can transact directly.</div>
+      <div class="svc-row">
+        <span class="svc-num">05</span>
+        <h4>Network Adapters <span class="edge">&#9733; Edge</span></h4>
+        <span class="svc-noun">Secure, compliant, peer-to-peer message exchange.</span>
       </div>
-      <div class="svc">
-        <div class="svc-num">06</div>
-        <div class="svc-title">
-          <h4>Tokenisation <span class="svc-suffix">service.</span></h4>
-          <span class="svc-noun">Any form of value as a programmable, transferable token.</span>
-        </div>
-        <div class="svc-desc">Money, equity, energy, an invoice, a credit, a credential — represented as composable tokens that move across ledgers.</div>
+      <div class="svc-row">
+        <span class="svc-num">06</span>
+        <h4>Tokenisation</h4>
+        <span class="svc-noun">Any form of value as a programmable, transferable token.</span>
       </div>
-      <div class="svc">
-        <div class="svc-num">07</div>
-        <div class="svc-title">
-          <h4>Observability &amp; Audit <span class="svc-suffix">services.</span></h4>
-          <span class="svc-noun">End-to-end transaction tracing and verifiable audit trails.</span>
-        </div>
-        <div class="svc-desc">Inspectable across every hop, for participants, regulators, and counterparties alike. Trust isn't just established — it's verifiable after the fact.</div>
+      <div class="svc-row">
+        <span class="svc-num">07</span>
+        <h4>Observability &amp; Audit</h4>
+        <span class="svc-noun">End-to-end transaction tracing and verifiable audit trails.</span>
       </div>
     </div>
   </section>
