@@ -27,10 +27,27 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--ink);color:var(--paper);}
+  html{scroll-behavior:smooth;}
+  :target{scroll-margin-top:96px;}
   body{
     font-family:'EB Garamond', Georgia, serif;
     font-size:17px; line-height:1.6;
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    position:relative;
+  }
+  /* Fine film grain — adds atmosphere without colour */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:1000;
+    opacity:0.05;
+    mix-blend-mode:overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:240px 240px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
   }
   .mono{font-family:'JetBrains Mono', ui-monospace, monospace;}
   .page{max-width:1360px; margin:0 auto; padding:0 72px;}
@@ -91,6 +108,35 @@
     padding:96px 0 80px; align-items:center;
   }
   @media (max-width:1000px){ .hero{grid-template-columns:1fr; gap:48px; padding:64px 0 56px} }
+
+  /* Page-load reveal — staggered, subtle */
+  @keyframes hero-reveal{
+    from{ opacity:0; transform:translateY(14px); }
+    to  { opacity:1; transform:translateY(0); }
+  }
+  @keyframes globe-reveal{
+    from{ opacity:0; }
+    to  { opacity:1; }
+  }
+  .hero .eyebrow,
+  .hero h1,
+  .hero .sub,
+  .hero .cta-row{
+    opacity:0;
+    animation: hero-reveal .85s ease both;
+  }
+  .hero .eyebrow{ animation-delay:.10s; }
+  .hero h1     { animation-delay:.22s; }
+  .hero .sub   { animation-delay:.42s; }
+  .hero .cta-row{ animation-delay:.58s; }
+  .hero .globe-stage{
+    animation: globe-reveal 1.4s .15s ease both;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero .eyebrow, .hero h1, .hero .sub, .hero .cta-row, .hero .globe-stage{
+      animation:none; opacity:1;
+    }
+  }
 
   .eyebrow{
     font-family:'JetBrains Mono',monospace;
@@ -316,9 +362,6 @@
     font-size:clamp(20px,1.7vw,26px); letter-spacing:-0.012em;
     margin:0; line-height:1; color:var(--paper);
   }
-  .p-card:nth-child(2n) h4{
-    font-style:italic; color:var(--brass);
-  }
   .p-dot{
     width:5px; height:5px; border-radius:50%;
     background:var(--brass); opacity:0.55;
@@ -338,9 +381,18 @@
     border-bottom:1px solid var(--rule);
     min-height:200px;
     display:flex; flex-direction:column; justify-content:center;
-    transition:background .25s;
+    position:relative;
+    transition:background .3s ease;
   }
-  .why-cell:hover{background:rgba(200,147,79,0.03)}
+  .why-cell::after{
+    content:"";
+    position:absolute; left:0; bottom:-1px;
+    width:0; height:1px;
+    background:var(--brass);
+    transition:width .55s cubic-bezier(.2,.7,.2,1);
+  }
+  .why-cell:hover{background:rgba(200,147,79,0.025);}
+  .why-cell:hover::after{ width:100%; }
   .why-grid .why-cell:nth-child(3n){border-right:none}
   .why-grid .why-cell:nth-last-child(-n+3){border-bottom:none}
   @media (max-width:900px){
@@ -382,17 +434,29 @@
   .services{display:flex; flex-direction:column}
   .svc{
     display:grid; grid-template-columns:auto 1.2fr 1.6fr;
-    gap:32px; padding:36px 0;
+    gap:32px; padding:36px 16px 36px 0;
     border-top:1px solid var(--rule);
     align-items:baseline;
-    transition:background .25s, padding-left .25s;
+    position:relative;
+    transition:background .3s ease;
   }
   .svc:first-child{border-top:none}
-  .svc:hover{background:rgba(200,147,79,0.025); padding-left:14px;}
+  .svc::after{
+    content:"\2192"; /* → */
+    position:absolute; right:0; top:42px;
+    color:var(--brass);
+    font-family:'EB Garamond',serif; font-style:italic;
+    font-size:24px; line-height:1;
+    opacity:0;
+    transform:translateX(-10px);
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .svc:hover{background:rgba(200,147,79,0.025);}
+  .svc:hover::after{ opacity:1; transform:translateX(0); }
   @media (max-width:900px){
     .svc{grid-template-columns:auto 1fr; gap:14px 18px; padding:28px 0}
     .svc-desc{grid-column:1 / -1; padding-left:0;}
-    .svc:hover{padding-left:0;}
+    .svc::after{display:none;}
   }
   .svc-num{
     font-family:'JetBrains Mono',monospace; font-size:11px;
