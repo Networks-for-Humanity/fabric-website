@@ -979,10 +979,32 @@
   .ex-run .ex-item:hover::before{ opacity:1; color:var(--brass); }
   .ex-run .ex-sep{
     color:var(--brass);
-    opacity:0.55;
+    opacity:0.45;
     font-style:normal;
-    margin:0 0.18em;
+    margin:0 0.22em;
     user-select:none;
+  }
+
+  /* When the run lives in the vision-lede column, render as Garamond editorial body */
+  .vision-lede .ex-run{
+    font-family:'EB Garamond', serif !important;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(24px, 2.4vw, 32px);
+    line-height:1.42;
+    letter-spacing:-0.012em;
+    color:var(--paper);
+  }
+  .vision-lede .ex-run .ex-item{
+    font-style:italic;
+  }
+  .vision-lede .ex-eyebrow{
+    display:block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px; font-weight:500;
+    letter-spacing:0.22em; text-transform:uppercase;
+    color:var(--brass);
+    margin:0 0 16px;
   }
   .ex-run .ex-star{
     font-style: var(--display-italic-style);
@@ -1595,9 +1617,12 @@
 
     <div class="vision-grid">
       <div class="vision-lede">
+        <div>
+          <span class="ex-eyebrow">For instance —</span>
         <p class="ex-run" aria-label="Examples of value on Fabric">
           <span class="ex-item" data-i="01">A ride</span><span class="ex-sep"> · </span><span class="ex-item" data-i="02">a meal</span><span class="ex-sep"> · </span><span class="ex-item" data-i="03">a parcel</span><span class="ex-sep"> · </span><span class="ex-item" data-i="04">a kilowatt</span><span class="ex-sep"> · </span><span class="ex-item" data-i="05">a stablecoin</span><span class="ex-sep"> · </span><span class="ex-item" data-i="06">an invoice</span><span class="ex-sep"> · </span><span class="ex-item" data-i="07">a tokenised share</span><span class="ex-sep"> · </span><span class="ex-item" data-i="08">a carbon credit</span><span class="ex-sep"> · </span><span class="ex-item" data-i="09">a GPU-hour</span><span class="ex-sep"> · </span><span class="ex-item" data-i="10">an LLM call</span><span class="ex-sep"> · </span><span class="ex-item" data-i="11">an API endpoint</span><span class="ex-sep"> · </span><span class="ex-item" data-i="12">a credential</span><span class="ex-sep"> · </span><span class="ex-item" data-i="13">a prescription</span><span class="ex-sep"> · </span><span class="ex-item" data-i="14">a land title</span><span class="ex-sep"> · </span><span class="ex-item" data-i="15">a vote</span><span class="ex-sep"> · </span><span class="ex-item" data-i="16">a sneaker</span><span class="ex-sep"> · </span><span class="ex-item" data-i="17">a second-hand car</span><span class="ex-sep"> · </span><span class="ex-item" data-i="18">a data-centre operator</span><span class="ex-sep"> · </span><span class="ex-item ex-star" data-i="19">an agent</span>
         </p>
+        </div>
       </div>
       <div class="vision-compare">
         <div class="vc-row before">
