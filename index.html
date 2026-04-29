@@ -665,6 +665,14 @@
     letter-spacing:-0.015em;
     white-space:nowrap;
   }
+  .wordmark .nfh-by{
+    font-family:'EB Garamond',serif;
+    font-style:italic; font-weight:400;
+    font-size:15px; color:var(--paper-dim);
+    letter-spacing:-0.005em;
+    white-space:nowrap;
+  }
+  @media (max-width:640px){ .wordmark .nfh-by{ display:none; } }
   .topnav{
     display:flex; gap:30px; align-items:center;
     font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em;
@@ -696,7 +704,7 @@
 
   /* -------- hero -------- */
   .hero{
-    display:grid; grid-template-columns:1fr 1.05fr; gap:56px;
+    display:grid; grid-template-columns:0.85fr 1.25fr; gap:48px;
     padding:56px 0 48px; align-items:center;
   }
   @media (max-width:1000px){ .hero{grid-template-columns:1fr; gap:36px; padding:40px 0 32px} }
@@ -744,8 +752,8 @@
   .hero h1{
     font-family: var(--display);
     font-weight: var(--display-weight);
-    font-size:clamp(52px, 6.4vw, 96px);
-    line-height:0.98; letter-spacing: var(--display-letter);
+    font-size:clamp(40px, 5vw, 76px);
+    line-height:1.02; letter-spacing: var(--display-letter);
     margin:18px 0 18px; text-wrap:balance;
   }
   .hero h1 em{ font-style: var(--display-italic-style); font-weight:inherit; color:var(--brass); }
@@ -779,10 +787,10 @@
   /* -------- globe -------- */
   .globe-stage{
     position:relative; width:100%; aspect-ratio:1/1;
-    max-width:720px; justify-self:end;
-    margin-right:-24px;
+    max-width:880px; justify-self:end;
+    margin-right:-32px;
   }
-  @media (max-width:1000px){ .globe-stage{justify-self:center; max-width:560px; margin-right:0} }
+  @media (max-width:1000px){ .globe-stage{justify-self:center; max-width:620px; margin-right:0} }
   #globe-canvas{position:absolute; inset:0; width:100%; height:100%; display:block;}
 
   @media (prefers-reduced-motion: reduce){
@@ -1342,7 +1350,7 @@
     line-height:0.96; letter-spacing:-0.03em;
     margin:18px 0 28px; max-width:18ch; position:relative;
   }
-  .footer-cta h2 em{font-style:italic; color:var(--brass)}
+  .footer-cta h2 em{font-style:normal; color:var(--brass)}
   .footer-cta .kicker{
     font-family:'EB Garamond',serif; font-style:italic;
     font-size:21px; color:var(--paper-dim); max-width:46ch;
@@ -1448,7 +1456,8 @@
   <!-- TOPBAR -->
   <header class="topbar">
     <div class="wordmark">
-      <span class="nfh-fabric">NFH fabric</span>
+      <span class="nfh-fabric">NFH Fabric</span>
+      <span class="nfh-by">by Networks for Humanity</span>
     </div>
     <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" id="navToggle">Menu</button>
     <nav class="topnav" id="topnav" aria-label="Primary">
