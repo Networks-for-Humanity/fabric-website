@@ -184,6 +184,10 @@
     display:grid; grid-template-columns: 1fr 1fr; gap:72px;
     max-width:1140px;
   }
+  .intro-body.intro-body-single{
+    grid-template-columns: 1fr;
+    max-width:780px;
+  }
   @media (max-width:900px){ .intro-body{grid-template-columns:1fr; gap:32px} }
   .intro-body p{
     font-family:'EB Garamond',serif;
@@ -622,11 +626,11 @@
     </div>
     <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" id="navToggle">Menu</button>
     <nav class="topnav" id="topnav" aria-label="Primary">
+      <a href="#use-cases">Use cases</a>
       <a href="#vision">What it is</a>
       <a href="#principles">Principles</a>
       <a href="#capabilities">Capabilities</a>
       <a href="#services">Services</a>
-      <a href="#use-cases">Use cases</a>
       <a href="#participants">Participants</a>
       <a href="https://github.com/Networks-for-Humanity/fabric-support/issues" class="spec" target="_blank" rel="noopener">Support &#8599;</a>
     </nav>
@@ -652,6 +656,81 @@
   </section>
   </main>
 
+  <!-- USE CASES -->
+  <section id="use-cases" class="uc-section">
+    <div class="section-head">
+      <div>
+        <div class="snum"><span>Use cases</span></div>
+        <h2>What fabric <em>unlocks.</em></h2>
+      </div>
+    </div>
+
+    <div class="uc-rail-wrap">
+      <div class="uc-rail-hint" aria-hidden="true">Swipe &rarr;</div>
+      <div class="uc-rail" role="list">
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Server racks lit blue inside a data centre" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">01 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Energy</span>
+            <h3>The cheapest kilowatt-hour for your <em>data centre.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Stacked shipping containers at port" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">02 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Cross-border</span>
+            <h3>Cross-border commerce, <em>in seconds.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1601598851547-4302969d0614?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Long warehouse aisle filled with stacked goods" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">03 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Catalogue</span>
+            <h3>Every product, <em>on one network.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Sweeping facade of a contemporary building" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">04 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Securitisation</span>
+            <h3>Securitise any illiquid asset. <em>Make it transactable.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Macro view of a circuit board with intricate traces" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">05 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Data</span>
+            <h3>The data marketplace for <em>autonomous agents.</em></h3>
+          </div>
+        </article>
+
+        <article class="uc-card" role="listitem">
+          <img class="uc-img" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="People collaborating around a table" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="uc-shade"></div>
+          <span class="uc-num">06 / 06</span>
+          <div class="uc-overlay">
+            <span class="uc-eyebrow">Hybrid teams</span>
+            <h3>Spin up a hybrid team in seconds. <em>Humans and agents.</em></h3>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- VISION -->
   <section id="vision">
     <div class="section-head">
@@ -664,28 +743,11 @@
       </div>
     </div>
 
-    <div class="intro-body">
+    <div class="intro-body intro-body-single">
       <div>
         <p class="lede">Any kind of value — published once, discovered everywhere, settled the moment conditions are met.</p>
         <p>Today every kind of value lives on its own private rails. <b>Each network is closed. Each integration is bilateral. Each new use case starts from zero.</b></p>
         <p>Built by <a href="https://networksforhumanity.org/" target="_blank" rel="noopener" style="color:var(--paper); text-decoration:underline; text-decoration-color:var(--brass-dim); text-underline-offset:3px;">Networks for Humanity</a>.</p>
-      </div>
-
-      <div>
-        <div class="intro-compare">
-          <div class="ic-row">
-            <div class="ic-before"><span class="ic-label">Before</span>KYC repeated at every counter.</div>
-            <div class="ic-after"><span class="ic-label">On Fabric</span>Verify once. <em>Reuse anywhere.</em></div>
-          </div>
-          <div class="ic-row">
-            <div class="ic-before"><span class="ic-label">Before</span>Invoices reconciled by hand.</div>
-            <div class="ic-after"><span class="ic-label">On Fabric</span>Programmable invoices. <em>Self-settling.</em></div>
-          </div>
-          <div class="ic-row">
-            <div class="ic-before"><span class="ic-label">Before</span>Loyalty locked to one brand.</div>
-            <div class="ic-after"><span class="ic-label">On Fabric</span>Tokens that travel. <em>Redeemable everywhere.</em></div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -826,81 +888,6 @@
           <span class="svc-noun">End-to-end transaction tracing and verifiable audit trails.</span>
         </div>
         <div class="svc-desc">Inspectable across every hop, for participants, regulators, and counterparties alike. Trust isn't just established — it's verifiable after the fact.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- USE CASES -->
-  <section id="use-cases" class="uc-section">
-    <div class="section-head">
-      <div>
-        <div class="snum"><span>Use cases</span></div>
-        <h2>What fabric <em>unlocks.</em></h2>
-      </div>
-    </div>
-
-    <div class="uc-rail-wrap">
-      <div class="uc-rail-hint" aria-hidden="true">Swipe &rarr;</div>
-      <div class="uc-rail" role="list">
-        <article class="uc-card" role="listitem">
-          <img class="uc-img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Server racks lit blue inside a data centre" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-          <div class="uc-shade"></div>
-          <span class="uc-num">01 / 06</span>
-          <div class="uc-overlay">
-            <span class="uc-eyebrow">Energy</span>
-            <h3>The cheapest kilowatt-hour for your <em>data centre.</em></h3>
-          </div>
-        </article>
-
-        <article class="uc-card" role="listitem">
-          <img class="uc-img" src="https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Stacked shipping containers at port" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-          <div class="uc-shade"></div>
-          <span class="uc-num">02 / 06</span>
-          <div class="uc-overlay">
-            <span class="uc-eyebrow">Cross-border</span>
-            <h3>Cross-border commerce, <em>in seconds.</em></h3>
-          </div>
-        </article>
-
-        <article class="uc-card" role="listitem">
-          <img class="uc-img" src="https://images.unsplash.com/photo-1601598851547-4302969d0614?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Long warehouse aisle filled with stacked goods" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-          <div class="uc-shade"></div>
-          <span class="uc-num">03 / 06</span>
-          <div class="uc-overlay">
-            <span class="uc-eyebrow">Catalogue</span>
-            <h3>Every product, <em>on one network.</em></h3>
-          </div>
-        </article>
-
-        <article class="uc-card" role="listitem">
-          <img class="uc-img" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Sweeping facade of a contemporary building" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-          <div class="uc-shade"></div>
-          <span class="uc-num">04 / 06</span>
-          <div class="uc-overlay">
-            <span class="uc-eyebrow">Securitisation</span>
-            <h3>Securitise any illiquid asset. <em>Make it transactable.</em></h3>
-          </div>
-        </article>
-
-        <article class="uc-card" role="listitem">
-          <img class="uc-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="Macro view of a circuit board with intricate traces" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-          <div class="uc-shade"></div>
-          <span class="uc-num">05 / 06</span>
-          <div class="uc-overlay">
-            <span class="uc-eyebrow">Data</span>
-            <h3>The data marketplace for <em>autonomous agents.</em></h3>
-          </div>
-        </article>
-
-        <article class="uc-card" role="listitem">
-          <img class="uc-img" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&amp;q=80&amp;fm=webp&amp;fit=crop&amp;auto=format" alt="People collaborating around a table" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-          <div class="uc-shade"></div>
-          <span class="uc-num">06 / 06</span>
-          <div class="uc-overlay">
-            <span class="uc-eyebrow">Hybrid teams</span>
-            <h3>Spin up a hybrid team in seconds. <em>Humans and agents.</em></h3>
-          </div>
-        </article>
       </div>
     </div>
   </section>
