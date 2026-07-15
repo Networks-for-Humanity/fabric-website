@@ -1038,9 +1038,43 @@
   }
   .ex-foot strong{ color:var(--paper); font-weight:500; font-style:normal; }
 
+  /* -------- BY DESIGN -------- */
+  .bd-list{
+    border-top:1px solid var(--rule-strong);
+    max-width:980px;
+  }
+  .bd-item{
+    display:grid; grid-template-columns:72px 1fr;
+    gap:32px; padding:34px 0;
+    border-bottom:1px solid var(--rule);
+    align-items:baseline;
+  }
+  .bd-item .bd-num{
+    font-family: var(--mono), 'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:0.2em; font-weight:500;
+    color:var(--brass);
+  }
+  .bd-item p{
+    margin:0;
+    font-family: var(--body), 'EB Garamond', serif;
+    font-size:clamp(19px, 1.75vw, 23px); line-height:1.5;
+    letter-spacing:-0.008em;
+    color:var(--paper);
+    text-wrap:pretty;
+    max-width:62ch;
+  }
+  .bd-item p em{
+    font-style: var(--display-italic-style);
+    color:var(--brass);
+  }
+  .bd-item p .bd-dim{ color:var(--paper-dim); }
+  @media (max-width:700px){
+    .bd-item{ grid-template-columns:1fr; gap:10px; padding:26px 0; }
+  }
+
   /* -------- PRINCIPLES — full-bleed blue band -------- */
   #principles{ padding:0; border-top:none; }
-  #capabilities{ border-top:none; }
+  #guarantees{ border-top:none; }
   .principles-band{
     background:#1F4FA6;
     color:#FFFFFF;
@@ -1511,6 +1545,7 @@
       <a href="#use-cases">Use cases</a>
       <a href="#vision">What it is</a>
       <a href="#principles">Principles</a>
+      <a href="#guarantees">Our guarantees</a>
       <a href="#capabilities">Capabilities</a>
       <a href="#services">Services</a>
       <a href="#participants">Participants</a>
@@ -1652,6 +1687,47 @@
         <div class="p-card"><h4>Agent-native.</h4><span class="p-dot" aria-hidden="true"></span></div>
       </div>
     </div>
+    </div>
+  </section>
+
+  <!-- BY DESIGN -->
+  <section id="guarantees">
+    <div class="section-head">
+      <div>
+        <div class="snum"><span>Our guarantees</span></div>
+        <h2>One fabric <em>for the planet.</em></h2>
+      </div>
+    </div>
+
+    <div class="bd-list">
+      <div class="bd-item">
+        <span class="bd-num">01</span>
+        <p>NFH fabric is <em>one public, peer-to-peer network runtime for the entire planet</em> — not software available for project- or application-specific deployments.</p>
+      </div>
+      <div class="bd-item">
+        <span class="bd-num">02</span>
+        <p>It exists for one purpose: to offer a <em>universal, open and decentralised</em> runtime instance, publicly accessible to all.</p>
+      </div>
+      <div class="bd-item">
+        <span class="bd-num">03</span>
+        <p>Every component is built on <em>open-source specifications</em> that are publicly verifiable — beginning with the open-source Beckn protocol.</p>
+      </div>
+      <div class="bd-item">
+        <span class="bd-num">04</span>
+        <p>All backend components are either stateless or cache only public data. <em>No personal or confidential data</em> persists in fabric, by design.</p>
+      </div>
+      <div class="bd-item">
+        <span class="bd-num">05</span>
+        <p>Transactions are peer-to-peer: their data is never stored in — and never passes through — fabric. <span class="bd-dim">It remains with the applications executing the transaction, on nodes outside fabric.</span></p>
+      </div>
+      <div class="bd-item">
+        <span class="bd-num">06</span>
+        <p>Anyone can operate a node and connect. Every node stays <em>entirely under its provider&rsquo;s control.</em></p>
+      </div>
+      <div class="bd-item">
+        <span class="bd-num">07</span>
+        <p><em>Zero vendor lock-in:</em> portability and interoperability are built into the specifications, and fabric holds no application logic and nothing private — no surface area to retain your data or your code.</p>
+      </div>
     </div>
   </section>
 
