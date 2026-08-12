@@ -315,23 +315,9 @@
   .samples .foot-note a{ color:var(--brass); text-decoration:none; border-bottom:1px solid var(--brass-dim); }
 
   /* -------- footer -------- */
-  .footer-cta{ border-top:1px solid var(--rule); padding:88px 0 80px; position:relative; overflow:hidden; }
-  @media (max-width:900px){ .footer-cta{padding:64px 0} }
-  .footer-cta .bg-glow{
-    position:absolute; right:-160px; top:50%; transform:translateY(-50%);
-    width:820px; height:820px; pointer-events:none;
-    background:radial-gradient(circle, rgba(31,79,166,0.18), transparent 60%);
-  }
-  .footer-cta h2{
-    font-family:var(--sans); font-weight:500; font-size:clamp(34px,4vw,56px);
-    line-height:1.02; letter-spacing:-0.03em; margin:0 0 24px; max-width:18ch; position:relative;
-  }
-  .footer-cta h2 em{ font-style:normal; color:var(--brass); }
-  .footer-cta .kicker{
-    font-size:21px; line-height:1.45; color:var(--paper-dim);
-    max-width:46ch; margin:0 0 40px; position:relative;
-  }
-  .footer-cta .cta-row{ position:relative; display:flex; flex-wrap:wrap; gap:16px; }
+  .footer-cta{ border-top:1px solid var(--rule); padding:56px 0 52px; }
+  @media (max-width:900px){ .footer-cta{padding:44px 0 40px} }
+  .footer-cta .cta-row{ display:flex; flex-wrap:wrap; gap:16px; }
   footer{
     border-top:1px solid var(--rule); padding:32px 0 40px;
     display:grid; grid-template-columns:1fr 2fr 1fr; gap:36px;
@@ -531,12 +517,8 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
 
   <!-- FOOTER CTA -->
   <section class="footer-cta">
-    <div class="bg-glow" aria-hidden="true"></div>
-    <h2>One domain. <em>Everything downstream.</em></h2>
-    <p class="kicker">Publish. Issue. Settle. Run a node. Bring a sub-network of your own.</p>
     <div class="cta-row">
-      <a class="cta" href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Build on fabric <span class="arrow" aria-hidden="true">&#8599;</span></a>
-      <a class="cta ghost" href="https://github.com/Networks-for-Humanity/fabric-support/issues" target="_blank" rel="noopener">Get help <span class="arrow" aria-hidden="true">&#8599;</span></a>
+      <a class="cta" href="https://community.nfh.global/" target="_blank" rel="noopener">Get help <span class="arrow" aria-hidden="true">&#8599;</span></a>
     </div>
   </section>
 
