@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Onboarding — NFH fabric</title>
+<meta name="description" content="Bring your domain onto NFH fabric. Enter your FQDN and sign up to DeDi — host the files at your own website, or use the hosted dedi.global solution." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Resolved from the index.html theme system:
+     mood="nfh" (institutional white + royal blue) × voice="institutional" (DM Sans / DM Mono) */
+  :root{
+    --ink:#FFFFFF;
+    --ink-2:#F6F6F4;
+    --paper:#111316;
+    --paper-dim:rgba(17,19,22,.72);
+    --paper-faint:rgba(17,19,22,.5);
+    --paper-ghost:rgba(17,19,22,.14);
+    --brass:#1F4FA6;
+    --brass-dim:rgba(31,79,166,.5);
+    --brass-deep:#163978;
+    --brass-wash:rgba(31,79,166,.05);
+    --rule:rgba(17,19,22,.10);
+    --rule-strong:rgba(17,19,22,.22);
+    --ok:#1B6B45;
+    --warn:#A8231C;
+    --sans:'DM Sans', system-ui, sans-serif;
+    --mono:'DM Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  html{background:#FFFFFF; scroll-behavior:smooth;}
+  html,body{margin:0; padding:0; background:var(--ink); color:var(--paper);}
+  body{
+    font-family:var(--sans);
+    font-size:17px; line-height:1.6;
+    font-feature-settings:"ss01" on;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  ::selection{ background:#1F4FA6; color:#FFFFFF; }
+  a{color:inherit;}
+  .page{max-width:1360px; margin:0 auto; padding:0 72px;}
+  @media (max-width:1100px){ .page{padding:0 48px} }
+  @media (max-width:900px){ .page{padding:0 24px} }
+
+  /* -------- topbar -------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:32px 0 28px; border-bottom:1px solid var(--rule);
+  }
+  .wordmark{
+    display:flex; align-items:baseline; gap:14px;
+    font-family:var(--sans); letter-spacing:-0.015em; text-decoration:none;
+  }
+  .wordmark .nfh-fabric{
+    font-size:30px; font-weight:500; color:var(--paper);
+    letter-spacing:-0.015em; white-space:nowrap;
+  }
+  .wordmark .nfh-by{
+    font-weight:400; font-size:15px; color:var(--paper-dim);
+    letter-spacing:-0.005em; white-space:nowrap;
+  }
+  @media (max-width:640px){ .wordmark .nfh-by{ display:none; } }
+  .topnav{
+    display:flex; gap:30px; align-items:center;
+    font-family:var(--mono); font-size:11.5px; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--paper-dim); font-weight:400;
+  }
+  .topnav a{color:inherit; text-decoration:none; transition:color .15s; white-space:nowrap;}
+  .topnav a:hover{color:var(--paper);}
+  .topnav a.here{color:var(--paper); border-bottom:1px solid var(--brass); padding-bottom:3px;}
+  .topnav .spec{color:var(--brass)}
+  .nav-toggle{
+    display:none; background:none; border:1px solid var(--rule-strong); color:var(--paper);
+    font-family:var(--mono); font-size:11px; letter-spacing:0.14em;
+    text-transform:uppercase; padding:8px 14px; cursor:pointer;
+  }
+  @media (max-width:1000px){
+    .topnav{
+      position:fixed; left:0; right:0; top:0;
+      flex-direction:column; align-items:flex-start; gap:0;
+      background:#FFFFFF; padding:24px;
+      border-bottom:1px solid var(--rule-strong);
+      transform:translateY(-110%); transition:transform .25s ease; z-index:30;
+    }
+    .topnav.open{transform:translateY(0);}
+    .topnav a{padding:14px 0; width:100%; border-bottom:1px solid var(--rule);}
+    .nav-toggle{display:inline-block;}
+  }
+
+  /* -------- shared type -------- */
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--brass); font-weight:500;
+    display:flex; align-items:center; gap:14px;
+  }
+  .eyebrow::after{ content:""; flex:1; max-width:120px; height:1px; background:var(--brass-dim); }
+  .mono{ font-family:var(--mono); }
+
+  /* -------- step 1 : the form -------- */
+  .onb{
+    display:grid; grid-template-columns:1fr 0.85fr; gap:72px;
+    padding:64px 0 72px; align-items:start;
+  }
+  @media (max-width:1000px){ .onb{grid-template-columns:1fr; gap:40px; padding:44px 0 48px} }
+  .onb h1{
+    font-family:var(--sans); font-weight:500;
+    font-size:clamp(38px, 4.6vw, 66px);
+    line-height:1.02; letter-spacing:-0.03em;
+    margin:18px 0 18px; text-wrap:balance;
+  }
+  .onb h1 em{ font-style:normal; font-weight:500; color:var(--brass); }
+  .onb .sub{
+    font-size:clamp(18px,1.6vw,21px); line-height:1.5;
+    color:var(--paper-dim); max-width:46ch; margin:0 0 36px;
+    letter-spacing:-0.005em; text-wrap:balance;
+  }
+  .onb .sub b{color:var(--paper); font-weight:500}
+
+  form.fqdn-form{ max-width:560px; }
+  .field-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.18em;
+    text-transform:uppercase; color:var(--paper-faint); font-weight:500;
+    display:block; margin-bottom:10px;
+  }
+  .field-shell{
+    display:flex; align-items:stretch;
+    border:1px solid var(--rule-strong); background:#FFFFFF;
+    transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  .field-shell:focus-within{ border-color:var(--brass); box-shadow:0 0 0 3px var(--brass-wash); }
+  .field-shell.invalid{ border-color:var(--warn); }
+  .field-prefix{
+    display:flex; align-items:center; padding:0 14px 0 18px; margin:12px 0;
+    border-right:1px solid var(--rule);
+    font-family:var(--mono); font-size:15px; color:var(--paper-faint);
+    user-select:none; background:transparent;
+  }
+  .field-shell input{
+    flex:1; min-width:0; border:none; outline:none; background:transparent;
+    font-family:var(--mono); font-size:17px; color:var(--paper);
+    padding:20px 18px 20px 14px; letter-spacing:-0.01em;
+  }
+  .field-shell input::placeholder{ color:var(--paper-ghost); }
+  .field-help{
+    font-size:14.5px; color:var(--paper-faint); margin:12px 0 0; min-height:22px;
+  }
+  .field-help.error{ color:var(--warn); }
+  .form-actions{ display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-top:26px; }
+  .cta{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-weight:500;
+    font-size:12px; letter-spacing:0.12em; text-transform:uppercase;
+    color:#FFFFFF; background:var(--brass);
+    padding:18px 26px; text-decoration:none; border:none; cursor:pointer;
+    transition:all .18s ease; white-space:nowrap;
+  }
+  .cta:hover{ background:var(--brass-deep); color:#FFFFFF; transform:translateY(-1px); }
+  .cta .arrow{display:inline-block; transition:transform .2s ease}
+  .cta:hover .arrow{transform:translateX(3px)}
+  .cta.ghost{ background:transparent; color:var(--paper); border:1px solid var(--rule-strong); }
+  .cta.ghost:hover{ background:var(--brass-wash); border-color:var(--brass); color:var(--brass); }
+  .cta.small{ padding:13px 18px; font-size:11px; }
+
+  /* right rail — what happens next */
+  .rail{
+    border:1px solid var(--rule); background:var(--ink-2);
+    padding:32px 32px 28px;
+  }
+  .rail h3{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--paper-faint); font-weight:500;
+    margin:0 0 22px;
+  }
+  .rail ol{ margin:0; padding:0; list-style:none; counter-reset:r; }
+  .rail li{
+    counter-increment:r; position:relative; padding:0 0 20px 40px;
+    font-size:16px; line-height:1.5; color:var(--paper-dim);
+  }
+  .rail li:last-child{ padding-bottom:0; }
+  .rail li::before{
+    content:counter(r,decimal-leading-zero);
+    position:absolute; left:0; top:2px;
+    font-family:var(--mono); font-size:11px; letter-spacing:0.1em;
+    color:var(--brass); font-weight:500;
+  }
+  .rail li b{ color:var(--paper); font-weight:500; }
+  .rail li.done{ color:var(--paper-faint); }
+  .rail li.active b{ color:var(--brass); }
+
+  /* -------- step 2 : the two paths -------- */
+  .step2{ display:none; border-top:1px solid var(--rule); padding:72px 0 0; }
+  .step2.on{ display:block; animation:reveal .5s ease both; }
+  @keyframes reveal{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+  @media (prefers-reduced-motion:reduce){ .step2.on{animation:none} }
+
+  .s2-head{
+    display:grid; grid-template-columns:1.25fr 0.75fr; gap:40px; align-items:end;
+    margin-bottom:44px;
+  }
+  @media (max-width:900px){ .s2-head{grid-template-columns:1fr; gap:18px; margin-bottom:32px} }
+  .s2-head h2{
+    font-family:var(--sans); font-weight:500;
+    font-size:clamp(34px, 4vw, 54px); line-height:1.02; letter-spacing:-0.03em;
+    margin:20px 0 0; max-width:20ch; text-wrap:balance;
+  }
+  .s2-head h2 em{ font-style:normal; color:var(--brass); }
+  .s2-head .side{
+    max-width:34ch; justify-self:end; font-size:17px; line-height:1.5;
+    color:var(--paper-dim); padding-bottom:6px;
+  }
+  @media (max-width:900px){ .s2-head .side{justify-self:start} }
+
+  .domain-chip{
+    display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap;
+    border:1px solid var(--brass-dim); background:var(--brass-wash);
+    padding:10px 16px; margin-bottom:8px;
+    font-family:var(--mono); font-size:14px; color:var(--brass);
+  }
+  .domain-chip .lbl{
+    font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--paper-faint);
+  }
+  .domain-chip button{
+    background:none; border:none; cursor:pointer; padding:0;
+    font-family:var(--mono); font-size:10px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--paper-faint); text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  .domain-chip button:hover{ color:var(--brass); }
+
+  .paths{ display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--rule); }
+  @media (max-width:900px){ .paths{grid-template-columns:1fr} }
+  .path{ padding:38px 36px 36px; position:relative; display:flex; flex-direction:column; }
+  .path + .path{ border-left:1px solid var(--rule); }
+  @media (max-width:900px){ .path + .path{ border-left:none; border-top:1px solid var(--rule); } }
+  .path:hover{ background:var(--ink-2); }
+  .path-num{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--brass); font-weight:500;
+    display:flex; align-items:center; gap:12px; margin-bottom:18px;
+  }
+  .path-tag{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--paper-faint); font-weight:400;
+    border:1px solid var(--rule-strong); padding:3px 8px;
+  }
+  .path h3{
+    font-family:var(--sans); font-weight:500; font-size:29px;
+    line-height:1.1; letter-spacing:-0.028em; margin:0 0 14px; text-wrap:balance;
+  }
+  .path .blurb{ font-size:16.5px; line-height:1.5; color:var(--paper-dim); margin:0 0 26px; max-width:38ch; }
+  .path ul{ margin:0 0 28px; padding:0; list-style:none; }
+  /* push the code block + CTAs to a shared baseline across both cards */
+  .path .code-cap{ margin-top:auto; }
+  .path ul li{
+    position:relative; padding:0 0 12px 22px; font-size:15.5px;
+    line-height:1.5; color:var(--paper-dim);
+  }
+  .path ul li::before{
+    content:"—"; position:absolute; left:0; top:0; color:var(--brass-dim);
+  }
+  .path ul li b{ color:var(--paper); font-weight:500; }
+
+  pre.code{
+    margin:0 0 22px; padding:16px 18px; overflow-x:auto;
+    background:#0F1115; color:#E8EAED; border:1px solid var(--rule-strong);
+    font-family:var(--mono); font-size:12.5px; line-height:1.65; letter-spacing:-0.01em;
+  }
+  pre.code .k{ color:#8AB4F8; }
+  pre.code .s{ color:#A5D6A7; }
+  pre.code .c{ color:#7A828E; }
+  .code-cap{
+    font-family:var(--mono); font-size:10px; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--paper-faint);
+    margin:0 0 8px; display:flex; justify-content:space-between; gap:12px; align-items:baseline;
+  }
+  .path .cta-row{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+
+  /* -------- sample files -------- */
+  .samples{ border-top:1px solid var(--rule); padding:64px 0 72px; }
+  .samples .snum{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--brass); font-weight:500;
+  }
+  .samples h2{
+    font-family:var(--sans); font-weight:500; font-size:clamp(30px,3.2vw,42px);
+    line-height:1.05; letter-spacing:-0.03em; margin:18px 0 10px;
+  }
+  .samples .lede{ color:var(--paper-dim); max-width:56ch; margin:0 0 36px; font-size:17px; }
+  .file-list{ border-top:1px solid var(--rule); }
+  .file-row{
+    display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1.6fr) auto;
+    gap:28px; align-items:center;
+    padding:20px 0; border-bottom:1px solid var(--rule);
+  }
+  @media (max-width:900px){
+    .file-row{ grid-template-columns:1fr; gap:8px; align-items:start; }
+  }
+  .file-row .fname{
+    font-family:var(--mono); font-size:14px; color:var(--paper);
+    letter-spacing:-0.01em; word-break:break-all;
+  }
+  .file-row .fdesc{ font-size:15.5px; color:var(--paper-dim); }
+  .file-row .facts{ display:flex; gap:10px; flex-wrap:wrap; }
+  .flink{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--brass); text-decoration:none; border-bottom:1px solid var(--brass-dim);
+    padding-bottom:2px; cursor:pointer; background:none; border-left:none; border-right:none; border-top:none;
+  }
+  .flink:hover{ color:var(--brass-deep); border-color:var(--brass-deep); }
+  .samples .foot-note{
+    margin-top:26px; font-size:15px; color:var(--paper-faint);
+  }
+  .samples .foot-note a{ color:var(--brass); text-decoration:none; border-bottom:1px solid var(--brass-dim); }
+
+  /* -------- footer -------- */
+  .footer-cta{ border-top:1px solid var(--rule); padding:88px 0 80px; position:relative; overflow:hidden; }
+  @media (max-width:900px){ .footer-cta{padding:64px 0} }
+  .footer-cta .bg-glow{
+    position:absolute; right:-160px; top:50%; transform:translateY(-50%);
+    width:820px; height:820px; pointer-events:none;
+    background:radial-gradient(circle, rgba(31,79,166,0.18), transparent 60%);
+  }
+  .footer-cta h2{
+    font-family:var(--sans); font-weight:500; font-size:clamp(34px,4vw,56px);
+    line-height:1.02; letter-spacing:-0.03em; margin:0 0 24px; max-width:18ch; position:relative;
+  }
+  .footer-cta h2 em{ font-style:normal; color:var(--brass); }
+  .footer-cta .kicker{
+    font-size:21px; line-height:1.45; color:var(--paper-dim);
+    max-width:46ch; margin:0 0 40px; position:relative;
+  }
+  .footer-cta .cta-row{ position:relative; display:flex; flex-wrap:wrap; gap:16px; }
+  footer{
+    border-top:1px solid var(--rule); padding:32px 0 40px;
+    display:grid; grid-template-columns:1fr 2fr 1fr; gap:36px;
+    font-family:var(--mono); font-size:11px;
+    letter-spacing:0.14em; color:var(--paper-faint); text-transform:uppercase;
+    align-items:start;
+  }
+  @media (max-width:900px){ footer{grid-template-columns:1fr; gap:32px} }
+  footer .cols{display:flex; gap:64px; flex-wrap:wrap}
+  footer .col{display:flex; flex-direction:column; gap:10px}
+  footer .col b{color:var(--paper-dim); font-weight:500; margin-bottom:6px}
+  footer a{color:inherit; text-decoration:none}
+  footer a:hover{color:var(--brass)}
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <a class="wordmark" href="/">
+      <span class="nfh-fabric">NFH fabric</span>
+      <span class="nfh-by">by Networks for Humanity</span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" id="navToggle">Menu</button>
+    <nav class="topnav" id="topnav" aria-label="Primary">
+      <a href="/#use-cases">Use cases</a>
+      <a href="/#vision">What it is</a>
+      <a href="/#principles">Principles</a>
+      <a href="/#capabilities">Capabilities</a>
+      <a href="/onboarding" class="here">Onboarding</a>
+      <a href="https://github.com/Networks-for-Humanity/fabric-support/issues" class="spec" target="_blank" rel="noopener">Support &#8599;</a>
+    </nav>
+  </header>
+
+  <main>
+  <!-- STEP 1 — FQDN -->
+  <section class="onb">
+    <div>
+      <div class="eyebrow"><span>Onboarding &middot; Step 01</span></div>
+      <h1>Bring your domain <em>onto fabric<span style="color:var(--brass)">.</span></em></h1>
+      <p class="sub">
+        Your <b>domain is your identity</b> on the network. Enter it once — everything else
+        on fabric hangs off it.
+      </p>
+
+      <form class="fqdn-form" id="fqdnForm" novalidate>
+        <label class="field-label" for="fqdn">Fully qualified domain name</label>
+        <div class="field-shell" id="fieldShell">
+          <span class="field-prefix" aria-hidden="true">https://</span>
+          <input
+            id="fqdn" name="fqdn" type="text"
+            placeholder="yourcompany.com"
+            autocomplete="url" autocapitalize="off" autocorrect="off" spellcheck="false"
+            aria-describedby="fqdnHelp" />
+        </div>
+        <p class="field-help" id="fqdnHelp">Domain only — no <span class="mono">https://</span>, no paths, no trailing slash.</p>
+        <div class="form-actions">
+          <button class="cta" type="submit">Continue <span class="arrow" aria-hidden="true">&rarr;</span></button>
+          <span class="mono" style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--paper-faint)">No account needed yet</span>
+        </div>
+      </form>
+    </div>
+
+    <aside class="rail" aria-label="What happens next">
+      <h3>What happens next</h3>
+      <ol>
+        <li class="active" id="railStep1"><b>Claim your domain.</b> Tell us the FQDN you control.</li>
+        <li id="railStep2"><b>Sign up to DeDi.</b> Publish a namespace against that domain — self-hosted or hosted for you.</li>
+        <li id="railStep3"><b>Publish your directories.</b> Keys, catalogues, member lists — whatever you want discoverable.</li>
+        <li id="railStep4"><b>Go live on fabric.</b> Counterparties can now find and verify you.</li>
+      </ol>
+    </aside>
+  </section>
+
+  <!-- STEP 2 — TWO PATHS -->
+  <section class="step2" id="step2" aria-live="polite">
+    <div class="s2-head">
+      <div>
+        <div class="domain-chip">
+          <span class="lbl">Your domain</span>
+          <span class="fq mono" id="chipDomain">yourcompany.com</span>
+          <button type="button" id="editDomain">Change</button>
+        </div>
+        <div class="eyebrow" style="margin-top:18px"><span>Onboarding &middot; Step 02</span></div>
+        <h2>Sign up to <em>DeDi.</em></h2>
+      </div>
+      <p class="side">
+        DeDi is the decentralised directory behind fabric — DNS for trust. Your namespace
+        proves that <span class="fq mono" style="font-size:15px">yourcompany.com</span> is yours, and carries the
+        records others look up. Two ways to stand it up. Both are valid; both are switchable later.
+      </p>
+    </div>
+
+    <div class="paths">
+      <!-- PATH A -->
+      <article class="path">
+        <div class="path-num"><span>Path A</span> <span class="path-tag">Self-hosted</span></div>
+        <h3>Host the files at your own website.</h3>
+        <p class="blurb">
+          You serve two static JSON files from your own domain. No intermediary holds your
+          namespace — the domain you already control is the proof.
+        </p>
+        <ul>
+          <li><b>You keep custody.</b> Records live on your infrastructure.</li>
+          <li><b>Zero dependency.</b> Nothing to sign up for, nothing to pay for.</li>
+          <li><b>You run uptime.</b> If your site is down, your namespace is unresolvable.</li>
+        </ul>
+        <div class="code-cap"><span>Serve these two paths</span><span>static · public · CORS *</span></div>
+        <pre class="code"><span class="c"># namespace descriptor</span>
+https://<span class="fq">yourcompany.com</span>/.well-known/dedi.json
+
+<span class="c"># one file per directory you publish</span>
+https://<span class="fq">yourcompany.com</span>/.well-known/dedi/members.json</pre>
+        <div class="cta-row">
+          <a class="cta small" href="#samples">Get the sample files <span class="arrow" aria-hidden="true">&darr;</span></a>
+          <a class="cta small ghost" href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">Self-host guide <span class="arrow" aria-hidden="true">&#8599;</span></a>
+        </div>
+      </article>
+
+      <!-- PATH B -->
+      <article class="path">
+        <div class="path-num"><span>Path B</span> <span class="path-tag">Hosted</span></div>
+        <h3>Use the hosted dedi.global solution.</h3>
+        <p class="blurb">
+          dedi.global serves the same files on your behalf. You verify the domain once with a
+          DNS record, then manage records through the console or the API.
+        </p>
+        <ul>
+          <li><b>Live in minutes.</b> Nothing to deploy, nothing to keep up.</li>
+          <li><b>Managed uptime</b> and cryptographic signing handled for you.</li>
+          <li><b>Same namespace.</b> Still keyed to your domain — portable out at any time.</li>
+        </ul>
+        <div class="code-cap"><span>Verify ownership, then publish</span><span>DNS TXT · one-time</span></div>
+        <pre class="code"><span class="c"># add to your DNS, then hit verify</span>
+_dedi.<span class="fq">yourcompany.com</span>. IN TXT
+  <span class="s">"dedi-verify=ns_7f3a91c4e0b8"</span></pre>
+        <div class="cta-row">
+          <a class="cta small" href="https://dedi.global" target="_blank" rel="noopener">Create hosted namespace <span class="arrow" aria-hidden="true">&#8599;</span></a>
+          <a class="cta small ghost" href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">Hosted guide <span class="arrow" aria-hidden="true">&#8599;</span></a>
+        </div>
+      </article>
+    </div>
+
+    <!-- SAMPLE FILES -->
+    <div class="samples" id="samples">
+      <div class="snum">Sample files</div>
+      <h2>Start from a working example.</h2>
+      <p class="lede">
+        Each sample below is pre-filled with <span class="fq mono" style="font-size:15.5px">yourcompany.com</span>.
+        Download, edit the values, and drop them at the paths above.
+      </p>
+
+      <div class="file-list">
+        <div class="file-row">
+          <div class="fname">/.well-known/dedi.json</div>
+          <div class="fdesc">Your namespace descriptor — who you are, your public key, and the directories you publish.</div>
+          <div class="facts">
+            <button class="flink" type="button" data-sample="namespace">Download</button>
+            <button class="flink" type="button" data-preview="namespace">Preview</button>
+          </div>
+        </div>
+        <div class="file-row">
+          <div class="fname">/.well-known/dedi/members.json</div>
+          <div class="fdesc">A directory — a list of records against a schema. Members, licences, keys, catalogue entries.</div>
+          <div class="facts">
+            <button class="flink" type="button" data-sample="directory">Download</button>
+            <button class="flink" type="button" data-preview="directory">Preview</button>
+          </div>
+        </div>
+        <div class="file-row">
+          <div class="fname">dns-txt.txt</div>
+          <div class="fdesc">The one-time DNS TXT record for the hosted path, formatted for your registrar.</div>
+          <div class="facts">
+            <button class="flink" type="button" data-sample="dns">Download</button>
+            <button class="flink" type="button" data-preview="dns">Preview</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="previewWrap" hidden style="margin-top:28px">
+        <div class="code-cap"><span id="previewName">preview</span><span>pre-filled for your domain</span></div>
+        <pre class="code" id="previewBody"></pre>
+      </div>
+
+      <p class="foot-note">
+        Full schema reference and validation rules live in the
+        <a href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">DeDi documentation &#8599;</a>.
+      </p>
+    </div>
+  </section>
+  </main>
+
+  <!-- FOOTER CTA -->
+  <section class="footer-cta">
+    <div class="bg-glow" aria-hidden="true"></div>
+    <h2>One domain. <em>Everything downstream.</em></h2>
+    <p class="kicker">Publish. Issue. Settle. Run a node. Bring a sub-network of your own.</p>
+    <div class="cta-row">
+      <a class="cta" href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Build on fabric <span class="arrow" aria-hidden="true">&#8599;</span></a>
+      <a class="cta ghost" href="https://github.com/Networks-for-Humanity/fabric-support/issues" target="_blank" rel="noopener">Get help <span class="arrow" aria-hidden="true">&#8599;</span></a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wordmark" style="font-size:14px">
+      <span class="nfh-fabric" style="font-size:18px">NFH fabric</span>
+    </div>
+    <div class="cols">
+      <div class="col"><b>Network</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Specification</a><a href="https://dedi.global" target="_blank" rel="noopener">Registry</a><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Governance</a></div>
+      <div class="col"><b>Build</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">SDKs</a><a href="/onboarding">Onboarding</a><a href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">DeDi docs</a></div>
+      <div class="col"><b>Read</b><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">The note</a><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Working group</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Changelog</a></div>
+    </div>
+    <div style="text-align:right">
+      <div>&copy; 2026 NFH Foundation</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ================== NAV TOGGLE ================== */
+(function(){
+  const t = document.getElementById('navToggle');
+  const n = document.getElementById('topnav');
+  if(!t || !n) return;
+  t.addEventListener('click', function(){
+    const open = n.classList.toggle('open');
+    t.setAttribute('aria-expanded', open?'true':'false');
+  });
+  n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');});});
+})();
+
+/* ================== FQDN FORM ================== */
+(function(){
+  const form   = document.getElementById('fqdnForm');
+  const input  = document.getElementById('fqdn');
+  const shell  = document.getElementById('fieldShell');
+  const help   = document.getElementById('fqdnHelp');
+  const step2  = document.getElementById('step2');
+  const HELP_DEFAULT = help.innerHTML;
+
+  /* Strip anything that isn't the host: scheme, credentials, port, path, query. */
+  function normalise(raw){
+    let v = (raw||'').trim().toLowerCase();
+    v = v.replace(/^[a-z][a-z0-9+.-]*:\/\//,'');
+    v = v.replace(/^[^@/]*@/,'');
+    v = v.split(/[/?#]/)[0];
+    v = v.replace(/:\d+$/,'');
+    v = v.replace(/\.$/,'');
+    return v;
+  }
+
+  /* One or more labels, then a TLD of 2+ letters. Labels: alnum, inner hyphens. */
+  const FQDN_RE = /^(?=.{4,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+
+  function fail(msg){
+    shell.classList.add('invalid');
+    help.classList.add('error');
+    help.textContent = msg;
+    input.focus();
+  }
+  function clearFail(){
+    shell.classList.remove('invalid');
+    help.classList.remove('error');
+    help.innerHTML = HELP_DEFAULT;
+  }
+
+  input.addEventListener('input', function(){ if(shell.classList.contains('invalid')) clearFail(); });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const fqdn = normalise(input.value);
+    if(!fqdn){ return fail('Enter the domain you control, e.g. yourcompany.com'); }
+    if(!FQDN_RE.test(fqdn)){ return fail('That does not look like a valid domain. Try yourcompany.com'); }
+
+    clearFail();
+    input.value = fqdn;
+    window.__fabricFqdn = fqdn;
+
+    document.querySelectorAll('.fq').forEach(function(el){ el.textContent = fqdn; });
+    document.getElementById('railStep1').classList.add('done');
+    document.getElementById('railStep1').classList.remove('active');
+    document.getElementById('railStep2').classList.add('active');
+
+    step2.classList.add('on');
+    step2.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  document.getElementById('editDomain').addEventListener('click', function(){
+    input.focus();
+    input.select();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+
+/* ================== SAMPLE FILES ================== */
+(function(){
+  function d(fqdn){ return fqdn || 'yourcompany.com'; }
+  function orgName(fqdn){
+    const base = d(fqdn).replace(/^www\./,'').split('.')[0];
+    return base.charAt(0).toUpperCase() + base.slice(1);
+  }
+
+  const SAMPLES = {
+    namespace: function(f){
+      return {
+        name: 'dedi.json',
+        type: 'application/json',
+        body: JSON.stringify({
+          "dedi_version": "1.0",
+          "namespace": {
+            "id": d(f),
+            "name": orgName(f),
+            "domain": d(f),
+            "description": "Public registries published by " + orgName(f) + ".",
+            "contact": "registry@" + d(f)
+          },
+          "verification": {
+            "method": "well-known",
+            "public_key": "z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+            "algorithm": "ed25519"
+          },
+          "directories": [
+            {
+              "id": "members",
+              "name": "Member registry",
+              "url": "https://" + d(f) + "/.well-known/dedi/members.json",
+              "schema": "https://schemas.dedi.global/member/v1"
+            }
+          ],
+          "updated_at": "2026-08-12T09:00:00Z"
+        }, null, 2)
+      };
+    },
+    directory: function(f){
+      return {
+        name: 'members.json',
+        type: 'application/json',
+        body: JSON.stringify({
+          "dedi_version": "1.0",
+          "directory": {
+            "id": "members",
+            "namespace": d(f),
+            "name": "Member registry",
+            "schema": "https://schemas.dedi.global/member/v1"
+          },
+          "records": [
+            {
+              "id": "MBR-000123",
+              "name": "Example Member Pvt Ltd",
+              "status": "active",
+              "valid_from": "2026-01-01",
+              "valid_to": "2027-01-01"
+            },
+            {
+              "id": "MBR-000124",
+              "name": "Second Member LLP",
+              "status": "revoked",
+              "valid_from": "2025-04-01",
+              "valid_to": "2026-03-31"
+            }
+          ],
+          "record_count": 2,
+          "updated_at": "2026-08-12T09:00:00Z"
+        }, null, 2)
+      };
+    },
+    dns: function(f){
+      return {
+        name: 'dns-txt.txt',
+        type: 'text/plain',
+        body:
+          '; DeDi domain verification for ' + d(f) + '\n' +
+          '; Add this TXT record, then click Verify in the dedi.global console.\n' +
+          '\n' +
+          'Host:   _dedi\n' +
+          'Type:   TXT\n' +
+          'TTL:    300\n' +
+          'Value:  dedi-verify=ns_7f3a91c4e0b8\n' +
+          '\n' +
+          '; Zone-file form:\n' +
+          '_dedi.' + d(f) + '. 300 IN TXT "dedi-verify=ns_7f3a91c4e0b8"\n'
+      };
+    }
+  };
+
+  document.querySelectorAll('[data-sample]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const s = SAMPLES[btn.dataset.sample](window.__fabricFqdn);
+      const blob = new Blob([s.body], {type:s.type});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = s.name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    });
+  });
+
+  const wrap = document.getElementById('previewWrap');
+  const pname = document.getElementById('previewName');
+  const pbody = document.getElementById('previewBody');
+  document.querySelectorAll('[data-preview]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const s = SAMPLES[btn.dataset.preview](window.__fabricFqdn);
+      pname.textContent = s.name;
+      pbody.textContent = s.body;
+      wrap.hidden = false;
+      wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+    });
+  });
+})();
+</script>
+</body>
+</html>
