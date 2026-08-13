@@ -331,6 +331,13 @@
   footer .col b{color:var(--paper-dim); font-weight:500; margin-bottom:6px}
   footer a{color:inherit; text-decoration:none}
   footer a:hover{color:var(--brass)}
+  /* Honeypot. Positioned away rather than display:none — some bots skip
+     hidden fields but happily fill this one. Never shown, never focusable,
+     never announced. */
+  .nope{
+    position:absolute; left:-9999px; top:auto;
+    width:1px; height:1px; overflow:hidden;
+  }
   .sr-only{
     position:absolute; width:1px; height:1px; padding:0; margin:-1px;
     overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
@@ -377,6 +384,10 @@
             placeholder="yourcompany.com"
             autocomplete="url" autocapitalize="off" autocorrect="off" spellcheck="false"
             aria-describedby="fqdnHelp" />
+        </div>
+        <div class="nope" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
         </div>
         <p class="field-help" id="fqdnHelp">Domain only — no <span class="mono">https://</span>, no paths, no trailing slash.</p>
         <div class="form-actions">
@@ -552,12 +563,12 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
 
 /* ================== FQDN FORM ================== */
 (function(){
-  /* Where submitted domains are recorded. Same-origin: nginx proxies this path
-     to the collector running on the same host (see server/README.md), so there
-     is no cross-origin call and no absolute URL to keep in sync. Until that
-     proxy exists the request simply fails, which is harmless — recording is
-     fire-and-forget and never stands between the visitor and step 2. */
-  const DOMAIN_ENDPOINT = '/api/domains';
+  /* Where submitted domains are recorded — see api/README.md. Either paste the
+     deployed Vercel URL here, or have nginx proxy /api/ to it and use the
+     same-origin path instead, which avoids CORS entirely.
+     Empty means don't call: harmless, since recording is fire-and-forget and
+     never stands between the visitor and step 2. */
+  const DOMAIN_ENDPOINT = '';  // e.g. https://fabric-onboarding.vercel.app/api/domains
 
   const form   = document.getElementById('fqdnForm');
   const input  = document.getElementById('fqdn');
@@ -597,13 +608,21 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
   /* Hand the domain to the backend. Deliberately silent: a logging outage is
      our problem, not the visitor's, so failures are swallowed and step 2
      opens either way. */
+  var openedAt = Date.now();
+
   function record(fqdn){
     if(!DOMAIN_ENDPOINT || !window.fetch) return;
     try{
       fetch(DOMAIN_ENDPOINT, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({fqdn:fqdn}),
+        body:JSON.stringify({
+          fqdn:fqdn,
+          /* Both are spam signals, not data: the honeypot is a field no
+             human can see, and elapsed is how long the page was open. */
+          website:(document.getElementById('website')||{}).value || '',
+          elapsed:Date.now() - openedAt
+        }),
         keepalive:true
       }).catch(function(){});
     }catch(err){ /* offline, blocked, file:// — carry on */ }

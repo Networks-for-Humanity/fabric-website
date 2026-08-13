@@ -1,8 +1,8 @@
 # The domains list lives in Networks-for-Humanity/fabric-onboarding, not here.
-# fabric-website is public and Pages-served, so a copy committed here would be
-# downloadable at fabric.nfh.global/fabric.domains.txt.
+# fabric-website is public, so a copy committed here would be public too.
 fabric.domains.txt
 
 # Never commit the data-repo token to a public repository.
 .env
-.dev.vars
+.env*.local
+.vercel

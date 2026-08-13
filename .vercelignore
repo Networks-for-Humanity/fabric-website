@@ -1,0 +1,8 @@
+# Only the function is deployed to Vercel. The site itself is served by
+# nginx at fabric.nfh.global, and a second copy on a vercel.app URL would
+# be a confusing, stale duplicate.
+index.html
+index_v1.html
+index_v2.html
+index.backup.html
+onboarding/

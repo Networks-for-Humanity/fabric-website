@@ -1,0 +1,5 @@
+{
+  "name": "fabric-onboarding-api",
+  "private": true,
+  "type": "module"
+}
