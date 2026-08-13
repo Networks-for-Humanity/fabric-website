@@ -28,13 +28,29 @@ token never touches your server.
 is just another file. If `/onboarding` 404s without a trailing slash, add the
 one-line block in `onboarding/nginx-snippet.conf`.
 
-**2. The function** — `./api/setup.sh` does the whole thing: signs in, links
-the project, sets the environment variables, deploys, and writes the resulting
-URL into the page. The GitHub token is prompted for with echo off and piped
-straight to Vercel, never written to disk.
+**2. The function.** Two ways; the first is better.
 
-Prefer it by hand? `npx vercel --prod`, then set the variables below in
-**Project → Settings → Environment Variables**.
+**Connect the repo (recommended).** In the Vercel dashboard: **Add New →
+Project → Import Git Repository →** `Networks-for-Humanity/fabric-website`.
+
+| Setting | Value |
+| --- | --- |
+| Framework Preset | **Other** |
+| Root Directory | `./` (repo root) |
+| Build Command | leave empty — nothing to build |
+| Output Directory | leave empty |
+| Install Command | leave empty — no dependencies |
+
+Add the environment variables below, then **Deploy**.
+
+After this, Vercel builds on every push: `main` becomes production, and any
+other branch gets its own preview URL. Nothing to run by hand again, and no
+Vercel token has to exist anywhere.
+
+**Or from the CLI:** `./api/setup.sh` signs in, links the project, sets the
+variables, deploys, and writes the resulting URL into the page. The GitHub
+token is prompted for with echo off and piped straight to Vercel, never written
+to disk. By hand it's `npx vercel --prod` plus the variables below.
 
 `.vercelignore` keeps the HTML out, so only the function deploys — no stale
 duplicate of the site on a `vercel.app` URL competing for search results.

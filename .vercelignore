@@ -6,3 +6,8 @@ index_v1.html
 index_v2.html
 index.backup.html
 onboarding/
+
+# Docs and the setup script live in api/ for discoverability, but they are not
+# part of the deployment — an uploaded README can end up served at /api/README.md.
+api/README.md
+api/setup.sh
