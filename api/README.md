@@ -28,12 +28,13 @@ token never touches your server.
 is just another file. If `/onboarding` 404s without a trailing slash, add the
 one-line block in `onboarding/nginx-snippet.conf`.
 
-**2. The function:**
+**2. The function** — `./api/setup.sh` does the whole thing: signs in, links
+the project, sets the environment variables, deploys, and writes the resulting
+URL into the page. The GitHub token is prompted for with echo off and piped
+straight to Vercel, never written to disk.
 
-```sh
-npx vercel            # preview
-npx vercel --prod     # production
-```
+Prefer it by hand? `npx vercel --prod`, then set the variables below in
+**Project → Settings → Environment Variables**.
 
 `.vercelignore` keeps the HTML out, so only the function deploys — no stale
 duplicate of the site on a `vercel.app` URL competing for search results.
@@ -48,8 +49,8 @@ Set these in **Project → Settings → Environment Variables**:
 | `MAX_DOMAINS` | `5000` (optional ceiling) |
 | `REQUIRE_DNS` | `0` only to disable the DNS check |
 
-**3. Connect them** — one line near the top of the script in
-`onboarding/index.html`:
+**3. Connect them** — `setup.sh` does this for you. By hand it is one line
+near the top of the script in `onboarding/index.html`:
 
 ```js
 const DOMAIN_ENDPOINT = 'https://<project>.vercel.app/api/domains';
