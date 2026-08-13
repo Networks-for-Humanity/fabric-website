@@ -15,13 +15,15 @@ can't see.
 
 ## Deploy
 
+This deployment is the onboarding page **and** its API — one standalone thing,
+independent of the main site. The page is served at the root, the function at
+`/api/domains`, same origin. There is nothing to wire up between them and no
+CORS involved.
+
 ```sh
 npx vercel            # preview
 npx vercel --prod     # production
 ```
-
-`.vercelignore` excludes the HTML, so only the function deploys — nginx keeps
-serving the site, and no stale duplicate appears on a `vercel.app` URL.
 
 Set these in **Project → Settings → Environment Variables**:
 
@@ -29,25 +31,25 @@ Set these in **Project → Settings → Environment Variables**:
 | --- | --- |
 | `DATA_REPO_TOKEN` | the PAT — mark it **Sensitive** |
 | `DATA_REPO` | `Networks-for-Humanity/fabric-onboarding` |
-| `SITE_ORIGIN` | `https://fabric.nfh.global` |
 | `MAX_DOMAINS` | `5000` (optional ceiling) |
 | `REQUIRE_DNS` | `0` only to disable the DNS check |
+| `SITE_ORIGIN` | only if the form is ever hosted on another origin |
 
-Then point the form at it — one line near the top of the script in
-`onboarding/index.html`:
+Then visit the deployment URL — it opens straight on the onboarding page, and
+the form is already pointed at its own `/api/domains`.
 
-```js
-const DOMAIN_ENDPOINT = 'https://<project>.vercel.app/api/domains';
-```
+### Relationship to the main site
 
-Or, since you already run nginx, proxy it and skip CORS entirely:
+`fabric-website` (this repo) still serves `fabric.nfh.global` from nginx and is
+untouched by this deployment — `.vercelignore` keeps the marketing pages out, so
+no stale duplicate of the site appears on a `vercel.app` URL competing for
+search results.
 
-```nginx
-location /api/ { proxy_pass https://<project>.vercel.app/api/; }
-```
-
-then leave `DOMAIN_ENDPOINT = '/api/domains'`. This also keeps the endpoint
-stable if you ever move hosts.
+The onboarding page's header and footer link back to `fabric.nfh.global`
+absolutely, so navigation works from wherever this is hosted. Nothing on the
+main site currently links *to* onboarding; add that link once the URL is
+settled, ideally after pointing a custom domain at the deployment so the link
+never has to change.
 
 ### The token
 

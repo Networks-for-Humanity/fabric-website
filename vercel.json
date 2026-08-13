@@ -1,8 +1,21 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "functions": {
-    "api/domains.js": {
-      "maxDuration": 10
+    "api/domains.js": { "maxDuration": 10 }
+  },
+  "rewrites": [
+    { "source": "/", "destination": "/onboarding" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
     }
-  }
+  ]
 }
