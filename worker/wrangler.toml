@@ -1,0 +1,12 @@
+name = "fabric-onboarding"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+DATA_REPO = "Networks-for-Humanity/fabric-onboarding"
+DATA_PATH = "fabric.domains.txt"
+DATA_BRANCH = "main"
+SITE_ORIGIN = "https://fabric.nfh.global"
+
+# DATA_REPO_TOKEN is a secret, never a var:
+#   npx wrangler secret put DATA_REPO_TOKEN

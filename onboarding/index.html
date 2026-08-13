@@ -552,11 +552,12 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
 
 /* ================== FQDN FORM ================== */
 (function(){
-  /* Where submitted domains are recorded. Same-origin by default; point this
-     at the backend's host if the site is served separately from the API.
-     If the endpoint is unreachable the form still works — recording is
-     fire-and-forget and never stands between the visitor and step 2. */
-  const DOMAIN_ENDPOINT = '/api/domains';
+  /* Where submitted domains are recorded — the deployed worker's URL, which
+     appends them to fabric.domains.txt in the fabric-onboarding repo. See
+     worker/README.md. Until it is deployed this points nowhere, which is
+     harmless: recording is fire-and-forget and never stands between the
+     visitor and step 2. */
+  const DOMAIN_ENDPOINT = '';  // e.g. https://fabric-onboarding.<subdomain>.workers.dev
 
   const form   = document.getElementById('fqdnForm');
   const input  = document.getElementById('fqdn');
@@ -597,7 +598,7 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
      our problem, not the visitor's, so failures are swallowed and step 2
      opens either way. */
   function record(fqdn){
-    if(!window.fetch) return;
+    if(!DOMAIN_ENDPOINT || !window.fetch) return;
     try{
       fetch(DOMAIN_ENDPOINT, {
         method:'POST',
