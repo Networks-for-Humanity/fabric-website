@@ -1,4 +1,9 @@
-# Domains collected by the onboarding form. Written by the running server —
-# see server/README.md. Kept out of git so deploys don't conflict with it and
-# submissions don't land in a public repo.
+# Local cache of the domains list. The record lives in the private repo
+# Anusree-J/fabric-onboarding — see server/README.md.
+#
+# Do not track this here: fabric-website is public and Pages-served, so a
+# committed copy would be downloadable at fabric.nfh.global/fabric.domains.txt.
 fabric.domains.txt
+
+# Never commit the data-repo token to a public repository.
+.env

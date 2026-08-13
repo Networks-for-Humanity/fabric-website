@@ -17,6 +17,7 @@ const http = require('http');
 const fs = require('fs');
 const fsp = require('fs/promises');
 const path = require('path');
+const store = require('./github-store');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -91,8 +92,85 @@ function record(fqdn) {
     if (known.has(fqdn)) return { stored: false, duplicate: true };
     await fsp.appendFile(DOMAINS_FILE, fqdn + '\n', 'utf8');
     known.add(fqdn);
+    scheduleSync();
     return { stored: true, duplicate: false };
   });
+}
+
+/* ------------------------------------------------------------------ *
+ * Mirroring the list into the private data repo
+ *
+ * The local write above already succeeded by the time we get here, so
+ * this is allowed to be slow and to fail. Syncs are debounced, which
+ * turns a burst of submissions into one commit instead of one per
+ * domain, and retried with backoff so a GitHub outage delays the mirror
+ * rather than dropping anything.
+ * ------------------------------------------------------------------ */
+
+const SYNC_DEBOUNCE_MS = Number(process.env.SYNC_DEBOUNCE_MS || 2000);
+const SYNC_MAX_BACKOFF_MS = 5 * 60 * 1000;
+
+let syncTimer = null;
+let syncing = false;
+let pending = false;
+let backoff = 0;
+
+function scheduleSync(delay = SYNC_DEBOUNCE_MS) {
+  if (!store.enabled) return;
+  pending = true;
+  if (syncTimer || syncing) return;
+  syncTimer = setTimeout(runSync, delay);
+  syncTimer.unref();
+}
+
+async function runSync() {
+  syncTimer = null;
+  if (syncing) return;
+  syncing = true;
+
+  try {
+    while (pending) {
+      pending = false;
+      const snapshot = Array.from(known);
+      const result = await store.syncUnion(snapshot);
+      if (result.added > 0) {
+        console.log(`[fabric] synced ${result.added} domain(s) to ${store.REPO} (${result.total} on file)`);
+      }
+      backoff = 0;
+    }
+  } catch (err) {
+    pending = true;
+    backoff = backoff ? Math.min(backoff * 2, SYNC_MAX_BACKOFF_MS) : 15000;
+    console.error(`[fabric] sync failed, retrying in ${Math.round(backoff / 1000)}s:`, err.message);
+    syncTimer = setTimeout(runSync, backoff);
+    syncTimer.unref();
+  } finally {
+    syncing = false;
+  }
+}
+
+/**
+ * Pull whatever is already upstream at boot and merge it in, so a fresh
+ * host (or a second instance) does not re-add domains that are already
+ * recorded, and so the local file reflects the full list.
+ */
+async function reconcileAtStartup() {
+  if (!store.enabled) return;
+  try {
+    const remote = await store.fetchList();
+    const missingLocally = remote.domains.filter((d) => !known.has(d));
+    if (missingLocally.length) {
+      await enqueue(async () => {
+        await fsp.appendFile(DOMAINS_FILE, missingLocally.join('\n') + '\n', 'utf8');
+        for (const d of missingLocally) known.add(d);
+      });
+    }
+    console.log(`[fabric] data repo: ${store.REPO}:${store.BRANCH}/${store.DATA_PATH} (${remote.domains.length} upstream)`);
+    if (known.size > remote.domains.length) scheduleSync(0);
+  } catch (err) {
+    console.error('[fabric] could not read the data repo at startup:', err.message);
+    scheduleSync();
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -299,7 +377,12 @@ const server = http.createServer((req, res) => {
   }
 
   if (pathname === '/api/health') {
-    return sendJson(req, res, 200, { ok: true, domains: known.size });
+    return sendJson(req, res, 200, {
+      ok: true,
+      domains: known.size,
+      repo: store.enabled ? `${store.REPO}:${store.BRANCH}/${store.DATA_PATH}` : null,
+      syncPending: store.enabled ? (pending || syncing) : false
+    });
   }
 
   if (SERVE_STATIC && (req.method === 'GET' || req.method === 'HEAD')) {
@@ -313,6 +396,10 @@ const server = http.createServer((req, res) => {
 loadExisting();
 server.listen(PORT, HOST, () => {
   console.log(`[fabric] listening on http://${HOST}:${PORT}`);
-  console.log(`[fabric] domains file: ${DOMAINS_FILE} (${known.size} on file)`);
+  console.log(`[fabric] local file: ${DOMAINS_FILE} (${known.size} on file)`);
   console.log(`[fabric] static: ${SERVE_STATIC ? STATIC_DIR : 'disabled'}`);
+  if (!store.enabled) {
+    console.log('[fabric] data repo: disabled (set DATA_REPO_TOKEN to mirror the list)');
+  }
+  reconcileAtStartup();
 });
