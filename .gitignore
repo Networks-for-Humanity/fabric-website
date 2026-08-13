@@ -1,0 +1,4 @@
+# Domains collected by the onboarding form. Written by the running server —
+# see server/README.md. Kept out of git so deploys don't conflict with it and
+# submissions don't land in a public repo.
+fabric.domains.txt

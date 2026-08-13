@@ -552,6 +552,12 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
 
 /* ================== FQDN FORM ================== */
 (function(){
+  /* Where submitted domains are recorded. Same-origin by default; point this
+     at the backend's host if the site is served separately from the API.
+     If the endpoint is unreachable the form still works — recording is
+     fire-and-forget and never stands between the visitor and step 2. */
+  const DOMAIN_ENDPOINT = '/api/domains';
+
   const form   = document.getElementById('fqdnForm');
   const input  = document.getElementById('fqdn');
   const shell  = document.getElementById('fieldShell');
@@ -587,6 +593,21 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
 
   input.addEventListener('input', function(){ if(shell.classList.contains('invalid')) clearFail(); });
 
+  /* Hand the domain to the backend. Deliberately silent: a logging outage is
+     our problem, not the visitor's, so failures are swallowed and step 2
+     opens either way. */
+  function record(fqdn){
+    if(!window.fetch) return;
+    try{
+      fetch(DOMAIN_ENDPOINT, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({fqdn:fqdn}),
+        keepalive:true
+      }).catch(function(){});
+    }catch(err){ /* offline, blocked, file:// — carry on */ }
+  }
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
     const fqdn = normalise(input.value);
@@ -596,6 +617,7 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
     clearFail();
     input.value = fqdn;
     window.__fabricFqdn = fqdn;
+    record(fqdn);
 
     document.querySelectorAll('.fq').forEach(function(el){ el.textContent = fqdn; });
     document.getElementById('railStep1').classList.add('done');
