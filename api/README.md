@@ -13,17 +13,30 @@ a token in a public web page is a public token — anyone could read it out of t
 page source. This is just somewhere for the credential to live that the browser
 can't see.
 
+## How the pieces sit
+
+The **page** is a static file deployed with the rest of the site, live at
+`fabric.nfh.global/onboarding`. The **function** runs on Vercel. The form calls
+it cross-origin, which is why `SITE_ORIGIN` matters.
+
+Nothing is proxied. nginx keeps doing exactly what it already does, and the
+token never touches your server.
+
 ## Deploy
 
-This deployment is the onboarding page **and** its API — one standalone thing,
-independent of the main site. The page is served at the root, the function at
-`/api/domains`, same origin. There is nothing to wire up between them and no
-CORS involved.
+**1. The page** — ships with your normal site deploy; `onboarding/index.html`
+is just another file. If `/onboarding` 404s without a trailing slash, add the
+one-line block in `onboarding/nginx-snippet.conf`.
+
+**2. The function:**
 
 ```sh
 npx vercel            # preview
 npx vercel --prod     # production
 ```
+
+`.vercelignore` keeps the HTML out, so only the function deploys — no stale
+duplicate of the site on a `vercel.app` URL competing for search results.
 
 Set these in **Project → Settings → Environment Variables**:
 
@@ -31,25 +44,30 @@ Set these in **Project → Settings → Environment Variables**:
 | --- | --- |
 | `DATA_REPO_TOKEN` | the PAT — mark it **Sensitive** |
 | `DATA_REPO` | `Networks-for-Humanity/fabric-onboarding` |
+| `SITE_ORIGIN` | `https://fabric.nfh.global` — required, this is a cross-origin call |
 | `MAX_DOMAINS` | `5000` (optional ceiling) |
 | `REQUIRE_DNS` | `0` only to disable the DNS check |
-| `SITE_ORIGIN` | only if the form is ever hosted on another origin |
 
-Then visit the deployment URL — it opens straight on the onboarding page, and
-the form is already pointed at its own `/api/domains`.
+**3. Connect them** — one line near the top of the script in
+`onboarding/index.html`:
 
-### Relationship to the main site
+```js
+const DOMAIN_ENDPOINT = 'https://<project>.vercel.app/api/domains';
+```
 
-`fabric-website` (this repo) still serves `fabric.nfh.global` from nginx and is
-untouched by this deployment — `.vercelignore` keeps the marketing pages out, so
-no stale duplicate of the site appears on a `vercel.app` URL competing for
-search results.
+Until that's filled in the page skips the call entirely: the form still works
+and opens step 2, nothing is recorded.
 
-The onboarding page's header and footer link back to `fabric.nfh.global`
-absolutely, so navigation works from wherever this is hosted. Nothing on the
-main site currently links *to* onboarding; add that link once the URL is
-settled, ideally after pointing a custom domain at the deployment so the link
-never has to change.
+Check it end to end from the live page, or:
+
+```sh
+curl -X POST -H 'Content-Type: application/json' \
+  -H 'Origin: https://fabric.nfh.global' \
+  -d '{"fqdn":"deploy-test.example"}' https://<project>.vercel.app/api/domains
+```
+
+`deploy-test.example` won't resolve, so it will be filtered — use a real domain
+you don't mind committing, then delete the line from the data repo.
 
 ### The token
 

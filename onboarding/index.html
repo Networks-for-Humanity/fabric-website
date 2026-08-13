@@ -349,17 +349,17 @@
 
   <!-- TOPBAR -->
   <header class="topbar">
-    <a class="wordmark" href="https://fabric.nfh.global/">
+    <a class="wordmark" href="/">
       <span class="nfh-fabric">NFH fabric</span>
       <span class="nfh-by">by Networks for Humanity</span>
     </a>
     <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" id="navToggle">Menu</button>
     <nav class="topnav" id="topnav" aria-label="Primary">
-      <a href="https://fabric.nfh.global/#use-cases">Use cases</a>
-      <a href="https://fabric.nfh.global/#vision">What it is</a>
-      <a href="https://fabric.nfh.global/#principles">Principles</a>
-      <a href="https://fabric.nfh.global/#capabilities">Capabilities</a>
-      <a href="/" class="here">Onboarding</a>
+      <a href="/#use-cases">Use cases</a>
+      <a href="/#vision">What it is</a>
+      <a href="/#principles">Principles</a>
+      <a href="/#capabilities">Capabilities</a>
+      <a href="/onboarding" class="here">Onboarding</a>
       <a href="https://github.com/Networks-for-Humanity/fabric-support/issues" class="spec" target="_blank" rel="noopener">Support &#8599;</a>
     </nav>
   </header>
@@ -539,7 +539,7 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
     </div>
     <div class="cols">
       <div class="col"><b>Network</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Specification</a><a href="https://dedi.global" target="_blank" rel="noopener">Registry</a><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Governance</a></div>
-      <div class="col"><b>Build</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">SDKs</a><a href="/">Onboarding</a><a href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">DeDi docs</a></div>
+      <div class="col"><b>Build</b><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">SDKs</a><a href="/onboarding">Onboarding</a><a href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">DeDi docs</a></div>
       <div class="col"><b>Read</b><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">The note</a><a href="https://networksforhumanity.org/" target="_blank" rel="noopener">Working group</a><a href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Changelog</a></div>
     </div>
     <div style="text-align:right">
@@ -563,11 +563,13 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
 
 /* ================== FQDN FORM ================== */
 (function(){
-  /* The page and the API ship in the same deployment, so this is same-origin:
-     nothing to configure, no CORS, and it keeps working if the deployment
-     moves to a custom domain. Recording is fire-and-forget — a failure here
+  /* The page is served from fabric.nfh.global; the function that records
+     domains runs on Vercel, so this is a cross-origin call. Set it to the
+     deployed function URL — the function allows this origin via SITE_ORIGIN.
+     See api/README.md.
+     Empty means don't call: harmless, since recording is fire-and-forget and
      never stands between the visitor and step 2. */
-  const DOMAIN_ENDPOINT = '/api/domains';
+  const DOMAIN_ENDPOINT = '';  // e.g. https://fabric-onboarding.vercel.app/api/domains
 
   const form   = document.getElementById('fqdnForm');
   const input  = document.getElementById('fqdn');
