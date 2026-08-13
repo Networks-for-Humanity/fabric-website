@@ -1,0 +1,47 @@
+# Collector for the onboarding form. Install at:
+#   /etc/systemd/system/fabric-onboarding.service
+#
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now fabric-onboarding
+#   journalctl -u fabric-onboarding -f
+#
+# Adjust User and WorkingDirectory to wherever the site is checked out.
+
+[Unit]
+Description=fabric onboarding collector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/fabric-website
+ExecStart=/usr/bin/node server/index.js
+Restart=always
+RestartSec=5
+
+# nginx serves the site; this only needs to answer the API.
+Environment=SERVE_STATIC=0
+Environment=HOST=127.0.0.1
+Environment=PORT=8787
+# nginx sets X-Forwarded-For, so the rate limiter can trust it.
+Environment=TRUST_PROXY=1
+
+# The token lives here, readable only by root. Contains one line:
+#   DATA_REPO_TOKEN=github_pat_...
+EnvironmentFile=/etc/fabric-onboarding.env
+
+# The domains cache is the only thing it writes.
+ReadWritePaths=/var/www/fabric-website
+
+# Hardening — it needs the network and one file, nothing else.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

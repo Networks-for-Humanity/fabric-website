@@ -552,12 +552,12 @@ _dedi.<span class="fq">yourcompany.com</span>. IN TXT
 
 /* ================== FQDN FORM ================== */
 (function(){
-  /* Where submitted domains are recorded — the deployed worker's URL, which
-     appends them to fabric.domains.txt in the fabric-onboarding repo. See
-     worker/README.md. Until it is deployed this points nowhere, which is
-     harmless: recording is fire-and-forget and never stands between the
-     visitor and step 2. */
-  const DOMAIN_ENDPOINT = '';  // e.g. https://fabric-onboarding.<subdomain>.workers.dev
+  /* Where submitted domains are recorded. Same-origin: nginx proxies this path
+     to the collector running on the same host (see server/README.md), so there
+     is no cross-origin call and no absolute URL to keep in sync. Until that
+     proxy exists the request simply fails, which is harmless — recording is
+     fire-and-forget and never stands between the visitor and step 2. */
+  const DOMAIN_ENDPOINT = '/api/domains';
 
   const form   = document.getElementById('fqdnForm');
   const input  = document.getElementById('fqdn');
