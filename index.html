@@ -2757,11 +2757,11 @@ window.addEventListener('resize', resize);
 /* ================== ONBOARDING FORM ================== */
 (function(){
   /* The collector that appends domains to fabric.domains.txt in the
-     fabric-onboarding repo. Same-origin: nginx hands /api/ to the collector
-     running on this host — see server/README.md. If it is not running the
-     request simply fails, which is harmless: recording is fire-and-forget and
-     never stands between the visitor and step 2. */
-  var DOMAIN_ENDPOINT = '/api/domains';
+     fabric-onboarding repo. Same-origin: Kong/nginx hands /onboarding/ to the
+     collector — see server/README.md. If it is not running the request simply
+     fails, which is harmless: recording is fire-and-forget and never stands
+     between the visitor and step 2. */
+  var DOMAIN_ENDPOINT = '/onboarding/domains';
 
   var form  = document.getElementById('fqdnForm');
   if(!form) return;

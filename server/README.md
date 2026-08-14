@@ -61,14 +61,15 @@ says `disabled`, the token isn't reaching the process.
 
 **3. nginx** — add the block from `server/deploy/nginx.conf` to the existing
 `server{}` for `fabric.nfh.global`, then `sudo nginx -t && sudo systemctl
-reload nginx`. It proxies `/api/` to the collector and denies the local cache
-file. The form itself is part of `index.html` and is already being served.
+reload nginx`. It proxies `/onboarding/` to the collector and denies the local
+cache file. The form itself is part of `index.html` and is already being
+served.
 
 **4. Verify:**
 
 ```sh
 curl -X POST -H 'Content-Type: application/json' \
-  -d '{"fqdn":"example.org"}' https://fabric.nfh.global/api/domains
+  -d '{"fqdn":"example.org"}' https://fabric.nfh.global/onboarding/domains
 ```
 
 Use a **real** domain — an invented one is dropped by the DNS check and looks
@@ -139,7 +140,7 @@ carries a commented `limit_req` example.
 | `429` | Rate limited. Carries `Retry-After`. |
 | `500` | Could not write locally. |
 
-`GET /api/health` returns `{ok, domains, repo, syncPending}`.
+`GET /onboarding/health` returns `{ok, domains, repo, syncPending}`.
 
 ## Notes
 
