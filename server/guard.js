@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Spam filtering for a public, unauthenticated form.
  *
@@ -9,7 +11,7 @@
  * module rather than an endpoint.
  */
 
-import dns from 'dns/promises';
+const dns = require('dns').promises;
 
 /* ------------------------------------------------------------------ *
  * 1. Bot tells
@@ -20,16 +22,16 @@ import dns from 'dns/promises';
  * neither, which is what the layers below are for.
  * ------------------------------------------------------------------ */
 
-export const MIN_FILL_MS = 1200;
+const MIN_FILL_MS = 1200;
 
-export function looksAutomated(payload) {
+function looksAutomated(payload) {
   // Honeypot: hidden on the page, so anything in it came from a machine.
   if (payload && typeof payload.website === 'string' && payload.website.trim() !== '') {
     return 'honeypot';
   }
   // Implausibly fast. Absent is fine — API clients don't send it and we
   // don't want to break them.
-  const elapsed = Number(payload?.elapsed);
+  const elapsed = Number(payload && payload.elapsed);
   if (Number.isFinite(elapsed) && elapsed >= 0 && elapsed < MIN_FILL_MS) {
     return 'too-fast';
   }
@@ -52,7 +54,7 @@ export function looksAutomated(payload) {
 const NONEXISTENT = new Set(['ENOTFOUND', 'ENODATA', 'NXDOMAIN']);
 const DNS_TIMEOUT_MS = 3000;
 
-export async function domainExists(fqdn) {
+async function domainExists(fqdn) {
   const lookups = [
     dns.resolveNs(fqdn),
     dns.resolve4(fqdn),
@@ -68,7 +70,7 @@ export async function domainExists(fqdn) {
   if (settled === null) return { exists: true, reason: 'dns-timeout' };   // fail open
 
   for (const r of settled) {
-    if (r.status === 'fulfilled' && r.value?.length) {
+    if (r.status === 'fulfilled' && r.value && r.value.length) {
       return { exists: true, reason: 'resolved' };
     }
   }
@@ -76,7 +78,7 @@ export async function domainExists(fqdn) {
   // Nothing resolved. Only call it fake if the resolver was definitive —
   // a SERVFAIL or refusal is our side failing, not their domain missing.
   const definitive = settled.every(
-    (r) => r.status === 'fulfilled' || NONEXISTENT.has(r.reason?.code)
+    (r) => r.status === 'fulfilled' || (r.reason && NONEXISTENT.has(r.reason.code))
   );
 
   return definitive
@@ -88,10 +90,10 @@ export async function domainExists(fqdn) {
  * 3. Domain normalisation and validation
  * ------------------------------------------------------------------ */
 
-export const FQDN_RE = /^(?=.{4,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+const FQDN_RE = /^(?=.{4,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
 
 /** Reduce whatever was typed to a bare hostname. */
-export function normalise(raw) {
+function normalise(raw) {
   return String(raw || '')
     .trim()
     .toLowerCase()
@@ -101,3 +103,5 @@ export function normalise(raw) {
     .replace(/:\d+$/, '')                    // port
     .replace(/\.$/, '');                     // trailing root label
 }
+
+module.exports = { looksAutomated, domainExists, normalise, FQDN_RE, MIN_FILL_MS };
