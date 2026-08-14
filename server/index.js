@@ -399,7 +399,7 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
   const pathname = url.pathname;
 
-  if (pathname === '/api/domains') {
+  if (pathname === '/onboarding/domains') {
     if (req.method === 'OPTIONS') {
       res.writeHead(204, corsHeaders(req));
       return res.end();
@@ -410,7 +410,7 @@ const server = http.createServer((req, res) => {
     return handleSubmit(req, res);
   }
 
-  if (pathname === '/api/health') {
+  if (pathname === '/onboarding/health') {
     return sendJson(req, res, 200, {
       ok: true,
       domains: known.size,
