@@ -14,6 +14,7 @@
  */
 
 import { looksAutomated, domainExists, normalise, FQDN_RE } from './_guard.js';
+import { rateLimit } from './_ratelimit.js';
 
 const MAX_FQDN_LEN = 253;
 
@@ -100,6 +101,14 @@ export default async function handler(req, res) {
   if (!c.token) {
     console.error('DATA_REPO_TOKEN is not set');
     return res.status(500).json({ error: 'Not configured.' });
+  }
+
+  /* Before any work: reject floods cheaply, and before touching DNS or
+     GitHub on someone else's behalf. */
+  const rl = await rateLimit(req);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many submissions. Try again shortly.' });
   }
 
   const payload = typeof req.body === 'string'

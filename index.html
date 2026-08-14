@@ -1507,6 +1507,192 @@
 
   /* Selection on light bg */
   body[data-mood="nfh"] ::selection{ background:#1F4FA6; color:#FFFFFF; }
+
+  /* ============ ONBOARDING (FQDN form + DeDi paths) ============
+     Scoped under #onboarding so nothing here can reach the rest of the page.
+     Uses only theme variables, so it follows mood/voice switches, and reuses
+     the site's own .cta / .eyebrow / .snum / .section-head components. */
+  #onboarding .onb-grid{
+    display:grid; grid-template-columns:1fr 0.85fr; gap:64px; align-items:start;
+  }
+  @media (max-width:1000px){ #onboarding .onb-grid{grid-template-columns:1fr; gap:36px} }
+
+  #onboarding .onb-form{ max-width:560px; }
+  #onboarding .onb-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.18em;
+    text-transform:uppercase; color:var(--paper-faint); font-weight:500;
+    display:block; margin-bottom:10px;
+  }
+  #onboarding .onb-field{
+    display:flex; align-items:stretch; background:transparent;
+    border:1px solid var(--rule-strong);
+    transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  #onboarding .onb-field:focus-within{
+    border-color:var(--brass); box-shadow:0 0 0 3px var(--brass-dim);
+  }
+  #onboarding .onb-field.invalid{ border-color:var(--cta); }
+  #onboarding .onb-prefix{
+    display:flex; align-items:center; padding:0 14px 0 18px; margin:12px 0;
+    border-right:1px solid var(--rule);
+    font-family:var(--mono); font-size:15px; color:var(--paper-faint);
+    user-select:none;
+  }
+  #onboarding .onb-field input{
+    flex:1; min-width:0; border:none; outline:none; background:transparent;
+    font-family:var(--mono); font-size:17px; color:var(--paper);
+    padding:20px 18px 20px 14px; letter-spacing:-0.01em;
+  }
+  #onboarding .onb-field input::placeholder{ color:var(--paper-ghost); }
+  #onboarding .onb-help{
+    font-size:14.5px; color:var(--paper-faint); margin:12px 0 0; min-height:22px;
+  }
+  #onboarding .onb-help.error{ color:var(--cta); }
+  #onboarding .onb-actions{
+    display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-top:26px;
+  }
+  #onboarding .onb-note{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--paper-faint);
+  }
+
+  /* Honeypot: positioned away rather than display:none — some bots skip
+     hidden fields but happily fill this one. Never seen, never focusable. */
+  #onboarding .onb-nope{
+    position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+  }
+
+  #onboarding .onb-rail{
+    border:1px solid var(--rule); background:var(--ink-2); padding:32px 32px 28px;
+  }
+  #onboarding .onb-rail h3{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--paper-faint); font-weight:500; margin:0 0 22px;
+  }
+  #onboarding .onb-rail ol{ margin:0; padding:0; list-style:none; counter-reset:r; }
+  #onboarding .onb-rail li{
+    counter-increment:r; position:relative; padding:0 0 20px 40px;
+    font-size:16px; line-height:1.5; color:var(--paper-dim);
+  }
+  #onboarding .onb-rail li:last-child{ padding-bottom:0; }
+  #onboarding .onb-rail li::before{
+    content:counter(r,decimal-leading-zero); position:absolute; left:0; top:2px;
+    font-family:var(--mono); font-size:11px; letter-spacing:0.1em;
+    color:var(--brass); font-weight:500;
+  }
+  #onboarding .onb-rail li b{ color:var(--paper); font-weight:500; }
+  #onboarding .onb-rail li.done{ color:var(--paper-faint); }
+  #onboarding .onb-rail li.active b{ color:var(--brass); }
+
+  /* ---- step 2: revealed after a valid domain ---- */
+  #onboarding .onb-step2{ display:none; margin-top:72px; }
+  #onboarding .onb-step2.on{ display:block; animation:onb-reveal .5s ease both; }
+  @keyframes onb-reveal{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+  @media (prefers-reduced-motion:reduce){ #onboarding .onb-step2.on{animation:none} }
+
+  #onboarding .onb-chip{
+    display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap;
+    border:1px solid var(--brass-dim); padding:10px 16px; margin-bottom:18px;
+    font-family:var(--mono); font-size:14px; color:var(--brass);
+  }
+  #onboarding .onb-chip .lbl{
+    font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--paper-faint);
+  }
+  #onboarding .onb-chip button{
+    background:none; border:none; cursor:pointer; padding:0;
+    font-family:var(--mono); font-size:10px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--paper-faint);
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  #onboarding .onb-chip button:hover{ color:var(--brass); }
+
+  #onboarding .onb-paths{
+    display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--rule); margin-top:8px;
+  }
+  @media (max-width:900px){ #onboarding .onb-paths{grid-template-columns:1fr} }
+  #onboarding .onb-path{ padding:38px 36px 36px; display:flex; flex-direction:column; }
+  #onboarding .onb-path + .onb-path{ border-left:1px solid var(--rule); }
+  @media (max-width:900px){
+    #onboarding .onb-path + .onb-path{ border-left:none; border-top:1px solid var(--rule); }
+  }
+  #onboarding .onb-path-num{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--brass); font-weight:500;
+    display:flex; align-items:center; gap:12px; margin-bottom:18px;
+  }
+  #onboarding .onb-tag{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--paper-faint); font-weight:400;
+    border:1px solid var(--rule-strong); padding:3px 8px;
+  }
+  #onboarding .onb-path h3{
+    font-family:var(--display); font-weight:var(--display-weight); font-size:28px;
+    line-height:1.1; letter-spacing:var(--display-letter); margin:0 0 14px; text-wrap:balance;
+  }
+  #onboarding .onb-path .blurb{
+    font-size:16.5px; line-height:1.5; color:var(--paper-dim); margin:0 0 26px; max-width:38ch;
+  }
+  #onboarding .onb-path ul{ margin:0 0 28px; padding:0; list-style:none; }
+  #onboarding .onb-path ul li{
+    position:relative; padding:0 0 12px 22px; font-size:15.5px;
+    line-height:1.5; color:var(--paper-dim);
+  }
+  #onboarding .onb-path ul li::before{
+    content:"\2014"; position:absolute; left:0; top:0; color:var(--brass-dim);
+  }
+  #onboarding .onb-path ul li b{ color:var(--paper); font-weight:500; }
+  /* push code + buttons to a shared baseline so the two cards compare cleanly */
+  #onboarding .onb-cap{ margin-top:auto; }
+
+  #onboarding .onb-cap{
+    font-family:var(--mono); font-size:10px; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--paper-faint);
+    margin:0 0 8px; display:flex; justify-content:space-between; gap:12px; align-items:baseline;
+  }
+  #onboarding pre.onb-code{
+    margin:0 0 22px; padding:16px 18px; overflow-x:auto;
+    background:var(--ink-2); color:var(--paper);
+    border:1px solid var(--rule-strong);
+    font-family:var(--mono); font-size:12.5px; line-height:1.65; letter-spacing:-0.01em;
+  }
+  #onboarding pre.onb-code .c{ color:var(--paper-faint); }
+  #onboarding pre.onb-code .s{ color:var(--brass); }
+  #onboarding .onb-btns{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  #onboarding .cta.small{ padding:13px 18px; font-size:11px; }
+
+  /* ---- sample files ---- */
+  #onboarding .onb-samples{ margin-top:64px; }
+  #onboarding .onb-samples h3{
+    font-family:var(--display); font-weight:var(--display-weight);
+    font-size:clamp(26px,2.6vw,34px); line-height:1.05;
+    letter-spacing:var(--display-letter); margin:16px 0 10px;
+  }
+  #onboarding .onb-lede{ color:var(--paper-dim); max-width:56ch; margin:0 0 32px; font-size:17px; }
+  #onboarding .onb-files{ border-top:1px solid var(--rule); }
+  #onboarding .onb-file{
+    display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1.6fr) auto;
+    gap:28px; align-items:center; padding:20px 0; border-bottom:1px solid var(--rule);
+  }
+  @media (max-width:900px){
+    #onboarding .onb-file{ grid-template-columns:1fr; gap:8px; align-items:start; }
+  }
+  #onboarding .onb-file .fname{
+    font-family:var(--mono); font-size:14px; color:var(--paper);
+    letter-spacing:-0.01em; word-break:break-all;
+  }
+  #onboarding .onb-file .fdesc{ font-size:15.5px; color:var(--paper-dim); }
+  #onboarding .onb-file .facts{ display:flex; gap:10px; flex-wrap:wrap; }
+  #onboarding .onb-link{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--brass); background:none; cursor:pointer;
+    border:none; border-bottom:1px solid var(--brass-dim); padding:0 0 2px;
+  }
+  #onboarding .onb-link:hover{ color:var(--cta); border-color:var(--cta); }
+  #onboarding .onb-foot{ margin-top:26px; font-size:15px; color:var(--paper-faint); }
+  #onboarding .onb-foot a{
+    color:var(--brass); text-decoration:none; border-bottom:1px solid var(--brass-dim);
+  }
+
 </style>
 </head>
 <body data-mood="nfh" data-voice="institutional" data-density="standard">
@@ -1549,7 +1735,7 @@
       <a href="#capabilities">Capabilities</a>
       <a href="#services">Services</a>
       <a href="#participants">Participants</a>
-      <a href="/onboarding">Onboarding</a>
+      <a href="#onboarding">Onboarding</a>
       <a href="https://github.com/Networks-for-Humanity/fabric-support/issues" class="spec" target="_blank" rel="noopener">Support &#8599;</a>
     </nav>
   </header>
@@ -1857,6 +2043,137 @@
     <div class="cta-row">
       <a class="cta" href="https://github.com/Networks-for-Humanity" target="_blank" rel="noopener">Build on fabric <span class="arrow" aria-hidden="true">&#8599;</span></a>
       <a class="cta ghost" href="https://networksforhumanity.org/" target="_blank" rel="noopener">About NFH <span class="arrow" aria-hidden="true">&#8599;</span></a>
+    </div>
+  </section>
+
+
+  <!-- ONBOARDING -->
+  <section id="onboarding">
+    <div class="section-head">
+      <div>
+        <div class="snum"><span>Onboarding</span></div>
+        <h2>Bring your domain <em>onto fabric.</em></h2>
+      </div>
+      <p class="side">Your domain is your identity on the network. Enter it once &mdash; everything else on fabric hangs off it.</p>
+    </div>
+
+    <div class="onb-grid">
+      <form class="onb-form" id="fqdnForm" novalidate>
+        <label class="onb-label" for="fqdn">Fully qualified domain name</label>
+        <div class="onb-field" id="fieldShell">
+          <span class="onb-prefix" aria-hidden="true">https://</span>
+          <input id="fqdn" name="fqdn" type="text" placeholder="yourcompany.com"
+                 autocomplete="url" autocapitalize="off" autocorrect="off"
+                 spellcheck="false" aria-describedby="fqdnHelp">
+        </div>
+        <div class="onb-nope" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <p class="onb-help" id="fqdnHelp">Domain only &mdash; no <span class="mono">https://</span>, no paths, no trailing slash.</p>
+        <div class="onb-actions">
+          <button class="cta" type="submit">Continue <span class="arrow" aria-hidden="true">&rarr;</span></button>
+          <span class="onb-note">No account needed yet</span>
+        </div>
+      </form>
+
+      <aside class="onb-rail" aria-label="What happens next">
+        <h3>What happens next</h3>
+        <ol>
+          <li class="active" id="railStep1"><b>Claim your domain.</b> Tell us the FQDN you control.</li>
+          <li id="railStep2"><b>Sign up to DeDi.</b> Publish a namespace against that domain &mdash; self-hosted or hosted for you.</li>
+          <li id="railStep3"><b>Publish your directories.</b> Keys, catalogues, member lists &mdash; whatever you want discoverable.</li>
+          <li id="railStep4"><b>You are now live on fabric.</b></li>
+        </ol>
+      </aside>
+    </div>
+
+    <div class="onb-step2" id="step2" aria-live="polite">
+      <div class="onb-chip">
+        <span class="lbl">Your domain</span>
+        <span class="fq mono" id="chipDomain">yourcompany.com</span>
+        <button type="button" id="editDomain">Change</button>
+      </div>
+      <div class="eyebrow"><span>Sign up to DeDi</span></div>
+
+      <div class="onb-paths">
+        <article class="onb-path">
+          <div class="onb-path-num"><span>Path A</span> <span class="onb-tag">Self-hosted</span></div>
+          <h3>Host the files at your own website.</h3>
+          <p class="blurb">You serve two static JSON files from your own domain. No intermediary holds your namespace &mdash; the domain you already control is the proof.</p>
+          <ul>
+            <li><b>You keep custody.</b> Records live on your infrastructure.</li>
+            <li><b>Zero dependency.</b> Nothing to sign up for, nothing to pay for.</li>
+            <li><b>You run uptime.</b> If your site is down, your namespace is unresolvable.</li>
+          </ul>
+          <div class="onb-cap"><span>Serve these two paths</span><span>static &middot; public</span></div>
+          <pre class="onb-code"><span class="c"># namespace descriptor</span>
+https://<span class="fq">yourcompany.com</span>/.well-known/dedi.json
+
+<span class="c"># one file per directory you publish</span>
+https://<span class="fq">yourcompany.com</span>/.well-known/dedi/members.json</pre>
+          <div class="onb-btns">
+            <a class="cta small" href="#onb-samples">Get the sample files <span class="arrow" aria-hidden="true">&darr;</span></a>
+            <a class="cta small ghost" href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">Self-host guide <span class="arrow" aria-hidden="true">&#8599;</span></a>
+          </div>
+        </article>
+
+        <article class="onb-path">
+          <div class="onb-path-num"><span>Path B</span> <span class="onb-tag">Hosted</span></div>
+          <h3>Use the hosted dedi.global solution.</h3>
+          <p class="blurb">dedi.global serves the same files on your behalf. You verify the domain once with a DNS record, then manage records through the console or the API.</p>
+          <ul>
+            <li><b>Live in minutes.</b> Nothing to deploy, nothing to keep up.</li>
+            <li><b>Managed uptime</b> and cryptographic signing handled for you.</li>
+            <li><b>Same namespace.</b> Still keyed to your domain &mdash; portable out at any time.</li>
+          </ul>
+          <div class="onb-cap"><span>Verify ownership, then publish</span><span>DNS TXT &middot; one-time</span></div>
+          <pre class="onb-code"><span class="c"># add to your DNS, then hit verify</span>
+_dedi.<span class="fq">yourcompany.com</span>. IN TXT
+  <span class="s">"dedi-verify=ns_7f3a91c4e0b8"</span></pre>
+          <div class="onb-btns">
+            <a class="cta small" href="https://dedi.global" target="_blank" rel="noopener">Create hosted namespace <span class="arrow" aria-hidden="true">&#8599;</span></a>
+            <a class="cta small ghost" href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">Hosted guide <span class="arrow" aria-hidden="true">&#8599;</span></a>
+          </div>
+        </article>
+      </div>
+
+      <div class="onb-samples" id="onb-samples">
+        <div class="snum"><span>Sample files</span></div>
+        <h3>Start from a working example.</h3>
+        <p class="onb-lede">Each sample below is pre-filled with <span class="fq mono">yourcompany.com</span>. Download, edit the values, and drop them at the paths above.</p>
+        <div class="onb-files">
+          <div class="onb-file">
+            <div class="fname">/.well-known/dedi.json</div>
+            <div class="fdesc">Your namespace descriptor &mdash; who you are, your public key, and the directories you publish.</div>
+            <div class="facts">
+              <button class="onb-link" type="button" data-sample="namespace">Download</button>
+              <button class="onb-link" type="button" data-preview="namespace">Preview</button>
+            </div>
+          </div>
+          <div class="onb-file">
+            <div class="fname">/.well-known/dedi/members.json</div>
+            <div class="fdesc">A directory &mdash; a list of records against a schema. Members, licences, keys, catalogue entries.</div>
+            <div class="facts">
+              <button class="onb-link" type="button" data-sample="directory">Download</button>
+              <button class="onb-link" type="button" data-preview="directory">Preview</button>
+            </div>
+          </div>
+          <div class="onb-file">
+            <div class="fname">dns-txt.txt</div>
+            <div class="fdesc">The one-time DNS TXT record for the hosted path, formatted for your registrar.</div>
+            <div class="facts">
+              <button class="onb-link" type="button" data-sample="dns">Download</button>
+              <button class="onb-link" type="button" data-preview="dns">Preview</button>
+            </div>
+          </div>
+        </div>
+        <div id="previewWrap" hidden style="margin-top:28px">
+          <div class="onb-cap"><span id="previewName">preview</span><span>pre-filled for your domain</span></div>
+          <pre class="onb-code" id="previewBody"></pre>
+        </div>
+        <p class="onb-foot">Full schema reference and validation rules live in the <a href="https://docs.nfh.global/dedi" target="_blank" rel="noopener">DeDi documentation &#8599;</a>.</p>
+      </div>
     </div>
   </section>
 
@@ -2434,6 +2751,181 @@ window.addEventListener('resize', resize);
   });
   obs.observe(document.body, {attributes:true});
 })();
+</script>
+<script>
+
+/* ================== ONBOARDING FORM ================== */
+(function(){
+  /* The collector that appends domains to fabric.domains.txt in the
+     fabric-onboarding repo. It runs on Vercel, so this is a cross-origin
+     call — see api/README.md. Empty means don't call, which is harmless:
+     recording is fire-and-forget and never stands between the visitor and
+     step 2. */
+  var DOMAIN_ENDPOINT = '';  // e.g. https://fabric-onboarding.vercel.app/api/domains
+
+  var form  = document.getElementById('fqdnForm');
+  if(!form) return;
+  var input = document.getElementById('fqdn');
+  var shell = document.getElementById('fieldShell');
+  var help  = document.getElementById('fqdnHelp');
+  var step2 = document.getElementById('step2');
+  var HELP_DEFAULT = help.innerHTML;
+  var openedAt = Date.now();
+
+  /* Strip anything that is not the host: scheme, credentials, port, path. */
+  function normalise(raw){
+    var v = (raw||'').trim().toLowerCase();
+    v = v.replace(/^[a-z][a-z0-9+.-]*:\/\//,'');
+    v = v.replace(/^[^@/]*@/,'');
+    v = v.split(/[/?#]/)[0];
+    v = v.replace(/:\d+$/,'');
+    v = v.replace(/\.$/,'');
+    return v;
+  }
+
+  /* One or more labels, then a TLD of two or more letters. */
+  var FQDN_RE = /^(?=.{4,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+
+  function fail(msg){
+    shell.classList.add('invalid');
+    help.classList.add('error');
+    help.textContent = msg;
+    input.focus();
+  }
+  function clearFail(){
+    shell.classList.remove('invalid');
+    help.classList.remove('error');
+    help.innerHTML = HELP_DEFAULT;
+  }
+  input.addEventListener('input', function(){
+    if(shell.classList.contains('invalid')) clearFail();
+  });
+
+  /* Hand the domain to the collector. Deliberately silent: a logging outage
+     is our problem, not the visitor's, so failures are swallowed. */
+  function record(fqdn){
+    if(!DOMAIN_ENDPOINT || !window.fetch) return;
+    try{
+      fetch(DOMAIN_ENDPOINT, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          fqdn:fqdn,
+          /* Spam signals, not data: a field no human can see, and how long
+             the page was open before submitting. */
+          website:(document.getElementById('website')||{}).value || '',
+          elapsed:Date.now() - openedAt
+        }),
+        keepalive:true
+      }).catch(function(){});
+    }catch(err){ /* offline, blocked — carry on */ }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var fqdn = normalise(input.value);
+    if(!fqdn){ return fail('Enter the domain you control, e.g. yourcompany.com'); }
+    if(!FQDN_RE.test(fqdn)){ return fail('That does not look like a valid domain. Try yourcompany.com'); }
+
+    clearFail();
+    input.value = fqdn;
+    window.__fabricFqdn = fqdn;
+    record(fqdn);
+
+    var els = document.querySelectorAll('#onboarding .fq');
+    for(var i=0;i<els.length;i++){ els[i].textContent = fqdn; }
+
+    document.getElementById('railStep1').classList.remove('active');
+    document.getElementById('railStep1').classList.add('done');
+    document.getElementById('railStep2').classList.add('active');
+
+    step2.classList.add('on');
+    step2.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  document.getElementById('editDomain').addEventListener('click', function(){
+    input.focus(); input.select();
+    form.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+
+  /* ---- sample files, generated in the browser and pre-filled ---- */
+  function d(f){ return f || 'yourcompany.com'; }
+  function orgName(f){
+    var base = d(f).replace(/^www\./,'').split('.')[0];
+    return base.charAt(0).toUpperCase() + base.slice(1);
+  }
+
+  var SAMPLES = {
+    namespace: function(f){
+      return { name:'dedi.json', type:'application/json', body: JSON.stringify({
+        "dedi_version":"1.0",
+        "namespace":{ "id":d(f), "name":orgName(f), "domain":d(f),
+          "description":"Public registries published by " + orgName(f) + ".",
+          "contact":"registry@" + d(f) },
+        "verification":{ "method":"well-known",
+          "public_key":"z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+          "algorithm":"ed25519" },
+        "directories":[{ "id":"members", "name":"Member registry",
+          "url":"https://" + d(f) + "/.well-known/dedi/members.json",
+          "schema":"https://schemas.dedi.global/member/v1" }],
+        "updated_at":"2026-08-12T09:00:00Z"
+      }, null, 2) };
+    },
+    directory: function(f){
+      return { name:'members.json', type:'application/json', body: JSON.stringify({
+        "dedi_version":"1.0",
+        "directory":{ "id":"members", "namespace":d(f), "name":"Member registry",
+          "schema":"https://schemas.dedi.global/member/v1" },
+        "records":[
+          { "id":"MBR-000123", "name":"Example Member Pvt Ltd", "status":"active",
+            "valid_from":"2026-01-01", "valid_to":"2027-01-01" },
+          { "id":"MBR-000124", "name":"Second Member LLP", "status":"revoked",
+            "valid_from":"2025-04-01", "valid_to":"2026-03-31" }
+        ],
+        "record_count":2, "updated_at":"2026-08-12T09:00:00Z"
+      }, null, 2) };
+    },
+    dns: function(f){
+      return { name:'dns-txt.txt', type:'text/plain', body:
+        '; DeDi domain verification for ' + d(f) + '\n' +
+        '; Add this TXT record, then click Verify in the dedi.global console.\n\n' +
+        'Host:   _dedi\nType:   TXT\nTTL:    300\nValue:  dedi-verify=ns_7f3a91c4e0b8\n\n' +
+        '; Zone-file form:\n' +
+        '_dedi.' + d(f) + '. 300 IN TXT "dedi-verify=ns_7f3a91c4e0b8"\n' };
+    }
+  };
+
+  var dl = document.querySelectorAll('#onboarding [data-sample]');
+  for(var j=0;j<dl.length;j++){
+    (function(btn){
+      btn.addEventListener('click', function(){
+        var s = SAMPLES[btn.getAttribute('data-sample')](window.__fabricFqdn);
+        var url = URL.createObjectURL(new Blob([s.body], {type:s.type}));
+        var a = document.createElement('a');
+        a.href = url; a.download = s.name;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      });
+    })(dl[j]);
+  }
+
+  var wrap  = document.getElementById('previewWrap');
+  var pname = document.getElementById('previewName');
+  var pbody = document.getElementById('previewBody');
+  var pv = document.querySelectorAll('#onboarding [data-preview]');
+  for(var k=0;k<pv.length;k++){
+    (function(btn){
+      btn.addEventListener('click', function(){
+        var s = SAMPLES[btn.getAttribute('data-preview')](window.__fabricFqdn);
+        pname.textContent = s.name;
+        pbody.textContent = s.body;
+        wrap.hidden = false;
+        wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+      });
+    })(pv[k]);
+  }
+})();
+
 </script>
 </body>
 </html>

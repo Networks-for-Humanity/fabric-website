@@ -1,10 +1,11 @@
 # fabric onboarding — domain collector
 
-A Vercel function. Takes the domain submitted on `/onboarding` and appends it to
-`fabric.domains.txt` in **`Networks-for-Humanity/fabric-onboarding`**, one
-domain per line, no duplicates.
+Takes the domain submitted by the onboarding form at the end of the main
+fabric page and appends it to `fabric.domains.txt` in
+**`Networks-for-Humanity/fabric-onboarding`**, one domain per line, no
+duplicates.
 
-Two files, no dependencies, nothing to run or patch.
+Three files, no dependencies, nothing to run or patch.
 
 ## Why it exists
 
@@ -15,76 +16,47 @@ can't see.
 
 ## How the pieces sit
 
-The **page** is a static file deployed with the rest of the site, live at
-`fabric.nfh.global/onboarding`. The **function** runs on Vercel. The form calls
-it cross-origin, which is why `SITE_ORIGIN` matters.
-
-Nothing is proxied. nginx keeps doing exactly what it already does, and the
-token never touches your server.
+The **form** is part of `index.html` — the last section on the page. It ships
+wherever the site already ships; there is no separate page and nothing new to
+host. The **function** runs on Vercel. The form calls it cross-origin, which is
+why `SITE_ORIGIN` matters.
 
 ## Deploy
 
-**1. The page** — ships with your normal site deploy; `onboarding/index.html`
-is just another file. If `/onboarding` 404s without a trailing slash, add the
-one-line block in `onboarding/nginx-snippet.conf`.
+**1. The site** — redeploy `index.html` however you normally do. That's the
+whole front-end change.
 
-**2. The function.** Two ways; the first is better.
+**2. The function** — either connect the repo in the Vercel dashboard
+(**Add New → Project → Import Git Repository**, framework **Other**, all build
+fields empty — there is nothing to build), or run `./api/setup.sh`, which signs
+in, links the project, sets the variables, deploys, and writes the resulting URL
+into the page.
 
-**Connect the repo (recommended).** In the Vercel dashboard: **Add New →
-Project → Import Git Repository →** `Networks-for-Humanity/fabric-website`.
+`.vercelignore` keeps the HTML out, so only the function deploys — no duplicate
+of the site on a `vercel.app` URL competing for search results.
 
-| Setting | Value |
-| --- | --- |
-| Framework Preset | **Other** |
-| Root Directory | `./` (repo root) |
-| Build Command | leave empty — nothing to build |
-| Output Directory | leave empty |
-| Install Command | leave empty — no dependencies |
+**3. Connect them** — one line near the top of the onboarding script at the
+bottom of `index.html`:
 
-Add the environment variables below, then **Deploy**.
+```js
+var DOMAIN_ENDPOINT = 'https://<project>.vercel.app/api/domains';
+```
 
-After this, Vercel builds on every push: `main` becomes production, and any
-other branch gets its own preview URL. Nothing to run by hand again, and no
-Vercel token has to exist anywhere.
+Until that's filled in the page skips the call entirely: the form still works
+and opens step 2, nothing is recorded.
 
-**Or from the CLI:** `./api/setup.sh` signs in, links the project, sets the
-variables, deploys, and writes the resulting URL into the page. The GitHub
-token is prompted for with echo off and piped straight to Vercel, never written
-to disk. By hand it's `npx vercel --prod` plus the variables below.
-
-`.vercelignore` keeps the HTML out, so only the function deploys — no stale
-duplicate of the site on a `vercel.app` URL competing for search results.
-
-Set these in **Project → Settings → Environment Variables**:
+### Environment variables
 
 | Variable | Value |
 | --- | --- |
 | `DATA_REPO_TOKEN` | the PAT — mark it **Sensitive** |
 | `DATA_REPO` | `Networks-for-Humanity/fabric-onboarding` |
 | `SITE_ORIGIN` | `https://fabric.nfh.global` — required, this is a cross-origin call |
-| `MAX_DOMAINS` | `5000` (optional ceiling) |
+| `RATE_MAX` | submissions per IP per window (default `5`) |
+| `RATE_WINDOW_SECONDS` | window length (default `600`) |
+| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | optional, see rate limiting |
+| `MAX_DOMAINS` | ceiling on total entries (default `5000`) |
 | `REQUIRE_DNS` | `0` only to disable the DNS check |
-
-**3. Connect them** — `setup.sh` does this for you. By hand it is one line
-near the top of the script in `onboarding/index.html`:
-
-```js
-const DOMAIN_ENDPOINT = 'https://<project>.vercel.app/api/domains';
-```
-
-Until that's filled in the page skips the call entirely: the form still works
-and opens step 2, nothing is recorded.
-
-Check it end to end from the live page, or:
-
-```sh
-curl -X POST -H 'Content-Type: application/json' \
-  -H 'Origin: https://fabric.nfh.global' \
-  -d '{"fqdn":"deploy-test.example"}' https://<project>.vercel.app/api/domains
-```
-
-`deploy-test.example` won't resolve, so it will be filtered — use a real domain
-you don't mind committing, then delete the line from the data repo.
 
 ### The token
 
@@ -93,10 +65,34 @@ A **fine-grained personal access token**, scoped to
 Nothing else. Never commit it — `fabric-website` is public, so a token pushed
 here is a burned token even if the commit is reverted.
 
-## Spam handling
+## Rate limiting
 
-The form is public and unauthenticated, so assume it will be found. Layers,
-cheapest first:
+Serverless makes this awkward: every invocation may land on a different
+instance, so a counter in memory is partial by nature. Three layers, and you
+should have at least the first and third:
+
+**1. In the function, in memory (on by default).** A warm instance keeps its
+counters between invocations, so someone hammering the endpoint is stopped
+after `RATE_MAX` in `RATE_WINDOW_SECONDS`. Traffic spread across instances, or
+arriving after a cold start, gets a fresh count — real protection against a
+crude flood, not against a determined one.
+
+**2. In the function, shared (optional, exact).** Add a Vercel KV or Upstash
+Redis store and set `KV_REST_API_URL` and `KV_REST_API_TOKEN`. The limiter
+switches to a shared counter automatically — accurate across every instance,
+still no npm dependency, since it speaks the REST API over `fetch`. If the
+store is unreachable it **falls back to the in-memory count rather than
+rejecting**, because a broken counter must never become an outage.
+
+**3. Vercel Firewall (recommended, free).** Dashboard → your project →
+**Firewall → Rate Limiting**. This runs *in front of* the function, so blocked
+requests never invoke it and never cost anything. It's the only layer that
+protects against volume rather than merely counting it. Set it even if you also
+configure a KV store.
+
+## Other spam handling
+
+The form is public and unauthenticated, so assume it will be found.
 
 | Layer | Catches | Blind to |
 | --- | --- | --- |
@@ -114,15 +110,9 @@ spam domains fail immediately. It **fails open** on resolver trouble: if DNS is
 broken that's our problem, and it must never become "reject every genuine
 signup." Only a definitive NXDOMAIN drops a submission.
 
-Rejected submissions get a `200` that looks exactly like a duplicate. An error
+Filtered submissions get a `200` that looks exactly like a duplicate. An error
 message would tell whoever is probing which check to work around, and there's no
 human on the other end to inform.
-
-**What this does not have is per-IP rate limiting.** A long-running server can
-hold that in memory; a serverless function can't — every invocation starts
-fresh. If you need it, turn on **Vercel Firewall → Rate Limiting** in the
-dashboard: no code change, and it runs before the function so it costs nothing.
-That's the gap to close first if the list ever starts filling with junk.
 
 ## Behaviour
 
@@ -130,6 +120,7 @@ That's the gap to close first if the list ever starts filling with junk.
 | --- | --- |
 | `200` | Accepted. `added: false` means duplicate, filtered, or capped. |
 | `422` | Not a valid domain. |
+| `429` | Rate limited. Carries `Retry-After`. |
 | `502` | GitHub unreachable or refused the write. |
 
 `https://Acme-Corp.co.in/pricing?x=1` is recorded as `acme-corp.co.in`. The

@@ -5,7 +5,7 @@
 #   ./api/setup.sh
 #
 # Links the Vercel project, sets the environment variables, deploys, and
-# writes the resulting URL into onboarding/index.html.
+# writes the resulting URL into index.html.
 #
 # The GitHub token is read from a prompt with echo off, piped straight to
 # Vercel, and never written to disk or into this repo.
@@ -17,7 +17,7 @@ cd "$REPO_ROOT"
 
 DATA_REPO_DEFAULT="Networks-for-Humanity/fabric-onboarding"
 SITE_ORIGIN_DEFAULT="https://fabric.nfh.global"
-PAGE="onboarding/index.html"
+PAGE="index.html"
 
 say()  { printf '\n\033[1m%s\033[0m\n' "$*"; }
 note() { printf '  %s\n' "$*"; }
@@ -68,9 +68,9 @@ note "$DEPLOY_URL"
 
 say "5/5  Point the form at it"
 ENDPOINT="${DEPLOY_URL}/api/domains"
-if grep -q "const DOMAIN_ENDPOINT = " "$PAGE"; then
+if grep -q "DOMAIN_ENDPOINT = " "$PAGE"; then
   # Only the endpoint line changes; the surrounding comment is left intact.
-  perl -0pi -e "s{const DOMAIN_ENDPOINT = '[^']*';[^\n]*}{const DOMAIN_ENDPOINT = '$ENDPOINT';}" "$PAGE"
+  perl -0pi -e "s{var DOMAIN_ENDPOINT = '[^']*';[^\n]*}{var DOMAIN_ENDPOINT = '$ENDPOINT';}" "$PAGE"
   note "$PAGE now posts to $ENDPOINT"
 else
   die "Could not find DOMAIN_ENDPOINT in $PAGE — set it by hand to $ENDPOINT"
