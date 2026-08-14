@@ -27,8 +27,10 @@ Environment=PORT=8787
 # nginx sets X-Forwarded-For, so the rate limiter can trust it.
 Environment=TRUST_PROXY=1
 
-# The token lives here, readable only by root. Contains one line:
+# Tokens live here, readable only by root. Contains:
 #   DATA_REPO_TOKEN=github_pat_...
+#   DEDI_CRAWLER_URL=https://... (optional)
+#   DEDI_CRAWLER_TOKEN=... (optional)
 EnvironmentFile=/etc/fabric-onboarding.env
 
 # The domains cache is the only thing it writes.

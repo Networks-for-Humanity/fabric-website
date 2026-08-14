@@ -18,6 +18,7 @@ const fs = require('fs');
 const fsp = require('fs/promises');
 const path = require('path');
 const store = require('./github-store');
+const crawler = require('./dedi-crawler');
 const guard = require('./guard');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -89,6 +90,7 @@ function record(fqdn) {
     await fsp.appendFile(DOMAINS_FILE, fqdn + '\n', 'utf8');
     known.add(fqdn);
     scheduleSync();
+    scheduleCrawlRefresh();
     return { stored: true, duplicate: false };
   });
 }
@@ -166,6 +168,54 @@ async function reconcileAtStartup() {
   } catch (err) {
     console.error('[fabric] could not read the data repo at startup:', err.message);
     scheduleSync();
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Telling the dedi-crawler to refresh after a write
+ *
+ * Debounced the same way as the git mirror: a burst of submissions
+ * should trigger one full crawl, not one per domain. The local write
+ * has already succeeded by the time this runs, so it is fine for this
+ * to be slow or to fail — it just retries with backoff.
+ * ------------------------------------------------------------------ */
+
+const CRAWLER_DEBOUNCE_MS = Number(process.env.DEDI_CRAWLER_DEBOUNCE_MS || 2000);
+const CRAWLER_MAX_BACKOFF_MS = 5 * 60 * 1000;
+
+let crawlerTimer = null;
+let crawlerRunning = false;
+let crawlerPending = false;
+let crawlerBackoff = 0;
+
+function scheduleCrawlRefresh(delay = CRAWLER_DEBOUNCE_MS) {
+  if (!crawler.enabled) return;
+  crawlerPending = true;
+  if (crawlerTimer || crawlerRunning) return;
+  crawlerTimer = setTimeout(runCrawlRefresh, delay);
+  crawlerTimer.unref();
+}
+
+async function runCrawlRefresh() {
+  crawlerTimer = null;
+  if (crawlerRunning) return;
+  crawlerRunning = true;
+
+  try {
+    while (crawlerPending) {
+      crawlerPending = false;
+      await crawler.triggerFullCrawl();
+      crawlerBackoff = 0;
+      console.log('[fabric] triggered dedi-crawler full refresh');
+    }
+  } catch (err) {
+    crawlerPending = true;
+    crawlerBackoff = crawlerBackoff ? Math.min(crawlerBackoff * 2, CRAWLER_MAX_BACKOFF_MS) : 15000;
+    console.error(`[fabric] dedi-crawler refresh failed, retrying in ${Math.round(crawlerBackoff / 1000)}s:`, err.message);
+    crawlerTimer = setTimeout(runCrawlRefresh, crawlerBackoff);
+    crawlerTimer.unref();
+  } finally {
+    crawlerRunning = false;
   }
 }
 
@@ -434,6 +484,9 @@ server.listen(PORT, HOST, () => {
   console.log(`[fabric] static: ${SERVE_STATIC ? STATIC_DIR : 'disabled'}`);
   if (!store.enabled) {
     console.log('[fabric] data repo: disabled (set DATA_REPO_TOKEN to mirror the list)');
+  }
+  if (!crawler.enabled) {
+    console.log('[fabric] dedi-crawler: disabled (set DEDI_CRAWLER_URL and DEDI_CRAWLER_TOKEN to trigger refreshes)');
   }
   reconcileAtStartup();
 });

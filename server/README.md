@@ -33,18 +33,31 @@ losing a submission. At startup the server reads the repo and merges anything
 it doesn't have locally, so a rebuilt host recovers its list rather than
 re-adding domains.
 
+4. A debounced call to the dedi-crawler tells it to run a full refresh, the
+   same way the GitHub sync is debounced — a burst of submissions triggers one
+   crawl, not one per domain. It retries with the same backoff on failure and
+   never affects the response to the submitter.
+
 ## Deploy
 
 **1. The token**, root-readable only:
 
 ```sh
-echo 'DATA_REPO_TOKEN=github_pat_...' | sudo tee /etc/fabric-onboarding.env
+cat <<'EOF' | sudo tee /etc/fabric-onboarding.env
+DATA_REPO_TOKEN=github_pat_...
+DEDI_CRAWLER_URL=https://...
+DEDI_CRAWLER_TOKEN=...
+EOF
 sudo chmod 600 /etc/fabric-onboarding.env
 ```
 
-A **fine-grained personal access token**, scoped to
+`DATA_REPO_TOKEN` is a **fine-grained personal access token**, scoped to
 `Networks-for-Humanity/fabric-onboarding` alone, **Contents: read and write**.
 Nothing else. Never commit it — this repo is public.
+
+`DEDI_CRAWLER_URL`/`DEDI_CRAWLER_TOKEN` are optional — omit both to leave the
+crawler refresh disabled and keep the collector doing only what it did
+before.
 
 **2. The service** — edit `User` and `WorkingDirectory` first if the checkout
 isn't at `/var/www/fabric-website`:
@@ -89,6 +102,9 @@ repo afterwards.
 | `SERVE_STATIC` | on | `0` when nginx serves the site |
 | `TRUST_PROXY` | off | `1` reads the client IP from `X-Forwarded-For` |
 | `SYNC_DEBOUNCE_MS` | `2000` | How long to coalesce before committing |
+| `DEDI_CRAWLER_URL` | none | Base URL of the dedi-crawler. Unset = refresh disabled. |
+| `DEDI_CRAWLER_TOKEN` | none | Bearer token for the dedi-crawler. Required alongside the URL. |
+| `DEDI_CRAWLER_DEBOUNCE_MS` | `2000` | How long to coalesce before triggering a refresh |
 
 `TRUST_PROXY=1` is set in the unit because nginx sets `X-Forwarded-For`.
 Without it every visitor looks like the proxy, and one person hitting the limit
